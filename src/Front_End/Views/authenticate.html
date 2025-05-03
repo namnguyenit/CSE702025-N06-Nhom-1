@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticate</title>
+    <link rel="stylesheet" href="../CSS/login.css">
+    <link rel="stylesheet" href="../CSS/signup.css">
+</head>
+
+<body>
+    <div class="box">
+        <div class="logo">Facebook</div>
+        <form action="" class="login flex-login-signup" id="login" method="get">
+            <input class="login_account" type="text" placeholder="Account" name="account">
+            <input class="login_password" type="password" placeholder="Password" name="password">
+            <button class="login_submit" type="submit">Log In</button>
+            <a href="" class="login_forgot-pass">Forgot password</a>
+            <div class="login_hr"></div>
+            <div class="dont-have-account">
+                Don't have an account?
+            </div>
+            <div href="" class="login_signup" id="login_signup">Sign Up</div>
+        </form>
+        <form action="" class="signup" id="signup" method="get">
+            <input class="signup_account" type="text" placeholder="Account" name="account">
+            <input class="signup_password" type="password" placeholder="Password" name="password">
+            <input class="signup_confirm-password" type="password" placeholder="Confirm Password"
+                name="confirm-password">
+            <input class="signup_phone" type="tel" pattern="[0-9]+" placeholder="Phone Number" name="phone">
+            <input class="signup_gmail" type="email" placeholder="Gmail" name="gmail">
+
+            <button class="signup_submit" type="submit">Sign Up</button>
+            <div class="signup_hr"></div>
+            <div class="have-account">
+                Already have an account?
+            </div>
+            <div href="" class="signup_login" id="signup_login">Login</div>
+        </form>
+    </div>
+    <script>
+        document.getElementById("login_signup").addEventListener("click", function () {
+            document.getElementById("login").classList.toggle("flex-login-signup");
+            document.getElementById("signup").classList.toggle("flex-login-signup");
+        });
+        document.getElementById("signup_login").addEventListener("click", function () {
+            document.getElementById("login").classList.toggle("flex-login-signup");
+            document.getElementById("signup").classList.toggle("flex-login-signup");
+        });
+    </script>
+</body>
+
+</html>
