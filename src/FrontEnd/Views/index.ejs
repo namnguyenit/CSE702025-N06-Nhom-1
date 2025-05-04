@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof pageTitle !=='undefined' ? pageTitle : 'Trang Chủ - Cửa Hàng Hiện Đại' %>
+    </title>
+    <link rel="stylesheet" href="/CSS/style.css">
+</head>
+
+<body>
+
+    <%- include('partials/header', { cartCount: typeof cartCount !=='undefined' ? cartCount : 0, user: typeof user
+        !=='undefined' ? user : null }) %>
+
+        <main>
+            <section class="hero-section">
+                <div class="container">
+                    <h1>
+                        <%= typeof heroTitle !=='undefined' ? heroTitle : 'Bộ Sưu Tập Mới Nhất' %>
+                    </h1>
+                    <p>
+                        <%= typeof heroSubtitle !=='undefined' ? heroSubtitle
+                            : 'Khám phá những sản phẩm thời trang và công nghệ hàng đầu.' %>
+                    </p>
+                    <a href="<%= typeof heroButtonLink !== 'undefined' ? heroButtonLink : '#' %>" class="cta-button">
+                        <%= typeof heroButtonText !=='undefined' ? heroButtonText : 'Mua Ngay' %>
+                    </a>
+                </div>
+            </section>
+
+            <section class="featured-categories padding-section">
+                <div class="container">
+                    <h2>Danh Mục Nổi Bật</h2>
+                    <div class="category-grid">
+                        <% if (typeof categories !=='undefined' && categories.length> 0) { %>
+                            <% categories.forEach(category=> { %>
+                                <div class="category-item">
+                                    <img src="<%= category.imageUrl || 'https://via.placeholder.com/300x200?text=Danh+Mục' %>"
+                                        alt="<%= category.name %>">
+                                    <h3>
+                                        <%= category.name %>
+                                    </h3>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>Hiện chưa có danh mục nổi bật nào.</p>
+                                        <div class="category-item">
+                                            <img src="https://via.placeholder.com/300x200?text=Danh+Mục+1"
+                                                alt="Danh Mục 1">
+                                            <h3>Thời Trang Nam</h3>
+                                        </div>
+                                        <div class="category-item">
+                                            <img src="https://via.placeholder.com/300x200?text=Danh+Mục+2"
+                                                alt="Danh Mục 2">
+                                            <h3>Thời Trang Nữ</h3>
+                                        </div>
+                                        <div class="category-item">
+                                            <img src="https://via.placeholder.com/300x200?text=Danh+Mục+3"
+                                                alt="Danh Mục 3">
+                                            <h3>Phụ Kiện</h3>
+                                        </div>
+                                        <div class="category-item">
+                                            <img src="https://via.placeholder.com/300x200?text=Danh+Mục+4"
+                                                alt="Danh Mục 4">
+                                            <h3>Đồ Điện Tử</h3>
+                                        </div>
+                                        <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <section class="featured-products padding-section bg-light">
+                <div class="container">
+                    <h2>Sản Phẩm Bán Chạy</h2>
+                    <div class="product-grid">
+                        <% if (typeof products !=='undefined' && products.length> 0) { %>
+                            <% products.forEach(product=> { %>
+                                <div class="product-item">
+                                    <img src="<%= product.imageUrl || 'https://via.placeholder.com/250x250?text=Sản+Phẩm' %>"
+                                        alt="<%= product.name %>">
+                                    <h3>
+                                        <%= product.name %>
+                                    </h3>
+                                    <p class="product-price">
+                                        <%= product.formattedPrice || `$${product.price}` %>
+                                    </p>
+                                    <a href="/products/<%= product.slug || product.id %>" class="button-secondary">Xem
+                                        Chi Tiết</a>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>Hiện chưa có sản phẩm bán chạy nào.</p>
+                                        <div class="product-item">
+                                            <img src="https://via.placeholder.com/250x250?text=Sản+Phẩm+1"
+                                                alt="Sản Phẩm 1">
+                                            <h3>Tên Sản Phẩm 1</h3>
+                                            <p class="product-price">$99.99</p>
+                                            <a href="#" class="button-secondary">Xem Chi Tiết</a>
+                                        </div>
+                                        <div class="product-item">
+                                            <img src="https://via.placeholder.com/250x250?text=Sản+Phẩm+2"
+                                                alt="Sản Phẩm 2">
+                                            <h3>Tên Sản Phẩm 2</h3>
+                                            <p class="product-price">$129.00</p>
+                                            <a href="#" class="button-secondary">Xem Chi Tiết</a>
+                                        </div>
+                                        <div class="product-item">
+                                            <img src="https://via.placeholder.com/250x250?text=Sản+Phẩm+3"
+                                                alt="Sản Phẩm 3">
+                                            <h3>Tên Sản Phẩm 3</h3>
+                                            <p class="product-price">$75.50</p>
+                                            <a href="#" class="button-secondary">Xem Chi Tiết</a>
+                                        </div>
+                                        <div class="product-item">
+                                            <img src="https://via.placeholder.com/250x250?text=Sản+Phẩm+4"
+                                                alt="Sản Phẩm 4">
+                                            <h3>Tên Sản Phẩm 4</h3>
+                                            <p class="product-price">$199.99</p>
+                                            <a href="#" class="button-secondary">Xem Chi Tiết</a>
+                                        </div>
+                                        <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <section class="promo-banner padding-section">
+                <div class="container text-center">
+                    <h2>
+                        <%= typeof promoTitle !=='undefined' ? promoTitle : 'Giảm Giá Đặc Biệt Cuối Tuần!' %>
+                    </h2>
+                    <p>
+                        <%= typeof promoText !=='undefined' ? promoText
+                            : 'Nhận ưu đãi lên đến 50% cho các mặt hàng chọn lọc.' %>
+                    </p>
+                    <a href="<%= typeof promoLink !== 'undefined' ? promoLink : '#' %>" class="cta-button">
+                        <%= typeof promoButtonText !=='undefined' ? promoButtonText : 'Xem Ngay' %>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+
+        <%- include('partials/footer') %>
+
+</body>
+
+</html>
