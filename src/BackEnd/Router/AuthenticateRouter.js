@@ -4,7 +4,7 @@ const route = express.Router();
 
 const AuthenticateController = require("../Controller/AuthenticateController");
 
-route.get("/", AuthenticateController.index);
+route.get("/auth", AuthenticateController.index);
 
 //-------------------------------------
 module.exports = route;
