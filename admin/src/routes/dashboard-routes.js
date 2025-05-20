@@ -2,9 +2,9 @@ const express = require("express");
 const route = express.Router();
 //-------------------------------------
 
-const DashboardRouter = require("../controllers/dashboard-controllers");
+const DashboardControllers = require("../controllers/dashboard-controllers");
 
-route.get("/", DashboardRouter.index);
+route.get("/", DashboardControllers.index);
 
 //-------------------------------------
 module.exports = route;

@@ -2,6 +2,9 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const mainRoutes = require("./src/routes/main-routes");
+const connectDB = require("./src/config/database");
+
+connectDB();
 
 const PORT = 3001;
 
