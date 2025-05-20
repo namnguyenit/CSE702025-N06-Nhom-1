@@ -10,6 +10,26 @@
 
 <body>
     <h1>Hello World</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>acc</td>
+                <td>paw</td>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user=>{ %>
+                <tr>
+                    <td>
+                        <%=user.account %>
+                    </td>
+                    <td>
+                        <%=user.password %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
 </body>
 
 </html>
