@@ -1,14 +1,18 @@
 const users = require("../models/users");
+const bcrypt = require("bcrypt");
 
 class AuthenticateControllers {
   showLoginForm(req, res) {
     res.render("authenticate/login");
   }
   async handleLogin(req, res) {
-    // let { acc, pas } = req.body;
+    let { acc, paw } = req.body;
+
+    const hashedPassword = await bcrypt.hash(paw, 10);
+
     const newUser = new users({
-      account: req.body.acc,
-      password: req.body.paw,
+      account: acc,
+      password: hashedPassword,
     });
     await newUser
       .save()
