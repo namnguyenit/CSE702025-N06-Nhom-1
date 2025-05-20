@@ -1,0 +1,4 @@
+- Biến / hàm: camelCase
+- Class: PascalCase
+- File: kebab-case.js
+- Thư mục: kebab-case/
