@@ -1,12 +1,12 @@
+require("dotenv").config();
+const config = require("./src/config/config");
 const express = require("express");
 const path = require("path");
 const app = express();
 const mainRoutes = require("./src/routes/main-routes");
-const connectDB = require("./src/config/database");
+const connectDB = require("./src/config/connect-db");
 
 connectDB();
-
-const PORT = 3001;
 
 //Set view
 app.set("view engine", "ejs");
@@ -26,6 +26,6 @@ app.use((err, req, res, next) => {
 
 mainRoutes(app);
 
-app.listen(PORT, () => {
-  console.log(`Server dang chay tai http://localhost:${PORT}`);
+app.listen(config.app.port, () => {
+  console.log(`Server running on http://localhost:${config.app.port}`);
 });

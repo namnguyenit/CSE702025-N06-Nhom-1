@@ -1,13 +1,7 @@
-const mongoose = require("mongoose");
-
-const connectDB = async () => {
-  try {
-    await mongoose.connect(`mongodb://localhost:27017/web`);
-    console.log("✅ MongoDB connected");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-    process.exit(1);
-  }
+module.exports = {
+  host: process.env.DB_HOST || "localhost",
+  port: process.env.DB_PORT || 27017,
+  username: process.env.DB_USER || "root",
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME || "web",
 };
-
-module.exports = connectDB;
