@@ -10,11 +10,14 @@
 
 <body>
     <h1>Login hello</h1>
-    <form action="/login" method="post">
-        <input type="text" name="acc">
-        <input type="password" name="paw">
+    <form class="box" action="/login" method="post">
+        <input type="text" name="account">
+        <input type="password" name="password">
         <button type="submit">SUBMIT</button>
     </form>
+    <% if(err){ %>
+        <script src="./js/err/<%=err%>.js"></script>
+        <% } %>
 </body>
 
 </html>
