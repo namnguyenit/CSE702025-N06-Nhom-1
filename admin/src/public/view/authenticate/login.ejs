@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-
-<body>
-    <h1>Login hello</h1>
-    <form class="box" action="/login" method="post">
-        <input type="text" name="account">
-        <input type="password" name="password">
-        <button type="submit">SUBMIT</button>
-    </form>
-    <% if(err){ %>
-        <script src="./js/err/<%=err%>.js"></script>
-        <% } %>
-</body>
-
-</html>
+<%- include('../partials/header') %>
+    <main>
+        <h1>Login hello</h1>
+        <form class="box" action="/login" method="post">
+            <input type="text" name="account">
+            <input type="password" name="password">
+            <button type="submit">SUBMIT</button>
+        </form>
+        <% if(err){ %>
+            <script src="./js/err/<%=err%>.js"></script>
+            <% } %>
+    </main>
+    <%- include('../partials/footer') %>

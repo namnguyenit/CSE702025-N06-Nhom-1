@@ -1,35 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-
-<body>
-    <h1>Hello World</h1>
-    <table>
-        <thead>
-            <tr>
-                <td>acc</td>
-                <td>paw</td>
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(user=>{ %>
+<%- include('../partials/header') %>
+    <main>
+        <h1>Hello World</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        <%=user.account %>
-                    </td>
-                    <td>
-                        <%=user.password %>
-                    </td>
+                    <td>Account</td>
+                    <td>Password</td>
                 </tr>
-                <% }) %>
-        </tbody>
-    </table>
-</body>
-
-</html>
+            </thead>
+            <tbody>
+                <% users.forEach(user=>{ %>
+                    <tr>
+                        <td>
+                            <%=user.account %>
+                        </td>
+                        <td>
+                            <%=user.password %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </main>
+    <%- include('../partials/footer') %>

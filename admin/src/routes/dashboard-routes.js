@@ -1,10 +1,10 @@
 const express = require("express");
 const route = express.Router();
+const authenticateMiddleware = require("../middleware/authenticate-middleware");
+const DashboardControllers = require("../controllers/dashboard-controllers");
 //-------------------------------------
 
-const DashboardControllers = require("../controllers/dashboard-controllers");
-
-route.get("/dashboard", DashboardControllers.index);
+route.get("/dashboard", authenticateMiddleware, DashboardControllers.index);
 
 //-------------------------------------
 module.exports = route;
