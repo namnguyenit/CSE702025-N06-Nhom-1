@@ -1,11 +1,14 @@
 <%- include('../partials/header') %>
     <main>
         <h1>Hello World</h1>
+        <a href="/users/create">Create</a>
         <table>
             <thead>
                 <tr>
                     <td>Account</td>
                     <td>Password</td>
+                    <td>Show</td>
+                    <td>Destroy</td>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +19,12 @@
                         </td>
                         <td>
                             <%=user.password %>
+                        </td>
+                        <td>
+                            <a href="/users/show/<%=user.id %>">Details</a>
+                        </td>
+                        <td>
+                            <a href="/users/destroy/<%=user.id %>">Destroy</a>
                         </td>
                     </tr>
                     <% }) %>
