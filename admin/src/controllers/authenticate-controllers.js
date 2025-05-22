@@ -1,4 +1,4 @@
-const users = require("../models/users");
+const users = require("../models/user-models");
 const bcrypt = require("bcrypt");
 const AuthenticateService = require("../service/authenticate-service");
 
@@ -25,7 +25,7 @@ class AuthenticateControllers {
         // Mật khẩu đúng → đăng nhập thành công
         AuthenticateService.setSession(req, res);
         //
-        res.redirect("/dashboard");
+        res.redirect("/users");
       } else {
         res.redirect("/login?err=incorrect-password");
       }
@@ -58,7 +58,7 @@ class AuthenticateControllers {
         password: hashedPassword,
       });
       await newUser.save();
-      return res.redirect("/dashboard");
+      return res.redirect("/users");
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in handleSignup:", error);
