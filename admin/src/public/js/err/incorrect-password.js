@@ -1,1 +1,0 @@
-alert("err: Incorrect password");

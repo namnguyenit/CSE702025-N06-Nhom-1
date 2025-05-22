@@ -5,8 +5,8 @@ const AuthenticateService = require("../service/authenticate-service");
 class AuthenticateControllers {
   //showLoginForm
   showLoginForm(req, res) {
-    const err = req.query.err;
-    res.render("authenticate/login", { err });
+    const popup = req.query;
+    res.render("authenticate/login", { popup });
   }
   //handleLogin
   async handleLogin(req, res) {
@@ -16,7 +16,7 @@ class AuthenticateControllers {
       const user = await users.findOne({ account: inputAccount });
       //Nếu ko tồn tại
       if (!user) {
-        res.redirect("/login?err=no-user");
+        res.redirect("/login?type=error&info=no-user");
         return;
       }
       //Nếu sai mật khẩu
@@ -27,7 +27,7 @@ class AuthenticateControllers {
         //
         res.redirect("/users");
       } else {
-        res.redirect("/login?err=incorrect-password");
+        res.redirect("/login?type=error&info=incorrect-password");
       }
     } catch (error) {
       //log và thông báo về lỗi
@@ -37,8 +37,8 @@ class AuthenticateControllers {
   }
   //showSignupForm
   showSignupForm(req, res) {
-    const err = req.query.err;
-    res.render("authenticate/signup", { err });
+    const popup = req.query;
+    res.render("authenticate/signup", { popup });
   }
   //handleSignup
   async handleSignup(req, res) {
@@ -46,8 +46,7 @@ class AuthenticateControllers {
       //Validate dữ liệu
       let { account, password, passwordConfirm } = req.body;
       if (password != passwordConfirm) {
-        res.redirect("/signup?err=not-match");
-        return;
+        return res.redirect("/signup?type=error&info=not-match");
       }
       //Set sesion
       AuthenticateService.setSession(req, res);

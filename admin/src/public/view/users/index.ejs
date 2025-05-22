@@ -8,6 +8,7 @@
                     <td>Account</td>
                     <td>Password</td>
                     <td>Show</td>
+                    <td>Edit</td>
                     <td>Destroy</td>
                 </tr>
             </thead>
@@ -22,6 +23,9 @@
                         </td>
                         <td>
                             <a href="/users/show/<%=user.id %>">Details</a>
+                        </td>
+                        <td>
+                            <a href="/users/edit/<%=user.id %>">Edit</a>
                         </td>
                         <td>
                             <a href="/users/destroy/<%=user.id %>">Destroy</a>

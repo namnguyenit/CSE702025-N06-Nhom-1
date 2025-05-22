@@ -14,15 +14,15 @@ class UserControllers {
     }
   }
   async create(req, res) {
-    const err = req.query.err;
-    res.render("users/create", { err });
+    const popup = req.query;
+    res.render("users/create", { popup });
   }
   async store(req, res) {
     try {
       //Validate dữ liệu
       let { account, password, passwordConfirm } = req.body;
       if (password != passwordConfirm) {
-        res.redirect("/users/create?err=not-match");
+        res.redirect("/users/create?type=error&info=not-match");
         return;
       }
       //Lưu tài khoản
@@ -64,6 +64,39 @@ class UserControllers {
       return res
         .status(500)
         .json({ error: "Error in UserControllers.destroy" });
+    }
+  }
+  async edit(req, res) {
+    const popup = req.query;
+    const user = await UserModels.findById(req.params.id);
+    res.render("users/edit", { user, popup });
+  }
+  async update(req, res) {
+    try {
+      let { id, account: inputAccount, password, passwordConfirm } = req.body;
+      //Chưa nhập mật khẩu
+      if (!password || !passwordConfirm) {
+        return res.redirect(`/users/edit/${id}`);
+      }
+      //not math
+      if (password != passwordConfirm) {
+        res.redirect(`/users/edit/${id}?type=error&info=not-match`);
+        return;
+      }
+      //Update
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await UserModels.findByIdAndUpdate(id, {
+        account: inputAccount,
+        password: hashedPassword,
+      });
+
+      res.redirect("/users");
+    } catch (error) {
+      //log và thông báo về lỗi
+      console.error("Error in UserControllers.update:", error);
+      return res
+        .status(500)
+        .json({ error: "Error in UserControllers.update:" });
     }
   }
 }

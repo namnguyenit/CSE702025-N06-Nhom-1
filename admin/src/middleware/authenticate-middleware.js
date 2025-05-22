@@ -5,7 +5,7 @@ function authenticateMiddleware(req, res, next) {
   // Authenticate rồi thì mới được vào
   if (hasAuthenticate) return next();
   // Chưa Authenticate thì chuyển vào login
-  res.redirect("/login?err=unauthenticated");
+  res.redirect("/login?type=error&info=unauthenticated");
 }
 
 module.exports = authenticateMiddleware;
