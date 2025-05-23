@@ -10,6 +10,8 @@
                     <td>Price</td>
                     <td>Stock</td>
                     <td>Image</td>
+                    <td>Edit</td>
+                    <td>Destroy</td>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +31,12 @@
                         </td>
                         <td><img class="image" src="/products/image/<%=product.id %>"
                                 alt="<%=product.image.imageName%>">
+                        </td>
+                        <td>
+                            <a href="/products/edit/<%=product.id %>">Edit</a>
+                        </td>
+                        <td>
+                            <a href="/products/destroy/<%=product.id %>">Destroy</a>
                         </td>
                     </tr>
                     <% }) %>

@@ -49,13 +49,51 @@ class ProductController {
     res.redirect("/products");
   }
   async show(req, res) {
-    res.render("products/show");
+    res.send("Chức năng đang phát triển");
   }
-  async destroy(req, res) {}
+  async destroy(req, res) {
+    await ProductModels.findByIdAndDelete(req.params.id);
+    res.redirect("/products");
+  }
   async edit(req, res) {
-    res.render("products/edit");
+    const product = await ProductModels.findById(req.params.id);
+    const popup = req.query;
+    res.render("products/edit", { product, popup });
   }
-  async update(req, res) {}
+  async update(req, res) {
+    const id = req.body.id;
+    const inputName = req.body.name;
+    const inputDescription = req.body.description;
+    const inputPrice = req.body.price;
+    const inputStock = req.body.stock;
+    const inputImage = req.file;
+    //Missing data then kick
+    // for (const key in req.body) {
+    //   console.log(key, req.body[key]);
+    // }
+    if (!(inputName && inputDescription && inputPrice && inputStock)) {
+      return res.redirect(`/products/edit/${id}?type=error&info=missing-data`);
+    }
+    const product = await ProductModels.findById(id);
+    if (!product) {
+      return res.redirect("/products");
+    }
+    //Update new data
+    product.name = inputName;
+    product.description = inputDescription;
+    product.price = inputPrice;
+    product.stock = inputStock;
+    //hasImage will save
+    if (inputImage) {
+      product.image = {
+        imageName: inputImage.originalname,
+        imageType: inputImage.mimetype,
+        imageData: inputImage.buffer,
+      };
+    }
+    await product.save();
+    res.redirect("/products");
+  }
 }
 
 module.exports = new ProductController();

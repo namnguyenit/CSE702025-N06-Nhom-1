@@ -8,10 +8,12 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 route.use(authenticateMiddleware);
 
+route.use(upload.single("image"));
+
 route.get("/", ProductControllers.index);
 route.get("/image/:id", ProductControllers.getImage);
 route.get("/create", ProductControllers.create);
-route.post("/store", upload.single("image"), ProductControllers.store);
+route.post("/store", ProductControllers.store);
 route.get("/show/:id", ProductControllers.show);
 route.get("/destroy/:id", ProductControllers.destroy);
 route.get("/edit/:id", ProductControllers.edit);

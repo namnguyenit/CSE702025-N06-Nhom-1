@@ -4,12 +4,14 @@ const popup = document.getElementById("popup");
 //no-user: User does not exist
 //unauthenticated: Unauthenticated - You need to log in first
 //not-match: Passwords do not match
+//missing-data: Please fill out this field.
 
 const arrInfo = {
   "incorrect-password": "Incorrect password",
   "no-user": "User does not exist",
   unauthenticated: "Unauthenticated - You need to log in first",
   "not-match": "Passwords do not match",
+  "missing-data": "Please fill out this field",
 };
 
 let { name: type, value: info } = popup;
@@ -30,6 +32,8 @@ if (popup.name === "error") {
   } else if (popup.value === "unauthenticated") {
     alertBox(type, info);
   } else if (popup.value === "not-match") {
+    alertBox(type, info);
+  } else if (popup.value === "missing-data") {
     alertBox(type, info);
   }
 }
