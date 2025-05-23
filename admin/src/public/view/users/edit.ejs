@@ -1,5 +1,6 @@
 <%- include('../partials/header') %>
     <main>
+        <h1>Users edit</h1>
         <form class="box" method="post" action="/users/update">
             <input type="hidden" name="id" value="<%= user.id %>" required>
             <input type="text" name="account" value="<%= user.account %>" required>

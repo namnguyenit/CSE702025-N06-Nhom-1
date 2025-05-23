@@ -1,3 +1,3 @@
-const authenticateDB = [];
+const authenticateDB = {};
 
 module.exports = authenticateDB;

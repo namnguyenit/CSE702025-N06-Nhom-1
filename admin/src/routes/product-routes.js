@@ -1,0 +1,21 @@
+const express = require("express");
+const route = express.Router();
+const authenticateMiddleware = require("../middleware/authenticate-middleware");
+const ProductControllers = require("../controllers/product-controllers");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+//-------------------------------------
+
+route.use(authenticateMiddleware);
+
+route.get("/", ProductControllers.index);
+route.get("/image/:id", ProductControllers.getImage);
+route.get("/create", ProductControllers.create);
+route.post("/store", upload.single("image"), ProductControllers.store);
+route.get("/show/:id", ProductControllers.show);
+route.get("/destroy/:id", ProductControllers.destroy);
+route.get("/edit/:id", ProductControllers.edit);
+route.post("/update", ProductControllers.update);
+
+//-------------------------------------
+module.exports = route;

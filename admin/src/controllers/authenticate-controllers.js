@@ -1,6 +1,6 @@
+const AuthenticateService = require("../service/authenticate-service");
 const users = require("../models/user-models");
 const bcrypt = require("bcrypt");
-const AuthenticateService = require("../service/authenticate-service");
 
 class AuthenticateControllers {
   //showLoginForm

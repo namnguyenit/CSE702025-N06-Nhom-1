@@ -8,3 +8,8 @@ h1 {
   height: 100px;
   justify-content: space-around;
 }
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}

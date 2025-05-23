@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+    <main>
+        <h1>Product index</h1>
+        <a href="/products/create">Create</a>
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Description</td>
+                    <td>Price</td>
+                    <td>Stock</td>
+                    <td>Image</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product=>{ %>
+                    <tr>
+                        <td>
+                            <%=product.name %>
+                        </td>
+                        <td>
+                            <%=product.description %>
+                        </td>
+                        <td>
+                            <%=product.price %>
+                        </td>
+                        <td>
+                            <%=product.stock %>
+                        </td>
+                        <td><img class="image" src="/products/image/<%=product.id %>"
+                                alt="<%=product.image.imageName%>">
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </main>
+    <%- include('../partials/footer') %>

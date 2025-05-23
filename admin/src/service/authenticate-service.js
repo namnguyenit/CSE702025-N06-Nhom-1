@@ -18,7 +18,7 @@ class AuthenticateService {
 
     console.log("All Sesion:", authenticateDBService);
   }
-  getSession() {
+  getAllSession() {
     return authenticateDBService;
   }
   clearSesion(req, res) {
@@ -28,6 +28,11 @@ class AuthenticateService {
       httpOnly: true,
       sameSite: "strict",
     });
+  }
+  getUser(req, res) {
+    //Trả về tài khoản theo cookie gửi lên
+    const cookie = req.cookies.authenticateDB;
+    return authenticateDBService[cookie];
   }
 }
 

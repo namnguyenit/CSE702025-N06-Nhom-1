@@ -1,5 +1,4 @@
 const UserModels = require("../models/user-models");
-const users = require("../models/user-models");
 const bcrypt = require("bcrypt");
 
 class UserControllers {

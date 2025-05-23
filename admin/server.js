@@ -26,7 +26,10 @@ app.use((err, req, res, next) => {
 
 //Cấu hình file tĩnh
 app.use(express.static(path.join(__dirname, "./src/public")));
-app.use("/users", express.static(path.join(__dirname, "./src/public")));
+
+//Vấn đề này lúc lỗi lúc không (^-^)
+// app.use("/users", express.static(path.join(__dirname, "./src/public")));
+// app.use("/products", express.static(path.join(__dirname, "./src/public")));
 
 mainRoutes(app);
 
