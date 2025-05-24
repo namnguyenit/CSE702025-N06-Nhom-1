@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng nhập - ShopOnline Nhom 6</title>
+  <link rel="stylesheet" href="../CSS/login.css" />
+</head>
+<body>
+  <div class="login__container">
+    <div class="form__login">
+      <form id="loginForm">
+        <div class="form__header">
+          <h2>Đăng nhập</h2>
+        </div>
+
+        <div class="form__title">
+          <label for="username">Tài khoản:</label>
+          <input type="text" id="username" name="username" placeholder="Tài khoản" required />
+        </div>
+
+        <div class="form__password">
+          <label for="password">Mật khẩu:</label>
+          <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
+        </div>
+
+        <div class="login__btn">
+          <button type="submit">Đăng nhập</button>
+        </div>
+
+        <div class="register__link">
+          <h5>Bạn chưa có tài khoản? <a href="/register.html">Tạo tài khoản</a></h5>
+        </div>
+      </form>
+    </div>
+
+    <h1 class="welcome__text">
+      ShopOnline xin chào quý khách hàng.
+    </h1>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Chức năng đăng nhập đang được phát triển!");
+    });
+  </script>
+</body>
+</html>
