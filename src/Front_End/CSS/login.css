@@ -1,0 +1,121 @@
+.login__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+    position: relative;
+}
+
+.form__login {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 450px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.form__login h2 {
+    margin-bottom: 25px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.form__title,
+.form__password {
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+    align-items: center; 
+}
+
+.form__title label,
+.form__password label {
+    width: 120px; 
+    margin-right: 15px;
+    font-family: Arial, sans-serif;
+    text-align: left;
+}
+
+.form__title input,
+.form__password input {
+    width: calc(100% - 22px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.form__login button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px; 
+}
+
+.form__login button:hover {
+    background-color: #0056b3;
+}
+
+.form__login .error {
+    color: red;
+    margin-bottom: 10px;
+    text-align: left; 
+}
+
+.register__link {
+    margin-top: 15px;
+    font-size: 1em;
+}
+
+.register__link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.register__link a:hover {
+    text-decoration: underline;
+}
+
+.welcome__text {
+    font-size: 30px;
+    position: absolute;
+    bottom: 10%;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .welcome__text {
+        font-size: 20px;
+    }
+
+    .form__login {
+        width: 90%;
+    }
+
+    .form__login input {
+        width: 100%;
+    }
+
+    .form__title,
+    .form__password {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
