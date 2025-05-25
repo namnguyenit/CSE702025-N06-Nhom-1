@@ -101,6 +101,7 @@ class ProductController {
     //Xác định user
     const accountAuthenticate = AuthenticateService.getUser(req, res)?.account;
     const user = await UserModels.findOne({ account: accountAuthenticate });
+
     user.carts.push({
       productID: inputProductID,
       orderNumber: inputNumber,

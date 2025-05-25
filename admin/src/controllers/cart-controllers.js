@@ -9,7 +9,7 @@ class CartControllers {
     res.send(product.image.imageData);
   }
   async index(req, res) {
-    const products = [];
+    // const products = [];
 
     const user = await UserModels.findOne({ account: "long" });
 
@@ -18,10 +18,16 @@ class CartControllers {
     //   products.push(product);
     // });
 
-    for (const item of user.carts) {
-      const product = await ProductModels.findById(item.productID);
-      products.push(product);
-    }
+    // for (const item of user.carts) {
+    //   const product = await ProductModels.findById(item.productID);
+    //   products.push(product);
+    // }
+
+    const productPromises = user.carts.map((item) => {
+      return ProductModels.findById(item.productID);
+    });
+
+    const products = await Promise.all(productPromises);
 
     res.render("carts/index", { products });
   }
