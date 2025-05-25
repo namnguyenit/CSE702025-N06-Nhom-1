@@ -1,0 +1,62 @@
+<%- include('../partials/header', { title: title }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Thanh Toán</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="checkout_area section_padding">
+    <div class="container">
+        <form action="/checkout" method="POST" class="row contact_form" novalidate="novalidate">
+            <div class="col-lg-8">
+                <h3>Thông Tin Đặt Hàng</h3>
+                <div class="row">
+                    <div class="col-md-6 form-group p_star">
+                        <input type="text" class="form-control" name="firstName" placeholder="Họ" required />
+                    </div>
+                    <div class="col-md-6 form-group p_star">
+                        <input type="text" class="form-control" name="lastName" placeholder="Tên" required />
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <input type="text" class="form-control" name="address" placeholder="Địa chỉ" required />
+                    </div>
+                    <div class="col-md-6 form-group p_star">
+                        <input type="text" class="form-control" name="phone" placeholder="Số điện thoại" required />
+                    </div>
+                    <div class="col-md-6 form-group p_star">
+                        <input type="email" class="form-control" name="email" placeholder="Email" required />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="order_box">
+                    <h2>Đơn Hàng Của Bạn</h2>
+                    <ul class="list">
+                        <% if (cart && cart.length > 0) { %>
+                            <% cart.forEach(item => { %>
+                                <li><%= item.product.name %> <span class="middle">x <%= item.quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.product.price * item.quantity) %></span></li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>Không có sản phẩm trong giỏ hàng.</li>
+                        <% } %>
+                    </ul>
+                    <ul class="list list_2">
+                        <li><span>Tổng</span> <span><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cartTotal || 0) %></span></li>
+                    </ul>
+                    <button type="submit" class="btn_3 w-100 mt-3">Đặt Hàng</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

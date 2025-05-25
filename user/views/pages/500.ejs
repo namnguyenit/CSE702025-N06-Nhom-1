@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>500 - Lỗi Máy Chủ</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="contact-section section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="error-text">Rất tiếc, đã có lỗi xảy ra ở phía máy chủ. Chúng tôi đang khắc phục sự cố.</p>
+                <p>Vui lòng thử lại sau.</p>
+                <a href="/" class="btn hero-btn mt-20">Về Trang Chủ</a>
+                <% if (process.env.NODE_ENV === 'development' && typeof error !== 'undefined') { %>
+                    <div class="mt-4 text-left" style="background-color: #f8d7da; padding: 15px; border-radius: 5px;">
+                        <h4>Chi tiết lỗi (Development Mode):</h4>
+                        <p><strong><%= error.message %></strong></p>
+                        <pre><%= error.stack %></pre>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

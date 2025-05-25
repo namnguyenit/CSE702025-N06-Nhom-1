@@ -1,0 +1,66 @@
+<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/images/hero/category.jpg"> <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Thông Tin Tài Khoản</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="profile_area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="profile_form_inner">
+                    <h3>Xin chào, <%= profileUser.fullName %>!</h3>
+
+                    <div class="user-details mb-4">
+                        <p><strong>Tên đăng nhập:</strong> <%= profileUser.username %></p>
+                        <p><strong>Email:</strong> <%= profileUser.email %></p>
+                        <p><strong>Số điện thoại:</strong> <%= profileUser.phone || 'Chưa cập nhật' %></p>
+                        <p><strong>Địa chỉ:</strong> 
+                            <%= profileUser.address && profileUser.address.street ? profileUser.address.street + ', ' : '' %>
+                            <%= profileUser.address && profileUser.address.city ? profileUser.address.city : 'Chưa cập nhật' %>
+                        </p>
+                        <p><strong>Vai trò:</strong> <%= profileUser.role %></p>
+                    </div>
+
+                    <h4>Cập nhật thông tin</h4>
+                    <form class="row profile_form" action="/auth/profile" method="post">
+                        <div class="col-md-12 form-group">
+                            <label for="fullName">Họ và Tên</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" value="<%= profileUser.fullName %>" placeholder="Họ và Tên">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="<%= profileUser.phone || '' %>" placeholder="Số điện thoại">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="address_street">Địa chỉ (Số nhà, đường)</label>
+                            <input type="text" class="form-control" id="address_street" name="address_street" value="<%= profileUser.address ? profileUser.address.street : '' %>" placeholder="Số nhà, đường">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="address_city">Thành phố</label>
+                            <input type="text" class="form-control" id="address_city" name="address_city" value="<%= profileUser.address ? profileUser.address.city : '' %>" placeholder="Thành phố">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="primary-btn">Cập Nhật</button>
+                        </div>
+                    </form>
+                    <hr>
+                    <a href="/orders/my-history" class="btn btn-outline-primary mt-3">Xem Lịch Sử Đơn Hàng</a>
+                    <% if (currentUser.role === 'shipper') { %>
+                        <a href="/shipper/dashboard" class="btn btn-outline-info mt-3">Bảng Điều Khiển Giao Hàng</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

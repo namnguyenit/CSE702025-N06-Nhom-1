@@ -1,0 +1,27 @@
+<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>404 - Không Tìm Thấy Trang</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="contact-section section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="error-text">Rất tiếc, trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
+                <a href="/" class="btn hero-btn mt-20">Về Trang Chủ</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

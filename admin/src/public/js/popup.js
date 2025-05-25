@@ -6,7 +6,7 @@ const popup = document.getElementById("popup");
 //not-match: Passwords do not match
 //missing-data: Please fill out this field.
 
-const arrInfo = {
+const arrInfo = { 
   "incorrect-password": "Incorrect password",
   "no-user": "User does not exist",
   unauthenticated: "Unauthenticated - You need to log in first",

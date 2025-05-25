@@ -1,0 +1,141 @@
+<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/about.jpg"> <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2><%= product.name %></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product_image_area section-padding30"> <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <div class="single-prd-item">
+                    <img class="img-fluid" src="<%= (product.images && product.images.length > 0) ? product.images[0] : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
+                </div>
+                <% if (product.images && product.images.length > 1) { %>
+                    <div class="product_img_slide owl-carousel"> <% product.images.forEach(image => { %>
+                            <div class="single_gallery_item">
+                                <img src="<%= image %>" alt="Thumbnail <%= product.name %>" class="img-fluid">
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3><%= product.name %></h3>
+                    <h2><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) %></h2>
+                    <ul class="list">
+                        <li><a class="active" href="/products?category=<%= product.category.slug %>"><span>Danh mục</span> : <%= product.category.name %></a></li>
+                        <li><a href="#"><span>Size</span> : <%= product.size %></a></li>
+                        <li>
+                            <a href="#">
+                                <span>Tình trạng</span> : 
+                                <% if (product.stock > 0) { %>
+                                    Còn hàng (<%= product.stock %> sản phẩm)
+                                <% } else { %>
+                                    Hết hàng
+                                <% } %>
+                            </a>
+                        </li>
+                    </ul>
+                    <p><%= product.description.substring(0, 200) %>...</p> <% if (product.stock > 0) { %>
+                        <form action="/cart/add" method="POST">
+                            <div class="product_count">
+                                <label for="qty">Số lượng:</label>
+                                <input type="number" name="quantity" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty" min="1" max="<%= product.stock %>">
+                                </div>
+                            <input type="hidden" name="productId" value="<%= product._id %>">
+                            <div class="card_area d-flex align-items-center">
+                                <button type="submit" class="primary-btn">Thêm vào giỏ</button>
+                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                            </div>
+                        </form>
+                    <% } else { %>
+                         <div class="card_area d-flex align-items-center">
+                            <button type="button" class="primary-btn" disabled>Hết Hàng</button>
+                        </div>
+                    <% } %>
+
+                    <% if (productVariants && productVariants.length > 0) { %>
+                        <div class="mt-4">
+                            <h4>Các kích thước khác:</h4>
+                            <ul class="list-inline">
+                                <% productVariants.forEach(variant => { %>
+                                    <li class="list-inline-item">
+                                        <a href="/products/<%= variant.slug %>" class="btn btn-outline-secondary btn-sm <%= variant.stock <= 0 ? 'disabled' : '' %>">
+                                            <%= variant.size %> <%= variant.stock <=0 ? '(Hết)' : '' %>
+                                        </a>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="product_description_area"> <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Mô Tả</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Chi Tiết Kỹ Thuật</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Bình Luận</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Đánh Giá</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <p><%- product.description %></p> </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr><td>Size</td><td><h5><%= product.size %></h5></td></tr>
+                            <tr><td>Danh mục</td><td><h5><%= product.category.name %></h5></td></tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <p>Chức năng bình luận sẽ được cập nhật sớm.</p>
+            </div>
+            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <p>Chức năng đánh giá sẽ được cập nhật sớm.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<% if (relatedProducts && relatedProducts.length > 0) { %>
+<section class="new-product-area section-padding30">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section-tittle mb-70">
+                    <h2>Sản Phẩm Tương Tự</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <% relatedProducts.forEach(relatedProd => { %>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6"> <%- include('../partials/product_card', { product: relatedProd }) %>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</section>
+<% } %>
+<%- include('../partials/footer') %>
