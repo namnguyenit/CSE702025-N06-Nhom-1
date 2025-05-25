@@ -3,4 +3,4 @@ const Schema = mongoose.Schema;
 
 const orderDetails = new Schema({});
 
-module.exports = mongoose.model("order_details", orderDetails);
+module.exports = mongoose.model("orderDetails", orderDetails);

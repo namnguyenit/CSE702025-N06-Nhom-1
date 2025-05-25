@@ -18,6 +18,7 @@ route.get("/show/:id", ProductControllers.show);
 route.get("/destroy/:id", ProductControllers.destroy);
 route.get("/edit/:id", ProductControllers.edit);
 route.post("/update", ProductControllers.update);
+route.post("/add", ProductControllers.add);
 
 //-------------------------------------
 module.exports = route;

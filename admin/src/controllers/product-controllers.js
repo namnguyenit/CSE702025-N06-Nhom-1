@@ -94,6 +94,22 @@ class ProductController {
     await product.save();
     res.redirect("/products");
   }
+  async add(req, res) {
+    //Xác định product và number
+    const inputProductID = req.body.id;
+    const inputNumber = req.body.number;
+    //Xác định user
+    const accountAuthenticate = AuthenticateService.getUser(req, res)?.account;
+    const user = await UserModels.findOne({ account: accountAuthenticate });
+    user.carts.push({
+      productID: inputProductID,
+      orderNumber: inputNumber,
+    });
+
+    await user.save();
+
+    res.status(200).json({ message: "SUCCESS - Add to cart" });
+  }
 }
 
 module.exports = new ProductController();

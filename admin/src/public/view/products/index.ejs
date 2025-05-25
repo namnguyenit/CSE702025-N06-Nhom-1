@@ -12,6 +12,7 @@
                     <td>Image</td>
                     <td>Edit</td>
                     <td>Destroy</td>
+                    <td>Add to cart</td>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +38,13 @@
                         </td>
                         <td>
                             <a href="/products/destroy/<%=product.id %>">Destroy</a>
+                        </td>
+                        <td>
+                            <form class="addToCart" action="/products/add" method="post">
+                                <input type="hidden" name="id" value="<%=product.id %>">
+                                <input type="number" name="number" style="width:50px">
+                                <button type="submit">Add</button>
+                            </form>
                         </td>
                     </tr>
                     <% }) %>
