@@ -9,6 +9,7 @@
 
 ![Sequence Database](./image/sequence-database.png)
 
+
 **3:** Rest
 | Tên hàm | Chức năng | HTTP Method | Route ví dụ |
 | --------- | ------------ | ----------- | ----------------- |
