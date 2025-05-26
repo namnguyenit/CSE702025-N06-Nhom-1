@@ -1,4 +1,4 @@
-const AuthenticateService = require("../service/authenticate-service");
+const SessionService = require("../service/session/session-service");
 const users = require("../models/user-models");
 const bcrypt = require("bcrypt");
 
@@ -23,7 +23,7 @@ class AuthenticateControllers {
       const match = await bcrypt.compare(inputPassword, user.password);
       if (match) {
         // Mật khẩu đúng → đăng nhập thành công
-        AuthenticateService.setSession(req, res);
+        await SessionService.setSession(req, res);
         //
         res.redirect("/users");
       } else {
@@ -49,7 +49,7 @@ class AuthenticateControllers {
         return res.redirect("/signup?type=error&info=not-match");
       }
       //Set sesion
-      AuthenticateService.setSession(req, res);
+      await SessionService.setSession(req, res);
       //Lưu tài khoản
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new users({
@@ -65,8 +65,8 @@ class AuthenticateControllers {
     }
   }
   //handleLogout
-  handleLogout(req, res) {
-    AuthenticateService.clearSesion(req, res);
+  async handleLogout(req, res) {
+    await SessionService.clearSession(req, res);
     res.redirect("/");
   }
 }

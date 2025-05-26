@@ -1,10 +1,11 @@
-const authenticateDB = require("../service/authenticate-db-service");
+const AuthenticateService = require("../service/session/session-service");
+const AuthenticationService = require("../service/authentication-service");
 
-function authenticateMiddleware(req, res, next) {
+async function authenticateMiddleware(req, res, next) {
   //turn on/off
-  return next();
+  // return next();
   //-----------
-  let hasAuthenticate = req.cookies.authenticateDB in authenticateDB;
+  const hasAuthenticate = await AuthenticationService.hasAuthenticate(req, res);
   // Authenticate rồi thì mới được vào
   if (hasAuthenticate) return next();
   // Chưa Authenticate thì chuyển vào login

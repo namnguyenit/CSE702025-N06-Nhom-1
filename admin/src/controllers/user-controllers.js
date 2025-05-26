@@ -72,7 +72,13 @@ class UserControllers {
   }
   async update(req, res) {
     try {
-      let { id, account: inputAccount, password, passwordConfirm } = req.body;
+      let {
+        id,
+        account: inputAccount,
+        password,
+        role: inputRole,
+        passwordConfirm,
+      } = req.body;
       //Chưa nhập mật khẩu
       if (!password || !passwordConfirm) {
         return res.redirect(`/users/edit/${id}`);
@@ -87,6 +93,7 @@ class UserControllers {
       await UserModels.findByIdAndUpdate(id, {
         account: inputAccount,
         password: hashedPassword,
+        role: inputRole,
       });
 
       res.redirect("/users");

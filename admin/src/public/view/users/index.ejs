@@ -6,6 +6,7 @@
             <thead>
                 <tr>
                     <td>Account</td>
+                    <td>Role</td>
                     <td>Show</td>
                     <td>Edit</td>
                     <td>Destroy</td>
@@ -16,6 +17,9 @@
                     <tr>
                         <td>
                             <%=user.account %>
+                        </td>
+                        <td>
+                            <%=user.role %>
                         </td>
                         <td>
                             <a href="/users/show/<%=user.id %>">Details</a>

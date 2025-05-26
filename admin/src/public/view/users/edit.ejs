@@ -6,6 +6,12 @@
             <input type="text" name="account" value="<%= user.account %>" required>
             <input id="password" type="password" name="password">
             <input id="passwordConfirm" type="password" name="passwordConfirm">
+            <select name="role">
+                <option disabled>Choice Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Seller">Seller</option>
+                <option value="User" selected>User</option>
+            </select>
             <button type="submit">Update</button>
         </form>
     </main>

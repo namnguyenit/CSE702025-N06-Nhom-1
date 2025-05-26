@@ -5,6 +5,8 @@ class AuthenticateService {
   setSession(req, res) {
     //Xóa phiên cũ để thiết lập phiên mới
     const cookie = req.cookies.authenticateDB;
+    // console.log(req.cookies);
+    // console.log(req.cookies.authenticateDB);
     delete authenticateDBService[cookie];
     //Thiết lập phiên mới
     console.log("Service running with path:", req.path);

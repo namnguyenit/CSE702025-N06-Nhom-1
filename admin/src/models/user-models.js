@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 const cartLists = require("./cart-models");
 
 const users = new Schema({
-  account: { type: String },
-  password: { type: String },
+  account: String,
+  password: String,
+  role: String,
   carts: [cartLists],
 });
 
