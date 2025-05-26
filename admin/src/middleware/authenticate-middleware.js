@@ -2,7 +2,7 @@ const authenticateDB = require("../service/authenticate-db-service");
 
 function authenticateMiddleware(req, res, next) {
   //turn on/off
-  // return next();
+  return next();
   //-----------
   let hasAuthenticate = req.cookies.authenticateDB in authenticateDB;
   // Authenticate rồi thì mới được vào

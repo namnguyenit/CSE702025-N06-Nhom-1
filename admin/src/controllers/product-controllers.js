@@ -20,6 +20,7 @@ class ProductController {
     let {
       name: inputName,
       description: inputDescription,
+      group: inputGroup,
       price: inputPrice,
       stock: inputStock,
     } = req.body;
@@ -31,16 +32,11 @@ class ProductController {
         imageData: req.file.buffer,
       };
     }
-    //Xác định user theo account
-    let account = AuthenticateService?.getUser(req, res)?.account;
-    if (!account) {
-      account = null;
-    }
     //New a user
     const newProductModel = new ProductModels({
-      userID: account,
       name: inputName,
       description: inputDescription,
+      group: inputGroup,
       price: inputPrice,
       stock: inputStock,
       image: inputImage,
@@ -64,6 +60,7 @@ class ProductController {
     const id = req.body.id;
     const inputName = req.body.name;
     const inputDescription = req.body.description;
+    const inputGroup = req.body.group;
     const inputPrice = req.body.price;
     const inputStock = req.body.stock;
     const inputImage = req.file;
@@ -71,7 +68,9 @@ class ProductController {
     // for (const key in req.body) {
     //   console.log(key, req.body[key]);
     // }
-    if (!(inputName && inputDescription && inputPrice && inputStock)) {
+    if (
+      !(inputName && inputDescription && inputGroup && inputPrice && inputStock)
+    ) {
       return res.redirect(`/products/edit/${id}?type=error&info=missing-data`);
     }
     const product = await ProductModels.findById(id);
@@ -81,6 +80,7 @@ class ProductController {
     //Update new data
     product.name = inputName;
     product.description = inputDescription;
+    product.group = inputGroup;
     product.price = inputPrice;
     product.stock = inputStock;
     //hasImage will save
@@ -93,23 +93,6 @@ class ProductController {
     }
     await product.save();
     res.redirect("/products");
-  }
-  async add(req, res) {
-    //Xác định product và number
-    const inputProductID = req.body.id;
-    const inputNumber = req.body.number;
-    //Xác định user
-    const accountAuthenticate = AuthenticateService.getUser(req, res)?.account;
-    const user = await UserModels.findOne({ account: accountAuthenticate });
-
-    user.carts.push({
-      productID: inputProductID,
-      orderNumber: inputNumber,
-    });
-
-    await user.save();
-
-    res.status(200).json({ message: "SUCCESS - Add to cart" });
   }
 }
 
