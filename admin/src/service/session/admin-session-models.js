@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const adminSession = new Schema({
   sessionID: String,
   account: String,
-  name: String,
   role: String,
+  name: String,
   createAt: {
     type: Date,
     default: Date.now,

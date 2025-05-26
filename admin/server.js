@@ -7,6 +7,10 @@ const mainRoutes = require("./src/routes/main-routes");
 const connectDB = require("./src/config/connect-db");
 const cookieParser = require("cookie-parser");
 
+//generate admin
+const AdminService = require("./src/service/admin-service");
+AdminService.generate();
+
 connectDB();
 
 app.use(cookieParser());
