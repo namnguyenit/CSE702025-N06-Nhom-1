@@ -2,9 +2,18 @@
     <main>
         <h1>Product create</h1>
         <form style="height: 350px;" class="box" method="post" action="/products/store" enctype="multipart/form-data">
-            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="name" placeholder="Name">
             <input type="text" name="description" placeholder="Description">
-            <input type="text" name="group" placeholder="Group">
+            <input type="text" name="type" placeholder="Type">
+            <div>Size:
+                <label><input type="checkbox" name="size" value="XS">XS</label>
+                <label><input type="checkbox" name="size" value="S">S</label>
+                <label><input type="checkbox" name="size" value="M">M</label>
+                <label><input type="checkbox" name="size" value="L">L</label>
+                <label><input type="checkbox" name="size" value="XL">XL</label>
+                <label><input type="checkbox" name="size" value="XXL">XXL</label>
+                <label><input type="checkbox" name="size" value="XXXL">XXXL</label>
+            </div>
             <input type="number" name="price" placeholder="Price">
             <input type="number" name="stock" placeholder="Stock">
             <input type="file" name="image" placeholder="Image">

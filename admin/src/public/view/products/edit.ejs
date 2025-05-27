@@ -1,15 +1,31 @@
 <%- include('../partials/header') %>
     <main>
         <h1>Product edit</h1>
-        <form style="height: 350px;" class="box" method="post" action="/products/update" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="<%=product.id%>">
-            <input type="text" name="name" value="<%=product.name%>" placeholder="Name">
-            <input type="text" name="description" value="<%=product.description %>" placeholder="Description">
-            <input type="text" name="group" value="<%=product.group %>" placeholder="Group">
-            <input type="number" step="any" name="price" value="<%=product.price %>" placeholder="Price">
-            <input type="number" name="stock" value="<%=product.stock %>" placeholder="Stock">
-            <input type="file" name="image" placeholder="Image">
-            <button type="submit">Update</button>
-        </form>
+        <% product.forEach(item=>{ %>
+            <img style="width: 350px;height: 350px;" class="image" src="/products/image/<%=item.id%>"
+                alt="<%=item.image?.imageName%>">
+            <form style="height: 350px;" class="box" method="post" action="/products/update"
+                enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<%=item.id %>">
+                <input type="hidden" name="redirect" value="<%=item.name %>" placeholder="Name">
+                <input type="text" name="name" value="<%=item.name %>" placeholder="Name">
+                <input type="text" name="description" value="<%=item.description %>" placeholder="Description">
+                <input type="text" name="type" value="<%=item.type %>" placeholder="Type">
+                <div>Size:
+                    <label><input type="checkbox" name="size" value="XS">XS</label>
+                    <label><input type="checkbox" name="size" value="S">S</label>
+                    <label><input type="checkbox" name="size" value="M">M</label>
+                    <label><input type="checkbox" name="size" value="L">L</label>
+                    <label><input type="checkbox" name="size" value="XL">XL</label>
+                    <label><input type="checkbox" name="size" value="XXL">XXL</label>
+                    <label><input type="checkbox" name="size" value="XXXL">XXXL</label>
+                </div>
+                <input type="number" name="price" placeholder="Price">
+                <input type="number" name="stock" placeholder="Stock">
+                <input type="file" name="image" placeholder="Image">
+                <button type="submit">Update</button>
+            </form>
+            <% }) %>
+
     </main>
     <%- include('../partials/footer') %>

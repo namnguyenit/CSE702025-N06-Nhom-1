@@ -7,9 +7,7 @@
                 <tr>
                     <td>Name</td>
                     <td>Description</td>
-                    <td>Group</td>
                     <td>Price</td>
-                    <td>Stock</td>
                     <td>Image</td>
                     <td>Edit</td>
                     <td>Destroy</td>
@@ -25,22 +23,16 @@
                             <%=product.description %>
                         </td>
                         <td>
-                            <%=product.group %>
+                            <%=product.detail.price %>
+                        </td>
+                        <td><img class="image" src="/products/image/<%=product._id%>"
+                                alt="<%=product.image?.imageName%>">
                         </td>
                         <td>
-                            <%=product.price %>
+                            <a href="/products/edit/<%=encodeURIComponent(product.name) %>">Edit</a>
                         </td>
                         <td>
-                            <%=product.stock %>
-                        </td>
-                        <td><img class="image" src="/products/image/<%=product.id %>"
-                                alt="<%=product.image.imageName%>">
-                        </td>
-                        <td>
-                            <a href="/products/edit/<%=product.id %>">Edit</a>
-                        </td>
-                        <td>
-                            <a href="/products/destroy/<%=product.id %>">Destroy</a>
+                            <a href="/products/destroy/<%=encodeURIComponent(product.name) %>">Destroy</a>
                         </td>
                     </tr>
                     <% }) %>

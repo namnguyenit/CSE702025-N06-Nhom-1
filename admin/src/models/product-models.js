@@ -1,14 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const detailList = require("./product-detail-models");
 
 const products = new Schema({
-  userID: { type: String },
-  categoryID: { type: String },
   name: { type: String },
   description: { type: String },
-  group: { type: String },
-  price: { type: Number },
-  stock: { type: Number },
+  type: { type: String },
+  detail: [detailList],
   image: {
     imageName: { type: String },
     imageType: { type: String },

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const cartLists = require("./cart-models");
+const cartList = require("./cart-models");
 
 const users = new Schema({
   account: String,
@@ -10,7 +10,7 @@ const users = new Schema({
   phone: String,
   gmail: String,
   address: String,
-  carts: [cartLists],
+  carts: [cartList],
 });
 
 module.exports = mongoose.model("users", users);
