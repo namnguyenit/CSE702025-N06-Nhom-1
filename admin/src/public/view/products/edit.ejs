@@ -1,0 +1,15 @@
+<%- include('../partials/header') %>
+    <main>
+        <h1>Product edit</h1>
+        <form style="height: 350px;" class="box" method="post" action="/products/update" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%=product.id%>">
+            <input type="text" name="name" value="<%=product.name%>" placeholder="Name">
+            <input type="text" name="description" value="<%=product.description %>" placeholder="Description">
+            <input type="text" name="group" value="<%=product.group %>" placeholder="Group">
+            <input type="number" step="any" name="price" value="<%=product.price %>" placeholder="Price">
+            <input type="number" name="stock" value="<%=product.stock %>" placeholder="Stock">
+            <input type="file" name="image" placeholder="Image">
+            <button type="submit">Update</button>
+        </form>
+    </main>
+    <%- include('../partials/footer') %>

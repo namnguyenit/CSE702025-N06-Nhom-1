@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+    <main>
+        <h1>Users edit</h1>
+        <form class="box" method="post" action="/users/update">
+            <input type="hidden" name="id" value="<%= user.id %>" required>
+            <input type="text" name="account" value="<%= user.account %>" required>
+            <input id="password" type="password" name="password">
+            <input id="passwordConfirm" type="password" name="passwordConfirm">
+            <select name="role">
+                <option disabled>Choice Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Seller">Seller</option>
+                <option value="User" selected>User</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+    </main>
+    <%- include('../partials/footer') %>

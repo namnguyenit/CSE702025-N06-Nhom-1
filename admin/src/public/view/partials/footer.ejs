@@ -1,0 +1,12 @@
+<footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    FOOTER
+    <% if(typeof popup !=='undefined' && popup.type && popup.info){ %>
+        <input id="popup" type="hidden" name="<%=popup.type%>" value="<%=popup.info%>">
+        <script src="/js/popup.js"></script>
+        <% } %>
+            <script src="/js/script.js"></script>
+</footer>
+</body>
+
+</html>

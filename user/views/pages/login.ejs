@@ -1,0 +1,48 @@
+<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/images/hero/category.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Đăng Nhập</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="login_box_area section-padding"> <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto"> <div class="login_form_inner"> <h3>Đăng nhập vào tài khoản của bạn</h3>
+                    <form class="row login_form" action="/auth/login" method="post" id="contactForm" novalidate="novalidate">
+                        <div class="col-md-12 form-group">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<%= typeof oldInput !== 'undefined' ? oldInput.email : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'email')) { %>
+                                <small class="text-danger"><%= errors.find(e => e.path === 'email').msg %></small>
+                            <% } %>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mật khẩu'">
+                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'password')) { %>
+                                <small class="text-danger"><%= errors.find(e => e.path === 'password').msg %></small>
+                            <% } %>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account d-flex align-items-center"> <input type="checkbox" id="f-option2" name="remember">
+                                <label for="f-option2">Nhớ tài khoản</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="primary-btn">Đăng Nhập</button> <a href="#">Quên mật khẩu?</a> </div>
+                        <div class="col-md-12 form-group text-center">
+                            <p>Chưa có tài khoản? <a href="/auth/register">Đăng ký ngay</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/footer') %>

@@ -1,0 +1,15 @@
+h1 {
+  color: red;
+}
+.box {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: 100px;
+  justify-content: space-around;
+}
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}

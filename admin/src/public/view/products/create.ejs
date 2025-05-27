@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+    <main>
+        <h1>Product create</h1>
+        <form style="height: 350px;" class="box" method="post" action="/products/store" enctype="multipart/form-data">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="description" placeholder="Description">
+            <input type="text" name="group" placeholder="Group">
+            <input type="number" name="price" placeholder="Price">
+            <input type="number" name="stock" placeholder="Stock">
+            <input type="file" name="image" placeholder="Image">
+            <button type="submit">Create</button>
+        </form>
+    </main>
+    <%- include('../partials/footer') %>
