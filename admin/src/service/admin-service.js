@@ -12,6 +12,9 @@ class AdminService {
       await admin.save();
       return;
     }
+    if (admin) {
+      return;
+    }
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
     const user = new UserModels({});
     user.account = adminAccount;
