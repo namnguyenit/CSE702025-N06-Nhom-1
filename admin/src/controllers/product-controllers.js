@@ -1,6 +1,6 @@
 const UserModels = require("../models/user-models");
 const ProductModels = require("../models/product-models");
-const AuthenticateService = require("../service/authenticate-service");
+const PopupService = require("../service/popup-service");
 
 class ProductController {
   async getImage(req, res) {
@@ -31,10 +31,12 @@ class ProductController {
 
     // res.send(products);
     // const products = await ProductModels.find({});
-    res.render("products/index", { products });
+    const nameTable = "Products' Table";
+    res.render("products/index", { nameTable, products });
   }
   async create(req, res) {
-    res.render("products/create");
+    const nameForm = "Create Product";
+    res.render("products/create", { nameForm });
   }
   async store(req, res) {
     //-----------------------------------------
@@ -56,11 +58,26 @@ class ProductController {
       imageData: file?.buffer,
     };
     //-----------------------------------------
-    //Delete old Product
-    const exist = await ProductModels.findOneAndDelete({
+    //Thiếu dữ liệu
+    if (!inputName || !inputType) {
+      PopupService.message(req, res, "error", "Thiếu dữ liệu");
+      return res.redirect("/products/create");
+    }
+    //exist Product
+    const exist = await ProductModels.findOne({
       name: inputName,
       type: inputType,
     });
+    if (exist) {
+      PopupService.message(
+        req,
+        res,
+        "error",
+        `[${inputType}] đã có trong [${inputName}]`
+      );
+      return res.redirect("/products/create");
+    }
+
     //New a product
     const newProduct = new ProductModels({});
     newProduct.name = inputName;
@@ -75,7 +92,8 @@ class ProductController {
       });
     }
     await newProduct.save();
-    res.redirect("/products");
+    PopupService.message(req, res, "success", "Thêm Product thành công");
+    return res.redirect("/products");
   }
   async show(req, res) {
     res.send("Chức năng đang phát triển");
@@ -83,9 +101,9 @@ class ProductController {
 
   async edit(req, res) {
     const product = await ProductModels.find({ name: req.params.id });
-    const popup = req.query;
     // res.send(product);
-    res.render("products/edit", { product, popup });
+    const nameForm = "Edit Product";
+    res.render("products/edit", { product, nameForm });
   }
   async update(req, res) {
     //-----------------------------------------
@@ -113,15 +131,14 @@ class ProductController {
     // for (const key in req.body) {
     //   console.log(key, req.body[key]);
     // }
+    //Thiếu dữ liệu
     if (!(inputName && inputDescription && inputType)) {
-      return res.redirect(
-        `/products/edit/${encodeURIComponent(
-          redirect
-        )}?type=error&info=missing-data`
-      );
+      PopupService.message(req, res, "error", "Thiếu dữ liệu 😔");
+      return res.redirect(`/products/edit/${encodeURIComponent(redirect)}`);
     }
     const product = await ProductModels.findById(id);
     if (!product) {
+      PopupService.message(req, res, "error", "Không tìm thấy sản phẩm 😔");
       return res.redirect("/products");
     }
     //Update new data
@@ -148,10 +165,12 @@ class ProductController {
       product.image = inputImage;
     }
     await product.save();
-    res.redirect("/products");
+    PopupService.message(req, res, "success", "Cập nhật thành công");
+    return res.redirect("/products");
   }
   async destroy(req, res) {
     await ProductModels.deleteMany({ name: req.params.id });
+    PopupService.message(req, res, "success", "Đã xóa sản phẩm ✅");
     res.redirect("/products");
   }
 }

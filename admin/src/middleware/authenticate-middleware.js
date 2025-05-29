@@ -1,5 +1,5 @@
-const AuthenticateService = require("../service/session/session-service");
 const AuthenticationService = require("../service/authentication-service");
+const PopupService = require("../service/popup-service");
 
 async function authenticateMiddleware(req, res, next) {
   //turn on/off
@@ -9,7 +9,8 @@ async function authenticateMiddleware(req, res, next) {
   // Authenticate rồi thì mới được vào
   if (hasAuthenticate) return next();
   // Chưa Authenticate thì chuyển vào login
-  res.redirect("/login?type=error&info=unauthenticated");
+  PopupService.message(req, res, "error", "Bạn cần đăng nhập !");
+  return res.redirect("/login");
 }
 
 module.exports = authenticateMiddleware;

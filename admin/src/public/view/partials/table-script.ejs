@@ -1,0 +1,55 @@
+<!--   Core JS Files   -->
+<script src="/admin/assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="/admin/assets/js/core/popper.min.js"></script>
+<script src="/admin/assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="/admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<!-- Datatables -->
+<script src="/admin/assets/js/plugin/datatables/datatables.min.js"></script>
+<!-- Kaiadmin JS -->
+<script src="/admin/assets/js/kaiadmin.min.js"></script>
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="/admin/assets/js/setting-demo2.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#multi-filter-select").DataTable({
+            pageLength: 5,
+            initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var column = this;
+                        var select = $(
+                            '<select class="form-select"><option value=""></option></select>'
+                        )
+                            .appendTo($(column.footer()).empty())
+                            .on("change", function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                                column
+                                    .search(val ? "^" + val + "$" : "", true, false)
+                                    .draw();
+                            });
+
+                        column
+                            .data()
+                            .unique()
+                            .sort()
+                            .each(function (d, j) {
+                                select.append(
+                                    '<option value="' + d + '">' + d + "</option>"
+                                );
+                            });
+                    });
+            },
+        });
+
+        // Add Row
+        $("#add-row").DataTable({
+            pageLength: 5,
+        });
+
+    });
+</script>

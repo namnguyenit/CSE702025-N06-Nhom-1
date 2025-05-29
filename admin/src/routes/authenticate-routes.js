@@ -7,8 +7,6 @@ const AuthenticateControllers = require("../controllers/authenticate-controllers
 route.get("/", AuthenticateControllers.showLoginForm);
 route.get("/login", AuthenticateControllers.showLoginForm);
 route.post("/login", AuthenticateControllers.handleLogin);
-route.get("/signup", AuthenticateControllers.showSignupForm);
-route.post("/signup", AuthenticateControllers.handleSignup);
 route.get("/logout", AuthenticateControllers.handleLogout);
 
 //-------------------------------------

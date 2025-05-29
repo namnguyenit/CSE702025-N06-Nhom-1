@@ -26,7 +26,6 @@ class SessionService {
         sameSite: "strict",
         maxAge: 24 * 60 * 60 * 1000, //*1000 -> (s)
       });
-      console.log("Service running with path:", req.path);
     } catch (error) {
       console.log("ERR", error);
     }
