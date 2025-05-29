@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const orderItemSchema = new Schema({
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    group: { type: String, required: true },
     idSP: { type: String, required: true },
     name: { type: String, required: true },
     price: { type: Number, required: true },

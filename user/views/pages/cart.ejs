@@ -34,7 +34,7 @@
                                     <td>
                                         <div class="media">
                                             <div class="d-flex">
-                                                <img src="<%= item.product.images && item.product.images.length > 0 ? item.product.images[0] : '/img/product/product-placeholder.png' %>" alt="<%= item.product.name %>" style="width: 80px;">
+                                                <img src="<%= item.product.images && item.product.images.length > 0 && item.product.images[0].imageData ? `data:${item.product.images[0].imageType};base64,${item.product.images[0].imageData.toString('base64')}` : '/img/product/product-placeholder.png' %>" alt="<%= item.product.name %>" style="width: 80px;">
                                             </div>
                                             <div class="media-body">
                                                 <p><%= item.product.name %></p>
