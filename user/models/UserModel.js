@@ -9,7 +9,7 @@ const cartItemSchema = new Schema({
     name: { type: String, required: true }, // Tên sản phẩm
     image: {type: String }, // Ảnh sản phẩm
     size: {type: String, required: true},
-    idSP: {type: String, required: true}
+    group: {type: String, required: true}
 
 }, { _id: false });
 

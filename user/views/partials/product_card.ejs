@@ -1,7 +1,7 @@
 <%# Partial cho một thẻ sản phẩm %>
 <div class="single-popular-items mb-50 text-center"> <div class="popular-img">
         <a href="/products/<%= product.slug %>">
-            <img src="<%= (product.images && product.images.length > 0) ? product.images[0] : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
+            <img src="<%= (product.images && product.images.length > 0 && product.images[0].imageData) ? `data:${product.images[0].imageType};base64,${product.images[0].imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
         </a>
         <div class="img-cap">
             <form action="/cart/add" method="POST" class="add-to-cart-form">

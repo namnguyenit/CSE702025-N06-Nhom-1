@@ -88,13 +88,13 @@ exports.getProductDetailPage = async (req, res, next) => {
             throw err;
         }
 
-        // Lấy các sản phẩm cùng idSP (các size khác)
-        const productVariants = await Product.find({ idSP: product.idSP, _id: { $ne: product._id } });
+        // Lấy các sản phẩm cùng group (các size khác)
+        const productVariants = await Product.find({ group: product.group, _id: { $ne: product._id } });
 
         // Lấy các sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại và các variant của nó)
         const relatedProducts = await Product.find({
             category: product.category._id,
-            idSP: { $ne: product.idSP }, // Không lấy các variant của sản phẩm hiện tại
+            group: { $ne: product.group }, // Không lấy các variant của sản phẩm hiện tại
              _id: { $ne: product._id } // Không lấy chính sản phẩm hiện tại
         }).limit(4);
         
