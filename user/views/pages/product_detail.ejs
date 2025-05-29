@@ -16,12 +16,12 @@
         <div class="row s_product_inner">
             <div class="col-lg-6">
                 <div class="single-prd-item">
-                    <img class="img-fluid" src="<%= (product.images && product.images.length > 0) ? product.images[0] : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
+                    <img class="img-fluid" src="<%= (product.images && product.images.length > 0 && product.images[0].imageData) ? `data:${product.images[0].imageType};base64,${product.images[0].imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
                 </div>
                 <% if (product.images && product.images.length > 1) { %>
                     <div class="product_img_slide owl-carousel"> <% product.images.forEach(image => { %>
-                            <div class="single_gallery_item">
-                                <img src="<%= image %>" alt="Thumbnail <%= product.name %>" class="img-fluid">
+                            <div class="single_product_img">
+                                <img src="<%= image.imageData ? `data:${image.imageType};base64,${image.imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
                             </div>
                         <% }); %>
                     </div>

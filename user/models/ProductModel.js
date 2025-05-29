@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-    idSP: { type: String, required: true, trim: true, index: true },
+    group: { type: String, required: true, trim: true, index: true },
     name: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
     price: { type: Number, required: true, min: 0 },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-    images: [{ type: String, required: true }],
+    images: [{
+        imageName: { type: String },
+        imageType: { type: String },
+        imageData: { type: Buffer }
+    }],
     size: { type: String, required: true, trim: true },
     stock: { type: Number, required: true, min: 0, default: 0 },
     slug: { type: String, unique: true, lowercase: true, required: true } // Slug cho từng product variant
