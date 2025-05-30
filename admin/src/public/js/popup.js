@@ -6,34 +6,24 @@ const popup = document.getElementById("popup");
 //not-match: Passwords do not match
 //missing-data: Please fill out this field.
 
-const arrInfo = { 
-  "incorrect-password": "Incorrect password",
-  "no-user": "User does not exist",
-  unauthenticated: "Unauthenticated - You need to log in first",
-  "not-match": "Passwords do not match",
-  "missing-data": "Please fill out this field",
-};
-
-let { name: type, value: info } = popup;
-
-function alertBox(type, info) {
+if (document.cookie) {
+  const message = getMessage();
   Swal.fire({
-    icon: type,
-    title: info,
-    text: arrInfo[info],
+    title: message.title,
+    icon: message.icon,
+    draggable: true,
+  }).then((result) => {
+    document.cookie = "icon=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "title=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   });
 }
 
-if (popup.name === "error") {
-  if (popup.value === "incorrect-password") {
-    alertBox(type, info);
-  } else if (popup.value === "no-user") {
-    alertBox(type, info);
-  } else if (popup.value === "unauthenticated") {
-    alertBox(type, info);
-  } else if (popup.value === "not-match") {
-    alertBox(type, info);
-  } else if (popup.value === "missing-data") {
-    alertBox(type, info);
-  }
+function getMessage() {
+  const cookies = document.cookie.split("; ");
+  const message = {};
+  cookies.forEach((item) => {
+    const [key, value] = item.split("=");
+    message[key] = decodeURIComponent(value);
+  });
+  return message;
 }

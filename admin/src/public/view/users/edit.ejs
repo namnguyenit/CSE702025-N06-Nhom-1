@@ -1,18 +1,157 @@
-<%- include('../partials/header') %>
-    <main>
-        <h1>Users edit</h1>
-        <form class="box" method="post" action="/users/update">
-            <input type="hidden" name="id" value="<%= user.id %>" required>
-            <input type="text" name="account" value="<%= user.account %>" required>
-            <input id="password" type="password" name="password">
-            <input id="passwordConfirm" type="password" name="passwordConfirm">
-            <select name="role">
-                <option disabled>Choice Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Seller">Seller</option>
-                <option value="User" selected>User</option>
-            </select>
-            <button type="submit">Update</button>
-        </form>
-    </main>
-    <%- include('../partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head -->
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar') %>
+                <div class="main-panel">
+                    <div class="main-header">
+                        <div class="main-header-logo">
+                            <!-- Logo Header -->
+                            <div class="logo-header" data-background-color="dark">
+                                <div class="nav-toggle">
+                                    <button class="btn btn-toggle toggle-sidebar">
+                                        <i class="gg-menu-right"></i>
+                                    </button>
+                                    <button class="btn btn-toggle sidenav-toggler">
+                                        <i class="gg-menu-left"></i>
+                                    </button>
+                                </div>
+                                <button class="topbar-toggler more">
+                                    <i class="gg-more-vertical-alt"></i>
+                                </button>
+                            </div>
+                            <!-- End Logo Header -->
+                        </div>
+                        <!-- Navbar Header -->
+                        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                            <div class="container-fluid">
+                                <nav
+                                    class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-search pe-1">
+                                                <i class="fa fa-search search-icon"></i>
+                                            </button>
+                                        </div>
+                                        <input type="text" placeholder="Search ..." class="form-control" />
+                                    </div>
+                                </nav>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+
+                    <div class="container">
+                        <div class="page-inner">
+                            <div class="page-header">
+                                <h3 class="fw-bold mb-3">Forms</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <!-- Name Form -->
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <%- include('../partials/name-form') %>
+                                                    <a href="/users" class="btn btn-danger btn-round ms-auto">
+                                                        <i class="fa fa-arrow-left"></i>
+                                                        Back
+                                                    </a>
+                                            </div>
+                                        </div>
+                                        <form action="/users/update" method="post">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <input type="hidden" name="id" value="<%=user.id %>">
+                                                        <div class="form-group">
+                                                            <label for="password">Password</label>
+                                                            <input type="password" name="password" class="form-control"
+                                                                id="password" placeholder="Password" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="passwordConfirm">Password Confirm</label>
+                                                            <input type="password" name="passwordConfirm"
+                                                                class="form-control" id="passwordConfirm"
+                                                                placeholder="Password Confirm" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="name">Name</label>
+                                                            <input type="text" name="name" value="<%=user.name %>"
+                                                                class="form-control" id="name"
+                                                                placeholder="Enter Your Name" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Role</label><br />
+                                                            <div class="d-flex">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label" for="admin">
+                                                                        Admin
+                                                                    </label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="role" value="Admin" id="admin" <%
+                                                                        if(user.role=='Admin' ){ %>
+                                                                    checked
+                                                                    <% } %>
+                                                                        />
+
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label" for="user">
+                                                                        User
+                                                                    </label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="role" value="User" id="user" <%
+                                                                        if(user.role=='User' ){ %>
+                                                                    checked
+                                                                    <% } %>
+                                                                        />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="phone">Phone</label>
+                                                            <input type="text" name="phone" value="<%=user.phone %>"
+                                                                class="form-control" id="phone"
+                                                                placeholder="Enter Phone" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="gmail">Gmail</label>
+                                                            <input type="text" name="gmail" value="<%=user.gmail %>"
+                                                                class="form-control" id="gmail"
+                                                                placeholder="Enter Gmail" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="address">Address</label>
+                                                            <input type="text" name="address" value="<%=user.address %>"
+                                                                class="form-control" id="address"
+                                                                placeholder="Enter Address" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-action">
+                                                <button class="btn btn-success">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <%- include('../partials/footer') %>
+                </div>
+        </div>
+        <!-- Table Script -->
+        <%- include('../partials/table-script') %>
+            <!-- My Script -->
+            <%- include('../partials/my-script') %>
+    </body>
+
+</html>

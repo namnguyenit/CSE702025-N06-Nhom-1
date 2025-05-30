@@ -1,38 +1,159 @@
-<%- include('../partials/header') %>
-    <main>
-        <h1>Users index</h1>
-        <a href="/users/create">Create</a>
-        <table>
-            <thead>
-                <tr>
-                    <td>Account</td>
-                    <td>Role</td>
-                    <td>Show</td>
-                    <td>Edit</td>
-                    <td>Destroy</td>
-                </tr>
-            </thead>
-            <tbody>
-                <% users.forEach(user=>{ %>
-                    <tr>
-                        <td>
-                            <%=user.account %>
-                        </td>
-                        <td>
-                            <%=user.role %>
-                        </td>
-                        <td>
-                            <a href="/users/show/<%=user.id %>">Details</a>
-                        </td>
-                        <td>
-                            <a href="/users/edit/<%=user.id %>">Edit</a>
-                        </td>
-                        <td>
-                            <a href="/users/destroy/<%=user.id %>">Destroy</a>
-                        </td>
-                    </tr>
-                    <% }) %>
-            </tbody>
-        </table>
-    </main>
-    <%- include('../partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head -->
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar') %>
+                <div class="main-panel">
+                    <div class="main-header">
+                        <div class="main-header-logo">
+                            <!-- Logo Header -->
+                            <div class="logo-header" data-background-color="dark">
+                                <div class="nav-toggle">
+                                    <button class="btn btn-toggle toggle-sidebar">
+                                        <i class="gg-menu-right"></i>
+                                    </button>
+                                    <button class="btn btn-toggle sidenav-toggler">
+                                        <i class="gg-menu-left"></i>
+                                    </button>
+                                </div>
+                                <button class="topbar-toggler more">
+                                    <i class="gg-more-vertical-alt"></i>
+                                </button>
+                            </div>
+                            <!-- End Logo Header -->
+                        </div>
+                        <!-- Navbar Header -->
+                        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                            <div class="container-fluid">
+                                <nav
+                                    class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-search pe-1">
+                                                <i class="fa fa-search search-icon"></i>
+                                            </button>
+                                        </div>
+                                        <input type="text" placeholder="Search ..." class="form-control" />
+                                    </div>
+                                </nav>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+
+                    <div class="container">
+                        <div class="page-inner">
+                            <div class="page-header">
+                                <!-- Name Table -->
+                                <%- include('../partials/name-table') %>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <h4>Add Row</h4>
+                                                <a href="/users/create" class="btn btn-primary btn-round ms-auto">
+                                                    <i class="fa fa-plus"></i>
+                                                    Add Row
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header border-0">
+                                                            <h5 class="modal-title">
+                                                                <span class="fw-mediumbold"> New</span>
+                                                                <span class="fw-light"> Row </span>
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Data Table -->
+                                            <div class="table-responsive">
+                                                <table id="add-row" class="display table table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Account</th>
+                                                            <th>Name</th>
+                                                            <th>Role</th>
+                                                            <th>Phone</th>
+                                                            <th style="width: 10%">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>Account</th>
+                                                            <th>Name</th>
+                                                            <th>Role</th>
+                                                            <th>Phone</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        <% users.forEach(user=>{ %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%=user.account %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=user.name %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=user.role %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=user.phone %>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-button-action">
+                                                                        <a href="/users/edit/<%=user.id%>"
+                                                                            class="btn btn-link btn-primary btn-lg"
+                                                                            data-original-title="Edit Task">
+                                                                            <i class="fa fa-edit"></i>
+                                                                        </a>
+                                                                        <form action="/users/destroy" method="post"
+                                                                            class="btn btn-link btn-danger btn-destroy">
+                                                                            <input type="hidden" name="id"
+                                                                                value="<%=user.id%>">
+                                                                            <button type="submit"><i
+                                                                                    class="fa fa-times"></i></button>
+                                                                        </form>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <% }) %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <%- include('../partials/footer') %>
+                </div>
+        </div>
+        <!-- Table Script -->
+        <%- include('../partials/table-script') %>
+            <!-- My Script -->
+            <%- include('../partials/my-script') %>
+    </body>
+
+</html>

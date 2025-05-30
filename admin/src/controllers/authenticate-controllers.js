@@ -1,72 +1,47 @@
 const SessionService = require("../service/session/session-service");
-const users = require("../models/user-models");
+const PopupService = require("../service/popup-service");
+const UserModels = require("../models/user-models");
 const bcrypt = require("bcrypt");
 
 class AuthenticateControllers {
   //showLoginForm
   showLoginForm(req, res) {
-    const popup = req.query;
-    res.render("authenticate/login", { popup });
+    res.render("authenticate/login");
   }
   //handleLogin
   async handleLogin(req, res) {
     try {
-      let { account: inputAccount, password: inputPassword } = req.body;
+      const body = req.body;
+      const inputAccount = body?.account;
+      const inputPassword = body?.password;
 
-      const user = await users.findOne({ account: inputAccount });
-      //Nếu ko tồn tại
+      const user = await UserModels.findOne({ account: inputAccount });
+      //User does not exist
       if (!user) {
-        res.redirect("/login?type=error&info=no-user");
-        return;
+        PopupService.message(req, res, "error", "Tài Khoản Không Tồn Tại 😔");
+        return res.redirect("/login");
       }
-      //Nếu sai mật khẩu
+      //Incorrect password
       const match = await bcrypt.compare(inputPassword, user.password);
-      if (match) {
-        // Mật khẩu đúng → đăng nhập thành công
-        await SessionService.setSession(req, res);
-        //
-        res.redirect("/users");
-      } else {
-        res.redirect("/login?type=error&info=incorrect-password");
+      if (!match) {
+        PopupService.message(req, res, "error", "Sai mật khẩu 😔");
+        return res.redirect("/login");
       }
+      // Mật khẩu đúng → đăng nhập thành công
+      await SessionService.setSession(req, res);
+      PopupService.message(req, res, "success", "Đăng Nhập Thành Công 😊");
+      //
+      return res.redirect("/dashboard");
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in handleLogin:", error);
       return res.status(500).redirect("/login");
     }
   }
-  //showSignupForm
-  showSignupForm(req, res) {
-    const popup = req.query;
-    res.render("authenticate/signup", { popup });
-  }
-  //handleSignup
-  async handleSignup(req, res) {
-    try {
-      //Validate dữ liệu
-      let { account, password, passwordConfirm } = req.body;
-      if (password != passwordConfirm) {
-        return res.redirect("/signup?type=error&info=not-match");
-      }
-      //Set sesion
-      await SessionService.setSession(req, res);
-      //Lưu tài khoản
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new users({
-        account: account,
-        password: hashedPassword,
-      });
-      await newUser.save();
-      return res.redirect("/users");
-    } catch (error) {
-      //log và thông báo về lỗi
-      console.error("Error in handleSignup:", error);
-      return res.status(500).redirect("/signup");
-    }
-  }
   //handleLogout
   async handleLogout(req, res) {
     await SessionService.clearSession(req, res);
+    PopupService.message(req, res, "success", "Đã đăng xuất!");
     res.redirect("/");
   }
 }

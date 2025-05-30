@@ -1,11 +1,13 @@
 const UserModels = require("../models/user-models");
 const bcrypt = require("bcrypt");
+const PopupService = require("../service/popup-service");
 
 class UserControllers {
   async index(req, res) {
     try {
-      let users = await UserModels.find({});
-      res.render("users/index", { users });
+      const users = await UserModels.find({});
+      const nameTable = "Users' Table";
+      res.render("users/index", { nameTable, users });
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in UserControllers.index:", error);
@@ -13,25 +15,52 @@ class UserControllers {
     }
   }
   async create(req, res) {
-    const popup = req.query;
-    res.render("users/create", { popup });
+    const nameForm = "Create User";
+    res.render("users/create", { nameForm });
   }
   async store(req, res) {
     try {
-      //Validate dữ liệu
-      let { account, password, passwordConfirm } = req.body;
-      if (password != passwordConfirm) {
-        res.redirect("/users/create?type=error&info=not-match");
-        return;
+      //--------------------------------------
+      const body = req.body;
+      const inputAccount = body?.account;
+      const inputPassword = body?.password;
+      const inputPasswordConfirm = body?.passwordConfirm;
+      const inputRole =
+        body?.role != "Admin" && body?.role != "User" ? "User" : body.role;
+      const inputName = body?.name;
+      const inputPhone = body?.phone;
+      const inputGmail = body?.gmail;
+      const inputAddress = body?.address;
+      //--------------------------------------
+      //Thiếu dữ liệu
+      if (!inputAccount || !inputPassword || !inputPasswordConfirm) {
+        PopupService.message(req, res, "error", "Thiếu dữ liệu 😔");
+        return res.redirect("/users/create");
+      }
+      //Tài khoản đã tồn tại
+      const user = await UserModels.findOne({ account: inputAccount });
+      if (user) {
+        PopupService.message(req, res, "error", "Tài khoản đã tồn tại 😔");
+        return res.redirect("/users/create");
+      }
+      //Mật khẩu ko khớp
+      if (inputPassword != inputPasswordConfirm) {
+        PopupService.message(req, res, "error", "Mật khẩu không khớp 😔");
+        return res.redirect("/users/create");
       }
       //Lưu tài khoản
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new users({
-        account: account,
-        password: hashedPassword,
-      });
+      const newUser = new UserModels({});
+      const hashPassword = await bcrypt.hash(inputPassword, 10);
+      newUser.account = inputAccount;
+      newUser.password = hashPassword;
+      newUser.role = inputRole;
+      newUser.name = inputName;
+      newUser.phone = inputPhone;
+      newUser.gmail = inputGmail;
+      newUser.address = inputAddress;
       await newUser.save();
-      return res.redirect("/users");
+      PopupService.message(req, res, "success", "Thêm User thành công");
+      return res.redirect("/users/create");
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in UserControllers.store:", error);
@@ -52,11 +81,8 @@ class UserControllers {
   async destroy(req, res) {
     try {
       //Tìm theo ID và xóa
-      const user = await UserModels.findByIdAndDelete(req.params.id);
-      if (!user) {
-        console.log("User not found");
-      }
-      res.redirect("/users");
+      const user = await UserModels.findByIdAndDelete(req.body.id);
+      res.status(204).end();
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in UserControllers.destroy:", error);
@@ -66,37 +92,49 @@ class UserControllers {
     }
   }
   async edit(req, res) {
-    const popup = req.query;
     const user = await UserModels.findById(req.params.id);
-    res.render("users/edit", { user, popup });
+    const nameForm = "Edit User";
+    res.render("users/edit", { nameForm, user });
   }
   async update(req, res) {
     try {
-      let {
-        id,
-        account: inputAccount,
-        password,
-        role: inputRole,
-        passwordConfirm,
-      } = req.body;
-      //Chưa nhập mật khẩu
-      if (!password || !passwordConfirm) {
+      const body = req.body;
+      const id = body.id;
+      const inputPassword = body?.password;
+      const inputPasswordConfirm = body?.passwordConfirm;
+      const inputRole =
+        body?.role != "Admin" && body?.role != "User" ? "User" : body.role;
+      const inputName = body?.name;
+      const inputPhone = body?.phone;
+      const inputGmail = body?.gmail;
+      const inputAddress = body?.address;
+      //------------------------------------------------------
+      //Thiếu dữ liệu
+      if (!inputName || !inputPhone || !inputGmail || !inputAddress) {
+        PopupService.message(req, res, "error", "Thiếu dữ liệu 😔");
         return res.redirect(`/users/edit/${id}`);
       }
-      //not math
-      if (password != passwordConfirm) {
-        res.redirect(`/users/edit/${id}?type=error&info=not-match`);
-        return;
+      //Mật khẩu ko khớp
+      if (inputPassword != inputPasswordConfirm) {
+        PopupService.message(req, res, "error", "Mật khẩu không khớp 😔");
+        return res.redirect(`/users/edit/${id}`);
       }
-      //Update
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await UserModels.findByIdAndUpdate(id, {
-        account: inputAccount,
-        password: hashedPassword,
-        role: inputRole,
-      });
-
-      res.redirect("/users");
+      //Cập nhật tài khoản
+      const user = await UserModels.findById(id);
+      //Nếu mật khẩu ko trống
+      if (inputPassword && inputPasswordConfirm) {
+        const hashPassword = await bcrypt.hash(inputPassword, 10);
+        user.password = hashPassword;
+        console.log("P");
+      }
+      user.role = inputRole;
+      user.name = inputName;
+      user.phone = inputPhone;
+      user.gmail = inputGmail;
+      user.address = inputAddress;
+      await user.save();
+      PopupService.message(req, res, "success", "Sửa User thành công");
+      return res.redirect(`/users/edit/${id}`);
     } catch (error) {
       //log và thông báo về lỗi
       console.error("Error in UserControllers.update:", error);

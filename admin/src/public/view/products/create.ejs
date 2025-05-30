@@ -1,23 +1,165 @@
-<%- include('../partials/header') %>
-    <main>
-        <h1>Product create</h1>
-        <form style="height: 350px;" class="box" method="post" action="/products/store" enctype="multipart/form-data">
-            <input type="text" name="name" placeholder="Name">
-            <input type="text" name="description" placeholder="Description">
-            <input type="text" name="type" placeholder="Type">
-            <div>Size:
-                <label><input type="checkbox" name="size" value="XS">XS</label>
-                <label><input type="checkbox" name="size" value="S">S</label>
-                <label><input type="checkbox" name="size" value="M">M</label>
-                <label><input type="checkbox" name="size" value="L">L</label>
-                <label><input type="checkbox" name="size" value="XL">XL</label>
-                <label><input type="checkbox" name="size" value="XXL">XXL</label>
-                <label><input type="checkbox" name="size" value="XXXL">XXXL</label>
-            </div>
-            <input type="number" name="price" placeholder="Price">
-            <input type="number" name="stock" placeholder="Stock">
-            <input type="file" name="image" placeholder="Image">
-            <button type="submit">Create</button>
-        </form>
-    </main>
-    <%- include('../partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head -->
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar') %>
+                <div class="main-panel">
+                    <div class="main-header">
+                        <div class="main-header-logo">
+                            <!-- Logo Header -->
+                            <div class="logo-header" data-background-color="dark">
+                                <div class="nav-toggle">
+                                    <button class="btn btn-toggle toggle-sidebar">
+                                        <i class="gg-menu-right"></i>
+                                    </button>
+                                    <button class="btn btn-toggle sidenav-toggler">
+                                        <i class="gg-menu-left"></i>
+                                    </button>
+                                </div>
+                                <button class="topbar-toggler more">
+                                    <i class="gg-more-vertical-alt"></i>
+                                </button>
+                            </div>
+                            <!-- End Logo Header -->
+                        </div>
+                        <!-- Navbar Header -->
+                        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                            <div class="container-fluid">
+                                <nav
+                                    class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-search pe-1">
+                                                <i class="fa fa-search search-icon"></i>
+                                            </button>
+                                        </div>
+                                        <input type="text" placeholder="Search ..." class="form-control" />
+                                    </div>
+                                </nav>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+
+                    <div class="container">
+                        <div class="page-inner">
+                            <div class="page-header">
+                                <h3 class="fw-bold mb-3">Forms</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <!-- Name Form -->
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <%- include('../partials/name-form') %>
+                                                    <a href="/products" class="btn btn-danger btn-round ms-auto">
+                                                        <i class="fa fa-arrow-left"></i>
+                                                        Back
+                                                    </a>
+                                            </div>
+                                        </div>
+                                        <form action="/products/store" method="post" enctype="multipart/form-data">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="form-group">
+                                                            <label for="name">Name</label>
+                                                            <input type="text" name="name" class="form-control"
+                                                                id="name" placeholder="Name" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="description">Description</label>
+                                                            <input type="text" name="description" class="form-control"
+                                                                id="description" placeholder="Description" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="type">Type</label>
+                                                            <input type="text" name="type" class="form-control"
+                                                                id="type" placeholder="Type" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="form-label">Size</label>
+                                                            <div class="selectgroup w-100">
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="XS"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">XS</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="S"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">S</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="M"
+                                                                        class="selectgroup-input" checked />
+                                                                    <span class="selectgroup-button">M</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="L"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">L</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="XL"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">XL</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="XXL"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">XXL</span>
+                                                                </label>
+                                                                <label class="selectgroup-item">
+                                                                    <input type="checkbox" name="size" value="XXXL"
+                                                                        class="selectgroup-input" />
+                                                                    <span class="selectgroup-button">XXXL</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="price">Price</label>
+                                                            <input type="text" name="price" class="form-control"
+                                                                id="price" placeholder="Price" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="stock">Stock</label>
+                                                            <input type="text" name="stock" class="form-control"
+                                                                id="stock" placeholder="Stock" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="image">Image file
+                                                                input</label>
+                                                            <input type="file" name="image" class="form-control-file"
+                                                                id="image" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-action">
+                                                <button class="btn btn-success">Submit</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <%- include('../partials/footer') %>
+                </div>
+        </div>
+        <!-- Table Script -->
+        <%- include('../partials/table-script') %>
+            <!-- My Script -->
+            <%- include('../partials/my-script') %>
+    </body>
+
+</html>

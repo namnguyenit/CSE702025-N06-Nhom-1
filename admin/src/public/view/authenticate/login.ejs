@@ -11,7 +11,6 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<link rel="stylesheet" href="/authenticate/css/style.css">
-
 </head>
 
 <body class="img js-fullheight" style="background-image: url(/authenticate/images/bg.jpg);">
@@ -56,7 +55,7 @@
 							<!-- <a href="/signup" class="px-2 py-2 mr-md-1 rounded"><span
 									class="ion-logo-facebook mr-2"></span>
 								SIGN UP</a> -->
-							<a href="/users" class="px-2 py-2 mr-md-1 rounded"><span
+							<a href="/dashboard" class="px-2 py-2 mr-md-1 rounded"><span
 									class="ion-logo-facebook mr-2"></span>
 								HOME</a>
 						</div>
@@ -65,20 +64,11 @@
 			</div>
 		</div>
 	</section>
-
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	FOOTER
-	<% if(typeof popup !=='undefined' && popup.type && popup.info){ %>
-		<input id="popup" type="hidden" name="<%=popup.type%>" value="<%=popup.info%>">
-		<script src="/js/popup.js"></script>
-		<% } %>
-			<script src="/js/script.js"></script>
-
-			<script src="/authenticate/js/jquery.min.js"></script>
-			<script src="/authenticate/js/popper.js"></script>
-			<script src="/authenticate/js/bootstrap.min.js"></script>
-			<script src="/authenticate/js/main.js"></script>
-
+	<script src="/authenticate/js/jquery.min.js"></script>
+	<script src="/authenticate/js/popper.js"></script>
+	<script src="/authenticate/js/bootstrap.min.js"></script>
+	<script src="/authenticate/js/main.js"></script>
+	<%- include('../partials/my-script') %>
 </body>
 
 </html>
