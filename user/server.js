@@ -13,8 +13,8 @@ const connectDB = require('./config/database');
 const indexRoutes = require('./routes/indexRoutes');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
 // const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
-// const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
 // const shipperRoutes = require('./routes/shipperRoutes'); // Sẽ thêm
 
 // Connect to Database
@@ -27,8 +27,8 @@ const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -71,8 +71,8 @@ app.use((req, res, next) => {
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes); // Route cho sản phẩm
+app.use('/orders', orderRoutes); // Route cho đặt hàng
 // app.use('/cart', cartRoutes);
-// app.use('/orders', orderRoutes);
 // app.use('/shipper', shipperRoutes);
 
 // 404 Handler

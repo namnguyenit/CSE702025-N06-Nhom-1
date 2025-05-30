@@ -1,0 +1,40 @@
+<%- include('../partials/header', { title: title }) %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow" style="border-radius: 1rem;">
+        <div class="card-body">
+          <h2 class="text-center mb-4 text-success">Đặt hàng thành công!</h2>
+          <h5 class="mb-3">Mã đơn hàng: <span class="text-primary"><%= order._id %></span></h5>
+          <ul class="list-group mb-3">
+            <% order.items.forEach(function(item) { %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= item.name %></strong> 
+                  <span class="badge badge-info ml-2"><%= item.size %></span>
+                  <span class="badge badge-secondary ml-2"><%= item.group %></span>
+                </div>
+                <span>x<%= item.quantity %> - <span class="text-danger font-weight-bold"><%= item.price.toLocaleString() %>₫</span></span>
+              </li>
+            <% }) %>
+          </ul>
+          <div class="mb-3">
+            <strong>Tổng tiền:</strong> <span class="text-danger font-weight-bold"><%= order.totalAmount.toLocaleString() %>₫</span>
+          </div>
+          <div class="mb-3">
+            <strong>Địa chỉ giao hàng:</strong>
+            <div><%= order.shippingAddress.fullName %> | <%= order.shippingAddress.phone %></div>
+            <div><%= order.shippingAddress.address %>, <%= order.shippingAddress.city %></div>
+          </div>
+          <div class="mb-3">
+            <strong>Trạng thái:</strong> <span class="badge badge-warning"><%= order.status %></span>
+          </div>
+          <a href="/" class="btn btn-outline-primary">Tiếp tục mua sắm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

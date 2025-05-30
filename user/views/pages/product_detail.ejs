@@ -1,7 +1,8 @@
-<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+<%- include('../partials/header', { title: title }) %>
 
 <div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/about.jpg"> <div class="container">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/about.jpg">
+        <div class="container">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="hero-cap text-center">
@@ -12,130 +13,208 @@
         </div>
     </div>
 </div>
-<div class="product_image_area section-padding30"> <div class="container">
-        <div class="row s_product_inner">
-            <div class="col-lg-6">
-                <div class="single-prd-item">
-                    <img class="img-fluid" src="<%= (product.images && product.images.length > 0 && product.images[0].imageData) ? `data:${product.images[0].imageType};base64,${product.images[0].imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
-                </div>
-                <% if (product.images && product.images.length > 1) { %>
-                    <div class="product_img_slide owl-carousel"> <% product.images.forEach(image => { %>
-                            <div class="single_product_img">
-                                <img src="<%= image.imageData ? `data:${image.imageType};base64,${image.imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>">
-                            </div>
-                        <% }); %>
-                    </div>
-                <% } %>
-            </div>
-            <div class="col-lg-5 offset-lg-1">
-                <div class="s_product_text">
-                    <h3><%= product.name %></h3>
-                    <h2><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) %></h2>
-                    <ul class="list">
-                        <li><a class="active" href="/products?category=<%= product.category.slug %>"><span>Danh mục</span> : <%= product.category.name %></a></li>
-                        <li><a href="#"><span>Size</span> : <%= product.size %></a></li>
-                        <li>
-                            <a href="#">
-                                <span>Tình trạng</span> : 
-                                <% if (product.stock > 0) { %>
-                                    Còn hàng (<%= product.stock %> sản phẩm)
-                                <% } else { %>
-                                    Hết hàng
-                                <% } %>
-                            </a>
-                        </li>
-                    </ul>
-                    <p><%= product.description.substring(0, 200) %>...</p> <% if (product.stock > 0) { %>
-                        <form action="/cart/add" method="POST">
-                            <div class="product_count">
-                                <label for="qty">Số lượng:</label>
-                                <input type="number" name="quantity" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty" min="1" max="<%= product.stock %>">
-                                </div>
-                            <input type="hidden" name="productId" value="<%= product._id %>">
-                            <div class="card_area d-flex align-items-center">
-                                <button type="submit" class="primary-btn">Thêm vào giỏ</button>
-                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-                            </div>
-                        </form>
-                    <% } else { %>
-                         <div class="card_area d-flex align-items-center">
-                            <button type="button" class="primary-btn" disabled>Hết Hàng</button>
-                        </div>
-                    <% } %>
-
-                    <% if (productVariants && productVariants.length > 0) { %>
-                        <div class="mt-4">
-                            <h4>Các kích thước khác:</h4>
-                            <ul class="list-inline">
-                                <% productVariants.forEach(variant => { %>
-                                    <li class="list-inline-item">
-                                        <a href="/products/<%= variant.slug %>" class="btn btn-outline-secondary btn-sm <%= variant.stock <= 0 ? 'disabled' : '' %>">
-                                            <%= variant.size %> <%= variant.stock <=0 ? '(Hết)' : '' %>
-                                        </a>
-                                    </li>
-                                <% }); %>
-                            </ul>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<section class="product_description_area"> <div class="container">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Mô Tả</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Chi Tiết Kỹ Thuật</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Bình Luận</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Đánh Giá</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <p><%- product.description %></p> </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <div class="table-responsive">
-                    <table class="table">
-                        <tbody>
-                            <tr><td>Size</td><td><h5><%= product.size %></h5></td></tr>
-                            <tr><td>Danh mục</td><td><h5><%= product.category.name %></h5></td></tr>
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <p>Chức năng bình luận sẽ được cập nhật sớm.</p>
-            </div>
-            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                <p>Chức năng đánh giá sẽ được cập nhật sớm.</p>
-            </div>
-        </div>
-    </div>
-</section>
-<% if (relatedProducts && relatedProducts.length > 0) { %>
-<section class="new-product-area section-padding30">
+<section class="product_description_area">
     <div class="container">
         <div class="row">
-            <div class="col-xl-12">
-                <div class="section-tittle mb-70">
-                    <h2>Sản Phẩm Tương Tự</h2>
+            <div class="col-lg-6 col-md-6">
+                <!-- Ảnh sản phẩm -->
+                <div class="product-img-gallery mb-4">
+                    <img id="mainProductImg" src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>" class="img-fluid" style="max-width: 100%; max-height: 350px; object-fit: contain;">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="single-product-details">
+                    <h3><%= product.name %></h3>
+                    <div class="mb-2">
+                        <span class="badge badge-success">Còn hàng</span>
+                    </div>
+                    <p><%= product.description %></p>
+                    <form id="productOptionsForm">
+                        <div class="form-group">
+                            <label for="typeSelect">Loại sản phẩm:</label>
+                            <select class="form-control" id="typeSelect" name="type">
+                                <% product.types.forEach((type, idx) => { %>
+                                    <option value="<%= idx %>"><%= type.type %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sizeSelect">Size:</label>
+                            <select class="form-control" id="sizeSelect" name="size">
+                                <!-- Option sẽ được fill bằng JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Giá bán:</label>
+                            <span id="productPrice" class="font-weight-bold text-danger" style="font-size: 1.3rem;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Tồn kho:</label>
+                            <span id="productStock" class="font-weight-bold"></span>
+                        </div>
+                        <div class="form-group d-flex align-items-center">
+                            <label class="mr-2 mb-0">Số lượng:</label>
+                            <input type="number" class="form-control w-25" id="qtyInput" name="qty" min="1" value="1">
+                        </div>
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-outline-primary mt-2 mr-2" id="addToCartBtn">Thêm vào giỏ hàng</button>
+                            <button type="button" class="btn btn-primary mt-2" id="buyNowBtn">Mua ngay</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <% relatedProducts.forEach(relatedProd => { %>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6"> <%- include('../partials/product_card', { product: relatedProd }) %>
+        <!-- Tab mô tả, đánh giá, ... giữ nguyên template -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="productTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Mô tả</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab">Đánh giá</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="productTabContent">
+                    <div class="tab-pane fade show active p-3" id="desc" role="tabpanel">
+                        <%= product.description %>
+                    </div>
+                    <div class="tab-pane fade p-3" id="review" role="tabpanel">
+                        <!-- Đánh giá sản phẩm (có thể bổ sung sau) -->
+                        <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                    </div>
                 </div>
-            <% }); %>
+            </div>
         </div>
     </div>
 </section>
-<% } %>
+
+<!-- Modal Đăng nhập/Đăng ký -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius: 1rem;">
+      <div class="modal-header" style="border-bottom: none;">
+        <h5 class="modal-title w-100 text-center" id="authModalLabel" style="font-weight: bold;">Bạn cần đăng nhập hoặc đăng ký để tiếp tục</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <a href="/auth/login" class="btn btn-primary mb-2" style="width: 120px;">Đăng nhập</a>
+        <a href="/auth/register" class="btn btn-outline-primary" style="width: 120px;">Đăng ký</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Dữ liệu các loại sản phẩm và size
+    const productTypes = JSON.parse('<%- JSON.stringify(product.types) %>');
+    function updateSizeAndPrice() {
+        const typeIdx = document.getElementById('typeSelect').value;
+        const sizeSelect = document.getElementById('sizeSelect');
+        sizeSelect.innerHTML = '';
+        const details = productTypes[typeIdx].detail;
+        details.forEach((d, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.text = d.size;
+            sizeSelect.appendChild(opt);
+        });
+        updatePrice();
+    }
+    function updatePrice() {
+        const typeIdx = document.getElementById('typeSelect').value;
+        const sizeIdx = document.getElementById('sizeSelect').value;
+        const detail = productTypes[typeIdx].detail[sizeIdx];
+        document.getElementById('productPrice').innerText = detail.price + '₫';
+        document.getElementById('productStock').innerText = detail.stock;
+    }
+    document.getElementById('typeSelect').addEventListener('change', updateSizeAndPrice);
+    document.getElementById('sizeSelect').addEventListener('change', updatePrice);
+
+    // Kiểm tra trạng thái đăng nhập phía client
+    const isLoggedIn = "<%= currentUser ? 'true' : 'false' %>";
+
+    function showAuthModal() {
+      $('#authModal').modal('show');
+    }
+
+    document.getElementById('buyNowBtn').addEventListener('click', async function() {
+        if (!isLoggedIn) {
+            showAuthModal();
+            return;
+        }
+        const typeIdx = document.getElementById('typeSelect').value;
+        const sizeIdx = document.getElementById('sizeSelect').value;
+        const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const type = productTypes[typeIdx].type;
+        const detail = productTypes[typeIdx].detail[sizeIdx];
+        const price = parseInt(detail.price);
+        const size = detail.size;
+        const image = "<%= product.image && product.image.imageData ? 'data:' + product.image.imageType + ';base64,' + product.image.imageData.toString('base64') : '' %>";
+        // Địa chỉ giao hàng mẫu, thực tế nên lấy từ user nhập
+        const shippingAddress = {
+            fullName: 'Khách lẻ',
+            phone: '0123456789',
+            address: 'Địa chỉ mẫu',
+            city: 'Hà Nội'
+        };
+        const res = await fetch('/orders/quick-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: '<%= product.name %>',
+                type,
+                size,
+                price,
+                quantity: qty,
+                image,
+                shippingAddress
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            window.location.href = '/orders/checkout?orderId=' + data.orderId;
+        } else {
+            alert('Đặt hàng thất bại!');
+        }
+    });
+
+    document.getElementById('addToCartBtn').addEventListener('click', async function() {
+        if (!isLoggedIn) {
+            showAuthModal();
+            return;
+        }
+        const typeIdx = document.getElementById('typeSelect').value;
+        const sizeIdx = document.getElementById('sizeSelect').value;
+        const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const type = productTypes[typeIdx].type;
+        const detail = productTypes[typeIdx].detail[sizeIdx];
+        const price = parseInt(detail.price);
+        const size = detail.size;
+        const image = "<%= product.image && product.image.imageData ? 'data:' + product.image.imageType + ';base64,' + product.image.imageData.toString('base64') : '' %>";
+        const res = await fetch('/cart/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: '<%= product.name %>',
+                type,
+                size,
+                price,
+                quantity: qty,
+                image
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Đã thêm vào giỏ hàng!');
+        } else {
+            alert('Thêm vào giỏ hàng thất bại!');
+        }
+    });
+
+    // Khởi tạo ban đầu
+    updateSizeAndPrice();
+</script>
 <%- include('../partials/footer') %>

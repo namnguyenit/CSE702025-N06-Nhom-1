@@ -1,4 +1,26 @@
-<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
+<%- include('../partials/header', { title: title }) %>
+
+<!-- Category Filter Bar -->
+<div class="product-filter-bar d-flex justify-content-between align-items-center mb-4" style="border-bottom:1px solid #eee; padding-bottom:10px;">
+    <div class="product-categories d-flex align-items-center">
+        <a href="?" class="mr-4 <%= !currentCategory ? 'active' : '' %>">All</a>
+        <a href="?category=new" class="mr-4 <%= currentCategory==='new' ? 'active' : '' %>">New</a>
+        <a href="?category=featured" class="mr-4 <%= currentCategory==='featured' ? 'active' : '' %>">Featured</a>
+        <a href="?category=offer" class="mr-4 <%= currentCategory==='offer' ? 'active' : '' %>">Offer</a>
+    </div>
+    <div class="product-sort d-flex align-items-center">
+        <span class="mr-2">Short by:</span>
+        <form method="get" class="mb-0">
+            <select name="sort" class="form-control form-control-sm d-inline w-auto" onchange="this.form.submit()">
+                <option value="featured" <%= currentSort==='featured' ? 'selected' : '' %>>Featured</option>
+                <option value="name_asc" <%= currentSort==='name_asc' ? 'selected' : '' %>>Name A-Z</option>
+                <option value="name_desc" <%= currentSort==='name_desc' ? 'selected' : '' %>>Name Z-A</option>
+            </select>
+            <% if (searchQuery) { %><input type="hidden" name="search" value="<%= searchQuery %>"><% } %>
+            <% if (currentCategory) { %><input type="hidden" name="category" value="<%= currentCategory %>"><% } %>
+        </form>
+    </div>
+</div>
 
 <div class="slider-area ">
     <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg"> <div class="container">
@@ -15,57 +37,8 @@
 <section class="lattest-product-area pb-40 category-list">
     <div class="container">
         <div class="row">
-            <div class="col-xl-3 col-lg-3 col-md-4"> <div class="category-listing">
-                    <div class="categories-sidebar">
-                        <h3>Danh Mục Sản Phẩm</h3>
-                        <ul>
-                            <li><a href="/products" class="<%= !currentCategorySlug ? 'active' : '' %>">Tất Cả Sản Phẩm</a></li>
-                            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                                <% categories.forEach(category => { %>
-                                    <li>
-                                        <a href="/products?category=<%= category.slug %>" class="<%= currentCategorySlug === category.slug ? 'active' : '' %>">
-                                            <%= category.name %>
-                                        </a>
-                                    </li>
-                                <% }); %>
-                            <% } %>
-                        </ul>
-                    </div>
-                    <div class="filter-options mt-4">
-                        <h3>Sắp xếp theo</h3>
-                        <form id="sortForm" action="/products" method="GET">
-                            <% if (currentCategorySlug) { %>
-                                <input type="hidden" name="category" value="<%= currentCategorySlug %>">
-                            <% } %>
-                            <% if (searchQuery) { %>
-                                <input type="hidden" name="search" value="<%= searchQuery %>">
-                            <% } %>
-                            <select name="sort" class="nice-select" onchange="document.getElementById('sortForm').submit();">
-                                <option value="date-desc" <%= currentSort === 'date-desc' ? 'selected' : '' %>>Mới nhất</option>
-                                <option value="price-asc" <%= currentSort === 'price-asc' ? 'selected' : '' %>>Giá: Thấp đến Cao</option>
-                                <option value="price-desc" <%= currentSort === 'price-desc' ? 'selected' : '' %>>Giá: Cao đến Thấp</option>
-                                <option value="name-asc" <%= currentSort === 'name-asc' ? 'selected' : '' %>>Tên: A-Z</option>
-                                <option value="name-desc" <%= currentSort === 'name-desc' ? 'selected' : '' %>>Tên: Z-A</option>
-                            </select>
-                        </form>
-                    </div>
-                    <div class="search-products mt-4">
-                         <h3>Tìm kiếm sản phẩm</h3>
-                        <form action="/products" method="GET" class="search-form">
-                            <% if (currentCategorySlug) { %>
-                                <input type="hidden" name="category" value="<%= currentCategorySlug %>">
-                            <% } %>
-                            <% if (currentSort) { %>
-                                 <input type="hidden" name="sort" value="<%= currentSort %>">
-                            <% } %>
-                            <input type="text" name="search" placeholder="Nhập tên sản phẩm..." value="<%= searchQuery || '' %>">
-                            <button type="submit" class="btn">Tìm</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-9 col-lg-9 col-md-8"> <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="row">
                     <% if (typeof products !== 'undefined' && products.length > 0) { %>
                         <% products.forEach(product => { %>
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6"> <%- include('../partials/product_card', { product: product }) %>
@@ -74,46 +47,38 @@
                     <% } else { %>
                         <div class="col-12">
                             <p class="text-center">Không tìm thấy sản phẩm nào phù hợp.</p>
-                            <% if (searchQuery || currentCategorySlug) { %>
-                                <p class="text-center"><a href="/products" class="btn btn-link">Xem tất cả sản phẩm</a></p>
-                            <% } %>
                         </div>
                     <% } %>
                 </div>
-
                 <% if (lastPage > 1) { %>
                     <nav class="blog-pagination justify-content-center d-flex">
                         <ul class="pagination">
                             <% if (hasPreviousPage) { %>
                                 <li class="page-item">
-                                    <a href="?page=<%= previousPage %><%- currentCategorySlug ? '&category='+currentCategorySlug : '' %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link" aria-label="Previous">
+                                    <a href="?page=<%= previousPage %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link" aria-label="Previous">
                                         <i class="ti-angle-left"></i>
                                     </a>
                                 </li>
                             <% } else { %>
                                 <li class="page-item disabled"><span class="page-link"><i class="ti-angle-left"></i></span></li>
                             <% } %>
-
                             <% for (let i = 1; i <= lastPage; i++) { %>
                                 <% if (i === currentPage) { %>
                                     <li class="page-item active"><span class="page-link"><%= i %></span></li>
-                                <% } else if (i === 1 || i === lastPage || (i >= currentPage - 1 && i <= currentPage + 1) || (i === currentPage - 2 && currentPage > 3) || (i === currentPage + 2 && currentPage < lastPage - 2) ) { %>
+                                <% } else { %>
                                     <li class="page-item">
-                                        <a href="?page=<%= i %><%- currentCategorySlug ? '&category='+currentCategorySlug : '' %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link"><%= i %></a>
+                                        <a href="?page=<%= i %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link"><%= i %></a>
                                     </li>
-                                <% } else if ((i === currentPage - 3 && currentPage > 4) || (i === currentPage + 3 && currentPage < lastPage - 3)) { %>
-                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                 <% } %>
                             <% } %>
-
                             <% if (hasNextPage) { %>
                                 <li class="page-item">
-                                    <a href="?page=<%= nextPage %><%- currentCategorySlug ? '&category='+currentCategorySlug : '' %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link" aria-label="Next">
+                                    <a href="?page=<%= nextPage %><%- searchQuery ? '&search='+searchQuery : '' %><%- currentSort ? '&sort='+currentSort : '' %>" class="page-link" aria-label="Next">
                                         <i class="ti-angle-right"></i>
                                     </a>
                                 </li>
                             <% } else { %>
-                                 <li class="page-item disabled"><span class="page-link"><i class="ti-angle-right"></i></span></li>
+                                <li class="page-item disabled"><span class="page-link"><i class="ti-angle-right"></i></span></li>
                             <% } %>
                         </ul>
                     </nav>

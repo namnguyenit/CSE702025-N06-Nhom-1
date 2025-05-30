@@ -5,70 +5,61 @@ const Category = require('../models/CategoryModel');
 const PRODUCTS_PER_PAGE = 9; // Số sản phẩm mỗi trang
 
 exports.getProductListPage = async (req, res, next) => {
-    const page = +req.query.page || 1;
-    const categorySlug = req.query.category;
-    const searchQuery = req.query.search;
-    const sortBy = req.query.sort; // ví dụ: 'price-asc', 'price-desc', 'name-asc', 'date-desc'
-
-    let filter = {};
-    let categoryName = "Tất cả sản phẩm";
-
     try {
-        console.log('GET /products', { page, categorySlug, searchQuery, sortBy });
-        if (categorySlug) {
-            const category = await Category.findOne({ slug: categorySlug });
-            if (category) {
-                filter.category = category._id;
-                categoryName = category.name;
-            } else {
-                // Không tìm thấy category, có thể trả về trang 404 hoặc hiển thị tất cả sản phẩm
-                req.flash('error_msg', 'Danh mục không tồn tại.');
-                // return res.redirect('/products');
-            }
-        }
-
+        const page = parseInt(req.query.page) || 1;
+        const searchQuery = req.query.search || '';
+        const currentSort = req.query.sort || '';
+        const currentCategory = req.query.category || '';
+        const filter = {};
         if (searchQuery) {
-            filter.$text = { $search: searchQuery }; // Sử dụng text index
+            filter.name = { $regex: searchQuery, $options: 'i' };
         }
-
-        let sortOptions = {};
-        if (sortBy) {
-            const parts = sortBy.split('-');
-            if (parts.length === 2) {
-                const field = parts[0]; // 'price', 'name', 'createdAt'
-                const order = parts[1] === 'desc' ? -1 : 1;
-                if (['price', 'name', 'createdAt'].includes(field)) {
-                     sortOptions[field] = order;
-                }
+        // Lọc theo category (giả sử có trường category hoặc tag trong sản phẩm)
+        if (currentCategory && currentCategory !== 'all') {
+            if (currentCategory === 'new') filter.isNew = true;
+            if (currentCategory === 'featured') filter.isFeatured = true;
+            if (currentCategory === 'offer') filter.isOffer = true;
+        }
+        // Lấy tất cả sản phẩm, gom nhóm theo name
+        const allProducts = await Product.find(filter);
+        // Gom nhóm các sản phẩm theo name
+        const groupedProducts = {};
+        allProducts.forEach(prod => {
+            if (!groupedProducts[prod.name]) {
+                groupedProducts[prod.name] = {
+                    name: prod.name,
+                    description: prod.description,
+                    image: prod.image,
+                    types: []
+                };
             }
-        }
-        if (Object.keys(sortOptions).length === 0) {
-            sortOptions.createdAt = -1; // Mặc định sắp xếp mới nhất
-        }
-
-
-        const totalItems = await Product.countDocuments(filter);
-        const products = await Product.find(filter)
-            .populate('category')
-            .sort(sortOptions)
-            .skip((page - 1) * PRODUCTS_PER_PAGE)
-            .limit(PRODUCTS_PER_PAGE);
-
-        const categories = await Category.find({});
-        console.log('Render product_list:', { totalItems, productsCount: products.length, categoriesCount: categories.length });
+            groupedProducts[prod.name].types.push({
+                type: prod.type,
+                detail: prod.detail
+            });
+        });
+        // Chuyển thành mảng
+        const productCards = Object.values(groupedProducts);
+        // Phân trang
+        const totalProducts = productCards.length;
+        const lastPage = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+        const hasPreviousPage = page > 1;
+        const hasNextPage = page < lastPage;
+        const previousPage = page - 1;
+        const nextPage = page + 1;
+        const paginatedProducts = productCards.slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE);
         res.render('pages/product_list', {
-            title: categoryName,
-            products,
-            categories,
+            title: 'Tất cả sản phẩm',
+            products: paginatedProducts,
+            lastPage,
             currentPage: page,
-            hasNextPage: PRODUCTS_PER_PAGE * page < totalItems,
-            hasPreviousPage: page > 1,
-            nextPage: page + 1,
-            previousPage: page - 1,
-            lastPage: Math.ceil(totalItems / PRODUCTS_PER_PAGE),
-            currentCategorySlug: categorySlug, // Để active link category
-            searchQuery: searchQuery,
-            currentSort: sortBy
+            hasPreviousPage,
+            hasNextPage,
+            previousPage,
+            nextPage,
+            searchQuery,
+            currentSort,
+            currentCategory
         });
     } catch (err) {
         console.error('Lỗi getProductListPage:', err);
@@ -77,35 +68,28 @@ exports.getProductListPage = async (req, res, next) => {
 };
 
 exports.getProductDetailPage = async (req, res, next) => {
-    const productSlug = req.params.slug;
+    const productName = req.params.slug;
     try {
-        console.log('GET /products/:slug', { productSlug });
-        const product = await Product.findOne({ slug: productSlug }).populate('category');
-        if (!product) {
-            // return res.status(404).render('pages/404', { title: 'Sản phẩm không tồn tại' });
+        // Lấy tất cả các biến thể (type) của sản phẩm theo name
+        const variants = await Product.find({ name: productName });
+        if (!variants || variants.length === 0) {
             const err = new Error('Sản phẩm không tồn tại');
             err.statusCode = 404;
             throw err;
         }
-
-        // Lấy các sản phẩm cùng group (các size khác)
-        const productVariants = await Product.find({ group: product.group, _id: { $ne: product._id } });
-
-        // Lấy các sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại và các variant của nó)
-        const relatedProducts = await Product.find({
-            category: product.category._id,
-            group: { $ne: product.group }, // Không lấy các variant của sản phẩm hiện tại
-             _id: { $ne: product._id } // Không lấy chính sản phẩm hiện tại
-        }).limit(4);
-        
-        const categories = await Category.find({});
-        console.log('Render product_detail:', { productName: product.name, variants: productVariants.length, related: relatedProducts.length });
+        // Gom lại các type và detail
+        const productDetail = {
+            name: productName,
+            description: variants[0].description,
+            image: variants[0].image,
+            types: variants.map(v => ({
+                type: v.type,
+                detail: v.detail
+            }))
+        };
         res.render('pages/product_detail', {
-            title: product.name,
-            product,
-            categories,
-            productVariants,
-            relatedProducts
+            title: productName,
+            product: productDetail
         });
     } catch (err) {
         console.error('Lỗi getProductDetailPage:', err);

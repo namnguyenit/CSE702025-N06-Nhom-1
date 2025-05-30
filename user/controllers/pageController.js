@@ -5,16 +5,16 @@ const Category = require('../models/CategoryModel');
 exports.getHomePage = async (req, res, next) => {
     try {
         console.log('GET / - Trang chủ');
-        const popularProducts = await Product.find({}) // Lấy một vài sản phẩm nổi bật/mới nhất
+        const products = await Product.find()
+            // .populate('category'); // Lấy thông tin category
             .sort({ createdAt: -1 }) // Sắp xếp theo ngày tạo mới nhất
             .limit(8) // Giới hạn 8 sản phẩm
-            .populate('category'); // Lấy thông tin category
 
         const categories = await Category.find({});
-        console.log('Dữ liệu render index:', { popularProductsCount: popularProducts.length, categoriesCount: categories.length });
+        console.log('Dữ liệu render index:', { popularProductsCount: products.length, categoriesCount: categories.length });
         res.render('pages/index', {
             title: 'Trang Chủ',
-            popularProducts,
+            products,
             categories
         });
     } catch (err) {
