@@ -9,7 +9,7 @@ router.get('/login', isLoggedOut, authController.getLoginPage);
 
 // POST /auth/login - Xử lý đăng nhập
 router.post('/login', isLoggedOut, [
-    check('email', 'Email không hợp lệ').isEmail().normalizeEmail(),
+    check('account', 'Tài khoản không được để trống').not().isEmpty(),
     check('password', 'Mật khẩu không được để trống').not().isEmpty()
 ], authController.postLogin);
 

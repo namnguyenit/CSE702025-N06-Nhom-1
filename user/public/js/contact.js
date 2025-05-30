@@ -24,9 +24,9 @@ $(document).ready(function(){
                     required: true,
                     minlength: 5
                 },
-                email: {
+                gmail: {
                     required: true,
-                    email: true
+                    gmail: true
                 },
                 message: {
                     required: true,

@@ -15,9 +15,9 @@ const reviewProductSchema = new Schema({
 }, { _id: false });
 
 const userSchema = new Schema({
-    account: { type: String, required: true, unique: true },
+    account: { type: String, required: true},
     password: { type: String, required: true },
-    role: { type: String, default: 'user' },
+    role: { type: String, default: 'User' },
     name: { type: String, required: true },
     phone: String,
     gmail: String,

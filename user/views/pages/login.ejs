@@ -17,7 +17,7 @@
             <div class="col-lg-6 mx-auto"> <div class="login_form_inner"> <h3>Đăng nhập vào tài khoản của bạn</h3>
                     <form class="row login_form" action="/auth/login" method="post" id="contactForm" novalidate="novalidate">
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="account" name="account" placeholder="Tài khoản hoặc Email" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tài khoản hoặc Email'">
+                            <input type="text" class="form-control" id="account" name="account" placeholder="Tài khoản hoặc Gmail" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tài khoản hoặc Gmail'">
                             <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
                                 <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
                             <% } %>
