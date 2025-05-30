@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const cartList = require("./cart-models");
+
+const cartList = new Schema({
+  productID: String,
+  orderNumber: Number,
+});
 
 const users = new Schema({
   account: String,
