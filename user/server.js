@@ -14,7 +14,7 @@ const indexRoutes = require('./routes/indexRoutes');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
-// const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
+const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
 // const shipperRoutes = require('./routes/shipperRoutes'); // Sẽ thêm
 
 // Connect to Database
@@ -72,7 +72,7 @@ app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes); // Route cho sản phẩm
 app.use('/orders', orderRoutes); // Route cho đặt hàng
-// app.use('/cart', cartRoutes);
+app.use('/cart', cartRoutes);
 // app.use('/shipper', shipperRoutes);
 
 // 404 Handler

@@ -2,35 +2,45 @@
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 
-const PRODUCTS_PER_PAGE = 9; // Số sản phẩm mỗi trang
-
+// Hiển thị trang danh sách sản phẩm (có lọc và sắp xếp)
 exports.getProductListPage = async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const searchQuery = req.query.search || '';
-        const currentSort = req.query.sort || '';
-        const currentCategory = req.query.category || '';
-        const filter = {};
-        if (searchQuery) {
-            filter.name = { $regex: searchQuery, $options: 'i' };
+        const categoryName = req.query.category;
+        const sortBy = req.query.sort;
+        let products;
+        let currentCategory = null;
+        let pageTitle = 'Tất Cả Sản Phẩm';
+        let queryConditions = {};
+        if (categoryName && categoryName !== 'all') {
+            currentCategory = await Category.findOne({ name: categoryName });
+            if (currentCategory) {
+                queryConditions.category = currentCategory._id;
+                pageTitle = currentCategory.name;
+            }
         }
-        // Lọc theo category (giả sử có trường category hoặc tag trong sản phẩm)
-        if (currentCategory && currentCategory !== 'all') {
-            if (currentCategory === 'new') filter.isNew = true;
-            if (currentCategory === 'featured') filter.isFeatured = true;
-            if (currentCategory === 'offer') filter.isOffer = true;
+        let sortOptions = { createdAt: -1 };
+        if (sortBy) {
+            switch (sortBy) {
+                case 'price_asc': sortOptions = { 'detail.price': 1 }; break;
+                case 'price_desc': sortOptions = { 'detail.price': -1 }; break;
+                case 'name_asc': sortOptions = { name: 1 }; break;
+                case 'name_desc': sortOptions = { name: -1 }; break;
+                case 'latest': sortOptions = { createdAt: -1 }; break;
+            }
         }
-        // Lấy tất cả sản phẩm, gom nhóm theo name
-        const allProducts = await Product.find(filter);
-        // Gom nhóm các sản phẩm theo name
+        products = await Product.find(queryConditions).sort(sortOptions);
+        const categories = await Category.find({}).sort({ name: 1 });
         const groupedProducts = {};
-        allProducts.forEach(prod => {
+        products.forEach(prod => {
             if (!groupedProducts[prod.name]) {
                 groupedProducts[prod.name] = {
+                    _id: prod._id,
                     name: prod.name,
                     description: prod.description,
-                    image: prod.image,
-                    types: []
+                    image: prod.image && prod.image.imageData ? `data:${prod.image.imageType};base64,${prod.image.imageData.toString('base64')}` : '/img/product-placeholder.png',
+                    types: [],
+                    detail: prod.detail,
+                    reviewProducts: prod.reviewProducts
                 };
             }
             groupedProducts[prod.name].types.push({
@@ -38,61 +48,98 @@ exports.getProductListPage = async (req, res, next) => {
                 detail: prod.detail
             });
         });
-        // Chuyển thành mảng
-        const productCards = Object.values(groupedProducts);
-        // Phân trang
-        const totalProducts = productCards.length;
-        const lastPage = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
-        const hasPreviousPage = page > 1;
-        const hasNextPage = page < lastPage;
-        const previousPage = page - 1;
-        const nextPage = page + 1;
-        const paginatedProducts = productCards.slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE);
         res.render('pages/product_list', {
-            title: 'Tất cả sản phẩm',
-            products: paginatedProducts,
-            lastPage,
-            currentPage: page,
-            hasPreviousPage,
-            hasNextPage,
-            previousPage,
-            nextPage,
-            searchQuery,
-            currentSort,
-            currentCategory
+            title: pageTitle,
+            products: Object.values(groupedProducts),
+            categories,
+            currentCategory: categoryName || 'all',
+            sortBy: sortBy || ''
         });
     } catch (err) {
-        console.error('Lỗi getProductListPage:', err);
         next(err);
     }
 };
 
+// Hiển thị trang chi tiết sản phẩm (không dùng slug)
 exports.getProductDetailPage = async (req, res, next) => {
-    const productName = req.params.slug;
     try {
-        // Lấy tất cả các biến thể (type) của sản phẩm theo name
+        const productName = req.params.name;
         const variants = await Product.find({ name: productName });
         if (!variants || variants.length === 0) {
             const err = new Error('Sản phẩm không tồn tại');
-            err.statusCode = 404;
-            throw err;
+            err.status = 404;
+            return next(err);
         }
-        // Gom lại các type và detail
         const productDetail = {
+            _id: variants[0]._id,
             name: productName,
             description: variants[0].description,
-            image: variants[0].image,
+            image: variants[0].image && variants[0].image.imageData ? `data:${variants[0].image.imageType};base64,${variants[0].image.imageData.toString('base64')}` : '/img/product-placeholder.png',
             types: variants.map(v => ({
                 type: v.type,
                 detail: v.detail
-            }))
+            })),
+            detail: variants[0].detail,
+            reviewProducts: variants[0].reviewProducts
         };
+        const categories = await Category.find({});
         res.render('pages/product_detail', {
             title: productName,
-            product: productDetail
+            product: productDetail,
+            categories
         });
     } catch (err) {
-        console.error('Lỗi getProductDetailPage:', err);
+        next(err);
+    }
+};
+
+// Trả về ảnh sản phẩm từ buffer
+exports.getProductImage = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        // images là mảng, lấy ảnh đầu tiên
+        const img = product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
+        if (!img || !img.imageData) {
+            return res.status(404).sendFile('product-placeholder.png', { root: 'user/public/img' });
+        }
+        res.contentType(img.imageType || 'image/png');
+        res.send(img.imageData);
+    } catch (err) {
+        next(err);
+    }
+};
+
+// Xử lý tìm kiếm sản phẩm
+exports.searchProductsPage = async (req, res, next) => {
+    try {
+        const searchQuery = req.query.query; // Lấy từ khóa tìm kiếm từ URL query
+        let products = [];
+        let pageTitle = `Kết quả tìm kiếm cho "${searchQuery}"`;
+
+        if (searchQuery && searchQuery.trim() !== '') {
+            // Sử dụng $regex để tìm kiếm không phân biệt chữ hoa/thường và một phần của từ
+            // Để có tìm kiếm full-text hiệu quả hơn, cân nhắc sử dụng $text index trong MongoDB
+            products = await Product.find({
+                name: { $regex: searchQuery, $options: 'i' } // 'i' for case-insensitive
+                // Bạn có thể mở rộng tìm kiếm cho các trường khác như description, tags, etc.
+                // { $or: [ { name: { $regex: searchQuery, $options: 'i' } }, { description: { $regex: searchQuery, $options: 'i' } } ] }
+            }).sort({ createdAt: -1 }); // Sắp xếp kết quả
+        } else {
+            pageTitle = "Vui lòng nhập từ khóa để tìm kiếm";
+        }
+
+        const categories = await Category.find({}).sort({ name: 1 });
+
+        res.render('pages/product_list', { // Đúng tên file view
+            title: pageTitle,
+            products,
+            categories,
+            currentCategorySlug: 'all', // Không có category cụ thể khi tìm kiếm
+            sortBy: '', // Không có sắp xếp cụ thể ban đầu khi tìm kiếm
+            searchQuery: searchQuery // Truyền lại searchQuery để hiển thị trên view nếu cần
+        });
+    } catch (err) {
+        console.error('Lỗi tại searchProductsPage:', err);
         next(err);
     }
 };

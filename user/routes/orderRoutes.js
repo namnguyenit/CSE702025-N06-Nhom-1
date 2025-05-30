@@ -7,4 +7,6 @@ router.post('/quick-order', orderController.quickOrder);
 
 router.get('/checkout', orderController.checkoutPage);
 
+router.get('/history', require('../controllers/orderController').getOrderHistory);
+
 module.exports = router;

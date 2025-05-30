@@ -1,5 +1,4 @@
-<%- include('../partials/header', { title: title, categories: typeof categories !== 'undefined' ? categories : [] }) %>
-
+<%- include('../partials/header', { title: title }) %>
 <div class="slider-area ">
     <div class="single-slider slider-height2 d-flex align-items-center" data-background="/images/hero/category.jpg">
         <div class="container">
@@ -20,21 +19,21 @@
                 <div class="login_form_inner"> <h3>Tạo tài khoản mới</h3>
                     <form class="row login_form" action="/auth/register" method="post" id="registerForm" novalidate="novalidate">
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Họ và Tên" value="<%= typeof oldInput !== 'undefined' ? oldInput.fullName : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Họ và Tên'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'fullName')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'fullName').msg %></small>
-                            <% } %>
-                        </div>
-                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" value="<%= typeof oldInput !== 'undefined' ? oldInput.username : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tên đăng nhập'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'username')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'username').msg %></small>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Họ và Tên" value="<%= typeof oldInput !== 'undefined' ? oldInput.name : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Họ và Tên'">
+                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'name')) { %>
+                                <small class="text-danger"><%= errors.find(e => e.path === 'name').msg %></small>
                             <% } %>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<%= typeof oldInput !== 'undefined' ? oldInput.email : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'email')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'email').msg %></small>
+                            <input type="text" class="form-control" id="account" name="account" placeholder="Tên đăng nhập" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tên đăng nhập'">
+                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
+                                <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
+                            <% } %>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="email" class="form-control" id="gmail" name="gmail" placeholder="Email" value="<%= typeof oldInput !== 'undefined' ? oldInput.gmail : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'gmail')) { %>
+                                <small class="text-danger"><%= errors.find(e => e.path === 'gmail').msg %></small>
                             <% } %>
                         </div>
                         <div class="col-md-12 form-group">
@@ -44,7 +43,7 @@
                             <% } %>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Xác nhận mật khẩu'">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Nhập lại mật khẩu'">
                             <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'confirmPassword')) { %>
                                 <small class="text-danger"><%= errors.find(e => e.path === 'confirmPassword').msg %></small>
                             <% } %>
@@ -52,8 +51,8 @@
                         <div class="col-md-12 form-group">
                             <button type="submit" value="submit" class="primary-btn">Đăng Ký</button>
                         </div>
-                         <div class="col-md-12 form-group text-center">
-                            <p>Đã có tài khoản? <a href="/auth/login">Đăng nhập</a></p>
+                        <div class="col-md-12 form-group text-center">
+                            <p>Đã có tài khoản? <a href="/auth/login">Đăng nhập ngay</a></p>
                         </div>
                     </form>
                 </div>
@@ -61,5 +60,4 @@
         </div>
     </div>
 </section>
-
 <%- include('../partials/footer') %>

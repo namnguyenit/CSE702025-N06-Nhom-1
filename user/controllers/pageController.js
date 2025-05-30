@@ -1,25 +1,24 @@
 // user/controllers/pageController.js
-const Product = require('../models/ProductModel');
-const Category = require('../models/CategoryModel');
+const Product = require('../models/ProductModel'); //
+const Category = require('../models/CategoryModel'); //
 
 exports.getHomePage = async (req, res, next) => {
     try {
         console.log('GET / - Trang chủ');
         const products = await Product.find()
-            // .populate('category'); // Lấy thông tin category
-            .sort({ createdAt: -1 }) // Sắp xếp theo ngày tạo mới nhất
-            .limit(8) // Giới hạn 8 sản phẩm
+            .sort({ createdAt: -1 })
+            .limit(8);
 
         const categories = await Category.find({});
         console.log('Dữ liệu render index:', { popularProductsCount: products.length, categoriesCount: categories.length });
-        res.render('pages/index', {
+        res.render('pages/index', { // Giả sử bạn có view index.ejs đã Việt hóa
             title: 'Trang Chủ',
             products,
             categories
         });
     } catch (err) {
         console.error('Lỗi getHomePage:', err);
-        next(err); // Chuyển lỗi cho global error handler
+        next(err);
     }
 };
 
@@ -27,7 +26,7 @@ exports.getContactPage = async (req, res, next) => {
     try {
         console.log('GET /contact');
         const categories = await Category.find({});
-        res.render('pages/contact', {
+        res.render('pages/contact-vi', { // Giả sử có contact-vi.ejs
             title: 'Liên Hệ',
             categories
         });
@@ -37,11 +36,11 @@ exports.getContactPage = async (req, res, next) => {
     }
 };
 
-exports.getAboutPage = async (req, res, next) => { // Nếu bạn có trang about.html
+exports.getAboutPage = async (req, res, next) => {
     try {
         console.log('GET /about');
         const categories = await Category.find({});
-        res.render('pages/about', {
+        res.render('pages/about-vi', { // Giả sử có about-vi.ejs
             title: 'Về Chúng Tôi',
             categories
         });
@@ -51,16 +50,43 @@ exports.getAboutPage = async (req, res, next) => { // Nếu bạn có trang abou
     }
 };
 
-exports.getElementsPage = async (req, res, next) => { // Nếu bạn có trang elements.html
+exports.getElementsPage = async (req, res, next) => {
     try {
         console.log('GET /elements');
         const categories = await Category.find({});
-        res.render('pages/elements', {
-            title: 'Elements',
+        res.render('pages/elements-vi', { // Giả sử có elements-vi.ejs
+            title: 'Thành Phần',
             categories
         });
     } catch (err) {
         console.error('Lỗi getElementsPage:', err);
+        next(err);
+    }
+};
+
+// Hàm mới để xử lý đăng ký nhận tin
+exports.handleSubscription = async (req, res, next) => {
+    try {
+        const email = req.body.email; // Lấy email từ form POST
+        if (email) {
+            console.log(`Email đăng ký nhận tin: ${email}`);
+            // TODO: Thêm logic lưu email vào cơ sở dữ liệu hoặc dịch vụ email marketing
+            // Ví dụ: await Subscriber.create({ email });
+
+            // Sau khi xử lý, bạn có thể gửi thông báo thành công hoặc chuyển hướng
+            // req.flash('success_msg', 'Đăng ký nhận tin thành công!'); // Nếu dùng connect-flash
+            // return res.redirect('back'); // Quay lại trang trước đó
+            return res.status(200).send(`Đã nhận được email đăng ký: ${email}. Cảm ơn bạn đã đăng ký! (Đây là phản hồi mẫu, cần được hoàn thiện)`);
+
+        } else {
+            // req.flash('error_msg', 'Vui lòng nhập email.');
+            // return res.redirect('back');
+            return res.status(400).send('Vui lòng cung cấp địa chỉ email.');
+        }
+    } catch (err) {
+        console.error('Lỗi xử lý đăng ký nhận tin:', err);
+        // req.flash('error_msg', 'Có lỗi xảy ra, vui lòng thử lại.');
+        // return res.redirect('back');
         next(err);
     }
 };

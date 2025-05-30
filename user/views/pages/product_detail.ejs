@@ -19,7 +19,11 @@
             <div class="col-lg-6 col-md-6">
                 <!-- Ảnh sản phẩm -->
                 <div class="product-img-gallery mb-4">
-                    <img id="mainProductImg" src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : '/img/product-placeholder.png' %>" alt="<%= product.name %>" class="img-fluid" style="max-width: 100%; max-height: 350px; object-fit: contain;">
+                    <img id="mainProductImg"
+                        src="<%= product.image %>"
+                        alt="<%= product.name %>"
+                        class="img-fluid"
+                        style="max-width: 100%; max-height: 350px; object-fit: contain;">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -186,24 +190,14 @@
             showAuthModal();
             return;
         }
-        const typeIdx = document.getElementById('typeSelect').value;
-        const sizeIdx = document.getElementById('sizeSelect').value;
         const qty = parseInt(document.getElementById('qtyInput').value) || 1;
-        const type = productTypes[typeIdx].type;
-        const detail = productTypes[typeIdx].detail[sizeIdx];
-        const price = parseInt(detail.price);
-        const size = detail.size;
-        const image = "<%= product.image && product.image.imageData ? 'data:' + product.image.imageType + ';base64,' + product.image.imageData.toString('base64') : '' %>";
+        const productID = '<%= product._id %>';
         const res = await fetch('/cart/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                name: '<%= product.name %>',
-                type,
-                size,
-                price,
-                quantity: qty,
-                image
+                productID,
+                orderNumber: qty
             })
         });
         const data = await res.json();

@@ -47,3 +47,16 @@ exports.checkoutPage = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.getOrderHistory = async (req, res, next) => {
+    try {
+        const userId = req.session.user._id;
+        const user = await require('../models/UserModel').findById(userId).populate({
+            path: 'orders',
+            populate: { path: 'items.productID' }
+        });
+        res.render('pages/order_history', { orders: user.orders });
+    } catch (err) {
+        next(err);
+    }
+};

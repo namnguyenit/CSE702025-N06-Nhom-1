@@ -2,6 +2,7 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
+const Category = require('../models/CategoryModel'); // Đã import ở trên
 
 exports.getLoginPage = async (req, res, next) => {
     try {
@@ -11,7 +12,7 @@ exports.getLoginPage = async (req, res, next) => {
             title: 'Đăng Nhập',
             path: '/login',
             categories,
-            oldInput: { email: "" }
+            oldInput: { account: "" }
         });
     } catch (err) {
         console.error('Lỗi getLoginPage:', err);
@@ -20,10 +21,10 @@ exports.getLoginPage = async (req, res, next) => {
 };
 
 exports.postLogin = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { account, password } = req.body;
     const errors = validationResult(req);
     const categories = await Category.find({});
-    console.log('POST /auth/login', { email });
+    console.log('POST /auth/login', { account });
 
     if (!errors.isEmpty()) {
         console.log('Lỗi validate login:', errors.array());
@@ -33,39 +34,31 @@ exports.postLogin = async (req, res, next) => {
             categories,
             error_msg: errors.array()[0].msg, 
             errors: errors.array(),
-            oldInput: { email }
+            oldInput: { account }
         });
     }
 
     try {
-        const user = await User.findOne({ email }).select('+password'); 
+        // Cho phép đăng nhập bằng account hoặc gmail
+        const user = await User.findOne({ $or: [ { account }, { gmail: account } ] });
         if (!user) {
-            console.log('Không tìm thấy user:', email);
-            req.flash('error_msg', 'Email hoặc mật khẩu không đúng.');
+            console.log('Không tìm thấy user:', account);
+            req.flash('error_msg', 'Tài khoản hoặc mật khẩu không đúng.');
             return res.redirect('/auth/login');
         }
 
-        const isMatch = await user.comparePassword(password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            console.log('Sai mật khẩu cho user:', email);
-            req.flash('error_msg', 'Email hoặc mật khẩu không đúng.');
+            console.log('Sai mật khẩu cho user:', account);
+            req.flash('error_msg', 'Tài khoản hoặc mật khẩu không đúng.');
             return res.redirect('/auth/login');
         }
 
-        if (!user.active) {
-            console.log('Tài khoản bị khóa:', email);
-            req.flash('error_msg', 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
-            return res.redirect('/auth/login');
-        }
-
-        const userSessionData = user.toObject();
-        delete userSessionData.password;
-
-        req.session.user = userSessionData;
+        req.session.user = user;
         req.session.isLoggedIn = true;
 
         req.flash('success_msg', 'Đăng nhập thành công!');
-        console.log('Đăng nhập thành công:', email, 'role:', user.role);
+        console.log('Đăng nhập thành công:', account, 'role:', user.role);
 
         if (user.role === 'shipper') {
             return res.redirect('/shipper/dashboard'); 
@@ -88,7 +81,7 @@ exports.getRegisterPage = async (req, res, next) => {
             title: 'Đăng Ký',
             path: '/register',
             categories,
-            oldInput: { fullName: "", username: "", email: "" }
+            oldInput: {}
         });
     } catch (err) {
         console.error('Lỗi getRegisterPage:', err);
@@ -97,10 +90,22 @@ exports.getRegisterPage = async (req, res, next) => {
 };
 
 exports.postRegister = async (req, res, next) => {
-    const { fullName, username, email, password, confirmPassword } = req.body;
+    const { account, password, confirmPassword, name, gmail } = req.body;
     const errors = validationResult(req);
     const categories = await Category.find({});
-    console.log('POST /auth/register', { fullName, username, email });
+    console.log('POST /auth/register', { account, name, gmail });
+
+    // Kiểm tra xác nhận mật khẩu
+    if (password !== confirmPassword) {
+        return res.status(422).render('pages/register', {
+            title: 'Đăng Ký',
+            path: '/register',
+            categories,
+            error_msg: 'Mật khẩu và xác nhận mật khẩu không khớp.',
+            errors: [{ msg: 'Mật khẩu và xác nhận mật khẩu không khớp.' }],
+            oldInput: { account, name, gmail }
+        });
+    }
 
     if (!errors.isEmpty()) {
         console.log('Lỗi validate register:', errors.array());
@@ -110,56 +115,23 @@ exports.postRegister = async (req, res, next) => {
             categories,
             error_msg: errors.array()[0].msg,
             errors: errors.array(),
-            oldInput: { fullName, username, email }
+            oldInput: { account, name, gmail }
         });
     }
 
     try {
-        let user = await User.findOne({ $or: [{ email }, { username }] });
-        if (user) {
-            let msg = '';
-            if (user.email === email) msg = 'Email đã tồn tại.';
-            else if (user.username === username) msg = 'Tên đăng nhập đã tồn tại.';
-            
-            console.log('Tồn tại user:', msg, { email, username });
-            req.flash('error_msg', msg);
-            return res.status(400).render('pages/register', {
-                title: 'Đăng Ký',
-                path: '/register',
-                categories,
-                error_msg: msg,
-                errors: [{msg: msg}], 
-                oldInput: { fullName, username, email }
-            });
+        const existing = await User.findOne({ $or: [ { account }, { gmail } ] });
+        if (existing) {
+            req.flash('error_msg', 'Tài khoản hoặc email đã tồn tại.');
+            return res.redirect('/auth/register');
         }
-
-        user = new User({
-            fullName,
-            username,
-            email,
-            password,
-        
-        });
+        const hash = await bcrypt.hash(password, 10);
+        // Chỉ lưu các trường cần thiết, các trường khác để trống hoặc mặc định
+        const user = new User({ account, password: hash, name, gmail });
         await user.save();
-
-        console.log('Đăng ký thành công:', email);
-        req.flash('success_msg', 'Đăng ký thành công! Bạn có thể đăng nhập ngay.');
-        res.redirect('/auth/login');
-
+        req.session.user = user;
+        res.redirect('/');
     } catch (err) {
-        if (err.code === 11000) {
-             console.log('Lỗi duplicate key:', err);
-             req.flash('error_msg', 'Email hoặc Tên đăng nhập đã tồn tại.');
-             return res.status(400).render('pages/register', {
-                title: 'Đăng Ký',
-                path: '/register',
-                categories,
-                error_msg: 'Email hoặc Tên đăng nhập đã tồn tại.',
-                errors: [{msg: 'Email hoặc Tên đăng nhập đã tồn tại.'}],
-                oldInput: { fullName, username, email }
-            });
-        }
-        console.error('Lỗi postRegister:', err);
         next(err);
     }
 };
@@ -174,8 +146,6 @@ exports.getLogout = (req, res, next) => {
     });
 };
 
-
-const Category = require('../models/CategoryModel'); // Đã import ở trên
 
 exports.getUserProfilePage = async (req, res, next) => {
     try {

@@ -1,0 +1,37 @@
+<%- include('../partials/header', { title: 'Lịch sử mua hàng' }) %>
+<div class="container mt-5">
+    <h2>Lịch sử mua hàng</h2>
+    <% if (orders && orders.length > 0) { %>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Trạng thái</th>
+                    <th>Tổng tiền</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td><%= order._id %></td>
+                        <td><%= order.orderDate ? order.orderDate.toLocaleDateString('vi-VN') : '' %></td>
+                        <td><%= order.status %></td>
+                        <td><%= order.totalAmount %></td>
+                        <td>
+                            <ul>
+                                <% order.items.forEach(item => { %>
+                                    <li><%= item.productID ? item.productID.name : '' %> x <%= item.productNumber %></li>
+                                <% }) %>
+                            </ul>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Bạn chưa có đơn hàng nào.</p>
+    <% } %>
+</div>
+<%- include('../partials/footer') %>

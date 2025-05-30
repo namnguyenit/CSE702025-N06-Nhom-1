@@ -18,9 +18,9 @@ router.get('/register', isLoggedOut, authController.getRegisterPage);
 
 // POST /auth/register - Xử lý đăng ký
 router.post('/register', isLoggedOut, [
-    check('fullName', 'Họ tên không được để trống').not().isEmpty().trim().escape(),
-    check('username', 'Tên đăng nhập không được để trống và ít nhất 3 ký tự').isLength({ min: 3 }).trim().escape(),
-    check('email', 'Email không hợp lệ').isEmail().normalizeEmail(),
+    check('name', 'Họ tên không được để trống').not().isEmpty().trim().escape(),
+    check('account', 'Tên đăng nhập không được để trống và ít nhất 3 ký tự').isLength({ min: 3 }).trim().escape(),
+    check('gmail', 'Email không hợp lệ').isEmail().normalizeEmail(),
     check('password', 'Mật khẩu phải có ít nhất 6 ký tự').isLength({ min: 6 }),
     check('confirmPassword').custom((value, { req }) => {
         if (value !== req.body.password) {

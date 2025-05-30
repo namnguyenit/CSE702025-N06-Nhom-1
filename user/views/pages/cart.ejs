@@ -1,87 +1,34 @@
-<%- include('../partials/header', { title: title }) %>
-
-<div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="hero-cap text-center">
-                        <h2>Giỏ Hàng</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<%- include('../partials/header', { title: 'Giỏ hàng' }) %>
+<div class="container mt-5">
+    <h2>Giỏ hàng của bạn</h2>
+    <% if (cart && cart.length > 0) { %>
+        <form action="/cart/checkout" method="POST">
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Loại</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% cart.forEach(item => { %>
+                    <tr>
+                        <td><%= item.productID.name %></td>
+                        <td><%= item.productID.type %></td>
+                        <td><%= item.productID.detail[0] ? item.productID.detail[0].price : 'N/A' %></td>
+                        <td><%= item.orderNumber %></td>
+                        <td><%= item.productID.detail[0] ? (item.productID.detail[0].price * item.orderNumber) : 0 %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success">Thanh toán toàn bộ giỏ hàng</button>
+        </form>
+    <% } else { %>
+        <p>Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+    <% } %>
 </div>
-
-<section class="cart_area section_padding">
-    <div class="container">
-        <div class="cart_inner">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Sản phẩm</th>
-                            <th scope="col">Giá</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Tổng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (cart && cart.length > 0) { %>
-                            <% cart.forEach(item => { %>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="d-flex">
-                                                <img src="<%= item.product.images && item.product.images.length > 0 && item.product.images[0].imageData ? `data:${item.product.images[0].imageType};base64,${item.product.images[0].imageData.toString('base64')}` : '/img/product/product-placeholder.png' %>" alt="<%= item.product.name %>" style="width: 80px;">
-                                            </div>
-                                            <div class="media-body">
-                                                <p><%= item.product.name %></p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <h5><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.product.price) %></h5>
-                                    </td>
-                                    <td>
-                                        <form action="/cart/update" method="POST" class="d-flex align-items-center">
-                                            <input type="hidden" name="productId" value="<%= item.product._id %>">
-                                            <div class="product_count">
-                                                <span class="input-number-decrement"> <i class="ti-minus"></i></span>
-                                                <input class="input-number" type="number" name="quantity" value="<%= item.quantity %>" min="1" max="<%= item.product.stock %>">
-                                                <span class="input-number-increment"> <i class="ti-plus"></i></span>
-                                            </div>
-                                            <button type="submit" class="btn_1 ml-2">Cập nhật</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <h5><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.product.price * item.quantity) %></h5>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                            <tr class="bottom_button">
-                                <td>
-                                    <a class="btn_1" href="/cart/clear">Xóa toàn bộ</a>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <div class="cupon_text float-right">
-                                        <a class="btn_1" href="/checkout">Thanh toán</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% } else { %>
-                            <tr>
-                                <td colspan="4" class="text-center">Giỏ hàng của bạn đang trống.</td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-
 <%- include('../partials/footer') %>
