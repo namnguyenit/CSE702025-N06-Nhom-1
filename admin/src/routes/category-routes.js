@@ -5,10 +5,12 @@ const authenticateMiddleware = require("../middleware/authenticate-middleware");
 const multer = require("multer");
 const categoryModels = require("../models/category-models");
 const upload = multer({ storage: multer.memoryStorage() });
+const authorizationMiddleware = require("../middleware/authorization-middleware");
 
 //-------------------------------
 
 route.use(authenticateMiddleware);
+route.use(authorizationMiddleware);
 
 route.use(upload.single("image"));
 

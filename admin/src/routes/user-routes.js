@@ -4,11 +4,14 @@ const authenticateMiddleware = require("../middleware/authenticate-middleware");
 const UserControllers = require("../controllers/user-controllers");
 const multer = require("multer");
 const upload = multer();
+const authorizationMiddleware = require("../middleware/authorization-middleware");
+
 //-------------------------------------
 
-route.use(upload.none());
-
 route.use(authenticateMiddleware);
+route.use(authorizationMiddleware);
+
+route.use(upload.none());
 
 route.get("/", UserControllers.index);
 route.get("/create", UserControllers.create);
