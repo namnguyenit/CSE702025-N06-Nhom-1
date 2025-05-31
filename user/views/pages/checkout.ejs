@@ -43,7 +43,7 @@
                     <ul class="list">
                         <% if (cart && cart.length > 0) { %>
                             <% cart.forEach(item => { %>
-                                <li><%= item.product.name %> <span class="middle">x <%= item.quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.product.price * item.quantity) %></span></li>
+                                <li><%= item.product.name %> <span class="middle">x <%= item.quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((item.product.detail && item.product.detail[0] ? (typeof item.product.detail[0].price === 'string' ? parseFloat(item.product.detail[0].price) : item.product.detail[0].price) : 0) * item.quantity) %></span></li>
                             <% }); %>
                         <% } else { %>
                             <li>Không có sản phẩm trong giỏ hàng.</li>

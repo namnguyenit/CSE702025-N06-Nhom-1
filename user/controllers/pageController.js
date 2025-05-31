@@ -22,6 +22,23 @@ exports.getHomePage = async (req, res, next) => {
     }
 };
 
+exports.getCartPage = async (req, res) => {
+    try {
+        // Truyền toàn bộ đối tượng cart từ session, hoặc một đối tượng cart rỗng nếu chưa có
+        const sessionCart = req.session.cart || { items: [], itemsPrice: 0, taxPrice: 0, shippingPrice: 0, totalPrice: 0 };
+
+        res.render('cart', { // Renders views/cart.ejs
+            title: 'Shopping Cart',
+            path: '/cart',
+            user: req.user,
+            cart: sessionCart // Truyền toàn bộ đối tượng cart
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('error', { title: 'Error', message: 'Server Error', user: req.user, path: '/500' });
+    }
+};
+
 exports.getContactPage = async (req, res, next) => {
     try {
         console.log('GET /contact');
