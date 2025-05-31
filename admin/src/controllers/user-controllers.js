@@ -1,6 +1,7 @@
 const UserModels = require("../models/user-models");
 const bcrypt = require("bcrypt");
 const PopupService = require("../service/popup-service");
+const SessionService = require("../service/session/session-service");
 
 class UserControllers {
   async index(req, res) {
@@ -82,6 +83,7 @@ class UserControllers {
     try {
       //Tìm theo ID và xóa
       const user = await UserModels.findByIdAndDelete(req.body.id);
+      await SessionService.deleteOneSession(user.account);
       res.status(204).end();
     } catch (error) {
       //log và thông báo về lỗi
@@ -100,6 +102,7 @@ class UserControllers {
     try {
       const body = req.body;
       const id = body.id;
+      const inputAccount = body.account;
       const inputPassword = body?.password;
       const inputPasswordConfirm = body?.passwordConfirm;
       const inputRole =
@@ -125,7 +128,6 @@ class UserControllers {
       if (inputPassword && inputPasswordConfirm) {
         const hashPassword = await bcrypt.hash(inputPassword, 10);
         user.password = hashPassword;
-        console.log("P");
       }
       user.role = inputRole;
       user.name = inputName;
@@ -133,6 +135,11 @@ class UserControllers {
       user.gmail = inputGmail;
       user.address = inputAddress;
       await user.save();
+      //role khác Admin thì xóa session hiện tại
+      if (inputRole != "Admin") {
+        await SessionService.deleteOneSession(inputAccount);
+      }
+      //
       PopupService.message(req, res, "success", "Sửa User thành công");
       return res.redirect(`/users/edit/${id}`);
     } catch (error) {

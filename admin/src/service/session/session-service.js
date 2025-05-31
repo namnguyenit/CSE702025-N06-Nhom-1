@@ -43,6 +43,11 @@ class SessionService {
       console.log("ERR", error);
     }
   }
+  async deleteOneSession(inputAccount) {
+    const session = await AdminSessionModels.findOneAndDelete({
+      account: inputAccount,
+    });
+  }
 }
 
 module.exports = new SessionService();
