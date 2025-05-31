@@ -56,14 +56,15 @@
                                 <div class="col-md-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <div class="d-flex align-items-center">
-                                                <h4>Add Row</h4>
-                                                <a href="/products/create" class="btn btn-primary btn-round ms-auto">
-                                                    <i class="fa fa-plus"></i>
-                                                    Add Row
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h4 class="mb-0">You can unassign product in categories</h4>
+                                                <a href="/categories" class="btn btn-danger btn-round">
+                                                    <i class="fa fa-arrow-left"></i>
+                                                    Back
                                                 </a>
                                             </div>
                                         </div>
+
                                         <div class="card-body">
                                             <!-- Data Table -->
                                             <div class="table-responsive">
@@ -93,7 +94,7 @@
                                                             <tr>
                                                                 <td><img style="width: 100px;height: 75px;"
                                                                         class="image"
-                                                                        src="/products/image/<%=product._id%>"
+                                                                        src="/products/image/<%=product.id%>"
                                                                         alt="<%=product.image?.imageName%>">
                                                                 </td>
                                                                 <td>
@@ -106,28 +107,25 @@
                                                                     <%=product.description %>
                                                                 </td>
                                                                 <td>
-                                                                    <%=product.detail.price %> <u>đ</u>
+                                                                    <%=product.detail[0].price %> <u>đ</u>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="form-button-action">
-                                                                        <a
-                                                                            href="/products/edit/<%=encodeURIComponent(product.name) %>">
-                                                                            <button type="button"
-                                                                                data-bs-toggle="tooltip" title=""
-                                                                                class="btn btn-link btn-primary btn-lg">
-                                                                                <i class="fa fa-edit"></i>
-                                                                            </button>
-                                                                        </a>
-                                                                        <a
-                                                                            href="/products/destroy/<%=encodeURIComponent(product.name) %>">
-                                                                            <button type="button"
-                                                                                data-bs-toggle="tooltip" title=""
-                                                                                class="btn btn-link btn-danger">
-                                                                                <i class="fa fa-times"></i>
-                                                                            </button>
-                                                                        </a>
-
-                                                                    </div>
+                                                                    <form action="/categories/unassign" method="post">
+                                                                        <input type="hidden" name="categoryID"
+                                                                            value="<%=categoryID  %>">
+                                                                        <input type="hidden" name="productID"
+                                                                            value="<%=product.id  %>">
+                                                                        <div class="form-button-action">
+                                                                            <div class="form-button-action">
+                                                                                <button type="submit"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    title="Unassign"
+                                                                                    class="btn btn-danger">
+                                                                                    <i class="fa fa-unlink"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
                                                             <% }) %>

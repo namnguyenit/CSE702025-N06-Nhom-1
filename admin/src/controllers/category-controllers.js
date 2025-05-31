@@ -80,24 +80,7 @@ class CategoryControllers {
     return res.redirect("/categories");
   }
   async assign(req, res) {
-    const products = await ProductModels.aggregate([
-      { $unwind: "$detail" }, // Tách từng phần tử trong mảng detail
-      {
-        $sort: {
-          name: 1,
-          "detail.price": 1, // Ưu tiên giá thấp nhất
-        },
-      },
-      {
-        $group: {
-          _id: "$name",
-          doc: { $first: "$$ROOT" }, // Lấy sản phẩm đầu tiên theo giá
-        },
-      },
-      {
-        $replaceRoot: { newRoot: "$doc" }, // Đưa document về gốc
-      },
-    ]);
+    const products = await ProductModels.find({});
     const categories = await CategoryModels.find({});
     const nameTable = "Assign products to categories";
     res.render("categories/assign", { nameTable, products, categories });
@@ -107,12 +90,38 @@ class CategoryControllers {
     const categoryID = body.categoryID;
     const productID = body.productID;
     const category = await CategoryModels.findById(categoryID);
+    if (!category) {
+      return res.redirect("/categories/assign");
+    }
     if (!category.products.includes(productID)) {
       category.products.push(productID);
       await category.save();
     }
     PopupService.message(req, res, "success", "Success");
     return res.redirect("/categories/assign");
+  }
+  async show(req, res) {
+    const categoryID = req.params.id;
+    const categories = await CategoryModels.findById(categoryID);
+    const products = await ProductModels.find({
+      _id: { $in: categories.products },
+    });
+    const nameTable = "Category detail";
+    return res.render("categories/show", { nameTable, categoryID, products });
+  }
+  async unassign(req, res) {
+    const body = req.body;
+    const categoryID = body.categoryID;
+    const productID = body.productID;
+    //Gỡ
+    const category = await CategoryModels.findById(categoryID);
+    const index = category.products.indexOf(productID);
+    if (index !== -1) {
+      category.products.splice(index, 1); // xóa 1 phần tử tại vị trí index
+    }
+    await category.save();
+    PopupService.message(req, res, "success", "Gỡ sản phẩm thành công");
+    return res.redirect(`/categories/show/${categoryID}`);
   }
 }
 

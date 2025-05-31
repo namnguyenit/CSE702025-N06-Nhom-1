@@ -85,7 +85,7 @@
                                                     <tbody>
                                                         <% categories.forEach(category=>{ %>
                                                             <tr>
-                                                                <td><img style="width: 100px;height: 75px;"
+                                                                <td><img style="width: 100px;height: 75px;object-fit: contain;"
                                                                         class="image"
                                                                         src="/categories/image/<%=category.id%>"
                                                                         alt="<%=category.image?.imageName%>">
@@ -95,20 +95,28 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-button-action">
+                                                                        <a href="/categories/show/<%=category.id %>">
+                                                                            <button type="button"
+                                                                                data-bs-toggle="tooltip" title="Detail"
+                                                                                class="btn btn-link btn-info">
+                                                                                <i class="fa fa-eye"></i>
+                                                                            </button>
+                                                                        </a>
                                                                         <a href="/categories/edit/<%=category.id %>">
                                                                             <button type="button"
-                                                                                data-bs-toggle="tooltip" title=""
-                                                                                class="btn btn-link btn-primary btn-lg">
+                                                                                data-bs-toggle="tooltip" title="Edit"
+                                                                                class="btn btn-link btn-primary">
                                                                                 <i class="fa fa-edit"></i>
                                                                             </button>
                                                                         </a>
                                                                         <a href="/categories/destroy/<%=category.id %>">
                                                                             <button type="button"
-                                                                                data-bs-toggle="tooltip" title=""
+                                                                                data-bs-toggle="tooltip" title="Destroy"
                                                                                 class="btn btn-link btn-danger">
                                                                                 <i class="fa fa-times"></i>
                                                                             </button>
                                                                         </a>
+
 
                                                                     </div>
                                                                 </td>

@@ -13,6 +13,7 @@ route.use(authenticateMiddleware);
 route.use(upload.single("image"));
 
 route.get("/", CategoryControllers.index);
+route.get("/show/:id", CategoryControllers.show);
 route.get("/image/:id", CategoryControllers.getImage);
 route.get("/create", CategoryControllers.create);
 route.post("/store", CategoryControllers.store);
@@ -21,6 +22,7 @@ route.post("/update", CategoryControllers.update);
 route.get("/destroy/:id", CategoryControllers.destroy);
 route.post("/assign", CategoryControllers.assignHandler);
 route.get("/assign", CategoryControllers.assign);
+route.post("/unassign", CategoryControllers.unassign);
 
 //-------------------------------
 
