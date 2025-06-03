@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const detailSchema = new Schema({
     size: String,
-    price: String,
+    price: Number, // Đổi từ String sang Number để đồng bộ với admin
     stock: Number
 }, { _id: false });
 
