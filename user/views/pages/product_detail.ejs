@@ -320,5 +320,23 @@
 
     // Khởi tạo ban đầu
     updateSizeAndPrice();
+    // Đảm bảo Nice Select đã update và event đã bind trước khi trigger change
+    if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
+        $('#typeSelect').niceSelect('update');
+    }
+    bindTypeSelectEvents();
+    bindSizeSelectEvents();
+    // Chọn type đầu tiên và trigger update (nếu chưa được chọn)
+    const typeSelect = document.getElementById('typeSelect');
+    if (typeSelect.options.length > 0) {
+        typeSelect.selectedIndex = 0;
+        typeSelect.dispatchEvent(new Event('change'));
+    }
+    // Chọn size đầu tiên và trigger update (nếu chưa được chọn)
+    const sizeSelect = document.getElementById('sizeSelect');
+    if (sizeSelect.options.length > 0) {
+        sizeSelect.selectedIndex = 0;
+        sizeSelect.dispatchEvent(new Event('change'));
+    }
 </script>
 <%- include('../partials/footer') %>
