@@ -77,7 +77,11 @@ exports.getProductDetailPage = async (req, res, next) => {
             image: variants[0].image && variants[0].image.imageData ? `data:${variants[0].image.imageType};base64,${variants[0].image.imageData.toString('base64')}` : '/img/product-placeholder.png',
             types: variants.map(v => ({
                 type: v.type,
-                detail: v.detail
+                detail: v.detail,
+                image: v.image && v.image.imageData ? {
+                    imageType: v.image.imageType,
+                    imageData: { $binary: { base64: v.image.imageData.toString('base64') } }
+                } : null
             })),
             detail: variants[0].detail,
             reviewProducts: variants[0].reviewProducts

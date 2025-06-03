@@ -1,7 +1,7 @@
 <%- include('../partials/header', { title: title }) %>
 
 <div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/about.jpg">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/about_hero.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
@@ -114,34 +114,102 @@
 <script>
     // Dữ liệu các loại sản phẩm và size
     const productTypes = JSON.parse('<%- JSON.stringify(product.types) %>');
+    const placeholderImg = '/img/product-placeholder.png';
+
+    function getTypeImage(typeObj) {
+        if (typeObj && typeObj.image && typeObj.image.imageData && typeObj.image.imageType) {
+            if (typeObj.image.imageData.$binary && typeObj.image.imageData.$binary.base64) {
+                return `data:${typeObj.image.imageType};base64,${typeObj.image.imageData.$binary.base64}`;
+            } else if (typeof typeObj.image.imageData === 'string') {
+                return `data:${typeObj.image.imageType};base64,${typeObj.image.imageData}`;
+            }
+        }
+        return placeholderImg;
+    }
+
     function updateSizeAndPrice() {
-        const typeIdx = document.getElementById('typeSelect').value;
+        const typeIdx = parseInt(document.getElementById('typeSelect').value, 10);
         const sizeSelect = document.getElementById('sizeSelect');
         sizeSelect.innerHTML = '';
-        const details = productTypes[typeIdx].detail;
+        const details = productTypes[typeIdx]?.detail || [];
+        console.log('DEBUG updateSizeAndPrice:', { productTypes, typeIdx, typeObj: productTypes[typeIdx], details });
         details.forEach((d, idx) => {
             const opt = document.createElement('option');
             opt.value = idx;
             opt.text = d.size;
             sizeSelect.appendChild(opt);
         });
+        // Always select the first size if available
+        if (details.length > 0) {
+            sizeSelect.selectedIndex = 0;
+        }
+        // If using Nice Select, update it
+        if (window.jQuery && typeof $(sizeSelect).niceSelect === 'function') {
+            $(sizeSelect).niceSelect('update');
+        }
+        if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
+            $('#typeSelect').niceSelect('update');
+            bindTypeSelectEvents(); // Đảm bảo không bị lặp handler
+        }
+        // Update image
+        const imgEl = document.getElementById('mainProductImg');
+        const typeObj = productTypes[typeIdx];
+        imgEl.src = getTypeImage(typeObj);
         updatePrice();
     }
+
     function updatePrice() {
-        const typeIdx = document.getElementById('typeSelect').value;
-        const sizeIdx = document.getElementById('sizeSelect').value;
-        const detail = productTypes[typeIdx].detail[sizeIdx];
+        const typeIdx = parseInt(document.getElementById('typeSelect').value, 10);
+        const sizeIdx = parseInt(document.getElementById('sizeSelect').value, 10);
+        const details = productTypes[typeIdx]?.detail || [];
+        const detail = details[sizeIdx] || details[0] || { price: 0, stock: 0 };
+        console.log('DEBUG updatePrice:', { typeIdx, sizeIdx, details, detail });
         document.getElementById('productPrice').innerText = detail.price + '₫';
         document.getElementById('productStock').innerText = detail.stock;
     }
-    document.getElementById('typeSelect').addEventListener('change', updateSizeAndPrice);
+    function bindTypeSelectEvents() {
+        // Remove old event handlers to prevent duplicate binding
+        const typeSelect = document.getElementById('typeSelect');
+        typeSelect.onchange = null;
+        typeSelect.removeEventListener('change', updateSizeAndPrice);
+        typeSelect.addEventListener('change', updateSizeAndPrice);
+        // Nice Select: robustly sync native select and UI
+        if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
+            // Remove previous custom event namespace
+            $('#typeSelect').off('.productTypeSync');
+            // Listen for native select change (for keyboard, programmatic, etc)
+            $('#typeSelect').on('change.productTypeSync', function() {
+                updateSizeAndPrice();
+            });
+            // Listen for Nice Select option click
+            const $nice = $('#typeSelect').next('.nice-select');
+            if ($nice.length) {
+                $nice.off('click.productTypeSync');
+                $nice.on('click.productTypeSync', '.option', function(e) {
+                    // Get the value of the clicked option (always string)
+                    var value = $(this).attr('data-value');
+                    if (typeof value === 'undefined') {
+                        // fallback: get index and map to value
+                        var idx = $(this).index();
+                        value = $('#typeSelect option').eq(idx).val();
+                    }
+                    var $select = $('#typeSelect');
+                    if ($select.val() !== value) {
+                        $select.val(value).trigger('change');
+                    }
+                });
+            }
+        }
+    }
+    // Thay thế addEventListener cũ bằng hàm mới
+    bindTypeSelectEvents();
     document.getElementById('sizeSelect').addEventListener('change', updatePrice);
 
     // Kiểm tra trạng thái đăng nhập phía client
     const isLoggedIn = "<%= currentUser ? 'true' : 'false' %>";
 
     function showAuthModal() {
-      $('#authModal').modal('show');
+        $('#authModal').modal('show');
     }
 
     document.getElementById('buyNowBtn').addEventListener('click', async function() {
@@ -152,11 +220,13 @@
         const typeIdx = document.getElementById('typeSelect').value;
         const sizeIdx = document.getElementById('sizeSelect').value;
         const qty = parseInt(document.getElementById('qtyInput').value) || 1;
-        const type = productTypes[typeIdx].type;
-        const detail = productTypes[typeIdx].detail[sizeIdx];
-        const price = parseInt(detail.price);
-        const size = detail.size;
-        const image = "<%= product.image && product.image.imageData ? 'data:' + product.image.imageType + ';base64,' + product.image.imageData.toString('base64') : '' %>";
+        const type = productTypes[typeIdx]?.type || '';
+        const detail = (productTypes[typeIdx]?.detail || [])[sizeIdx] || {};
+        const price = parseInt(detail.price) || 0;
+        const size = detail.size || '';
+        // Lấy đúng ảnh của type đang chọn
+        const typeObj = productTypes[typeIdx];
+        const image = getTypeImage(typeObj);
         // Địa chỉ giao hàng mẫu, thực tế nên lấy từ user nhập
         const shippingAddress = {
             fullName: 'Khách lẻ',
@@ -190,14 +260,19 @@
             showAuthModal();
             return;
         }
+        const typeIdx = document.getElementById('typeSelect').value;
+        const sizeIdx = document.getElementById('sizeSelect').value;
         const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const typeObj = productTypes[typeIdx];
+        const image = getTypeImage(typeObj);
         const productID = '<%= product._id %>';
         const res = await fetch('/cart/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 productID,
-                orderNumber: qty
+                orderNumber: qty,
+                image // gửi đúng ảnh type nếu backend cần
             })
         });
         const data = await res.json();
@@ -206,6 +281,14 @@
         } else {
             alert('Thêm vào giỏ hàng thất bại!');
         }
+    });
+
+    // On page load, update Nice Select và bind lại sự kiện (chỉ 1 lần)
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
+            $('#typeSelect').niceSelect('update');
+        }
+        bindTypeSelectEvents();
     });
 
     // Khởi tạo ban đầu
