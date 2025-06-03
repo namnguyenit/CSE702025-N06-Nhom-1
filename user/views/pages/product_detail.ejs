@@ -142,10 +142,13 @@
         // Always select the first size if available
         if (details.length > 0) {
             sizeSelect.selectedIndex = 0;
+            // Trigger change event so price/stock update for new size
+            sizeSelect.dispatchEvent(new Event('change'));
         }
         // If using Nice Select, update it
         if (window.jQuery && typeof $(sizeSelect).niceSelect === 'function') {
             $(sizeSelect).niceSelect('update');
+            bindSizeSelectEvents();
         }
         if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
             $('#typeSelect').niceSelect('update');
@@ -155,7 +158,6 @@
         const imgEl = document.getElementById('mainProductImg');
         const typeObj = productTypes[typeIdx];
         imgEl.src = getTypeImage(typeObj);
-        updatePrice();
     }
 
     function updatePrice() {
@@ -201,9 +203,42 @@
             }
         }
     }
+    function bindSizeSelectEvents() {
+        const sizeSelect = document.getElementById('sizeSelect');
+        sizeSelect.onchange = null;
+        sizeSelect.removeEventListener('change', updatePrice);
+        sizeSelect.addEventListener('change', updatePrice);
+        if (window.jQuery && typeof $(sizeSelect).niceSelect === 'function') {
+            $(sizeSelect).off('.productSizeSync');
+            $(sizeSelect).on('change.productSizeSync', function() {
+                updatePrice();
+            });
+            const $nice = $(sizeSelect).next('.nice-select');
+            if ($nice.length) {
+                $nice.off('click.productSizeSync');
+                $nice.on('click.productSizeSync', '.option', function(e) {
+                    var value = $(this).attr('data-value');
+                    if (typeof value === 'undefined') {
+                        var idx = $(this).index();
+                        value = $(sizeSelect).find('option').eq(idx).val();
+                    }
+                    if ($(sizeSelect).val() !== value) {
+                        $(sizeSelect).val(value).trigger('change');
+                    }
+                });
+            }
+        }
+    }
     // Thay thế addEventListener cũ bằng hàm mới
     bindTypeSelectEvents();
-    document.getElementById('sizeSelect').addEventListener('change', updatePrice);
+    // On page load, update Nice Select và bind lại sự kiện (chỉ 1 lần)
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
+            $('#typeSelect').niceSelect('update');
+        }
+        bindTypeSelectEvents();
+        bindSizeSelectEvents();
+    });
 
     // Kiểm tra trạng thái đăng nhập phía client
     const isLoggedIn = "<%= currentUser ? 'true' : 'false' %>";
@@ -281,14 +316,6 @@
         } else {
             alert('Thêm vào giỏ hàng thất bại!');
         }
-    });
-
-    // On page load, update Nice Select và bind lại sự kiện (chỉ 1 lần)
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
-            $('#typeSelect').niceSelect('update');
-        }
-        bindTypeSelectEvents();
     });
 
     // Khởi tạo ban đầu
