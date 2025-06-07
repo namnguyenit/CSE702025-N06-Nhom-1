@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Ưu Đãi & Giảm Giá - Shop Thời Trang</title>
+    <meta name="description" content="Khám phá các ưu đãi và giảm giá hấp dẫn từ shop thời trang của chúng tôi">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .offers-banner {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/img/hero/category.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+            color: white;
+        }
+        .offers-banner h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .offers-banner p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .offer-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .offer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .offer-card .discount-tag {
+            background: #ff2020;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .offer-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .offer-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .offer-card .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .offer-card .timer-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        .offer-card .timer-box span {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff2020;
+        }
+        .offer-card .timer-box small {
+            color: #666;
+            font-size: 12px;
+        }
+        .offer-card .btn-shop {
+            background: #ff2020;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+        .offer-card .btn-shop:hover {
+            background: #e60000;
+            transform: translateY(-2px);
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-title h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Start -->
+    <header>
+        <div class="header-area">
+            <div class="main-header ">
+                <div class="header-top top-bg d-none d-lg-block">
+                   <div class="container-fluid">
+                       <div class="col-xl-12">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="header-info-left d-flex">
+                                    <div class="flag">
+                                        <img src="assets/img/icon/header_icon.png" alt="">
+                                    </div>
+                                    <div class="select-this">
+                                        <form action="#">
+                                            <div class="select-itms">
+                                                <select name="select" id="select1">
+                                                    <option value="">USA</option>
+                                                    <option value="">SPN</option>
+                                                    <option value="">CDA</option>
+                                                    <option value="">USD</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <ul class="contact-now">     
+                                        <li>+777 2345 7886</li>
+                                    </ul>
+                                </div>
+                                <div class="header-info-right">
+                                   <ul>                                          
+                                       <li><a href="login.html">My Account </a></li>
+                                       <li><a href="product_list.html">Wish List  </a></li>
+                                       <li><a href="cart.html">Shopping</a></li>
+                                       <li><a href="cart.html">Cart</a></li>
+                                       <li><a href="checkout.html">Checkout</a></li>
+                                   </ul>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+                </div>
+               <div class="header-bottom  header-sticky">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <!-- Logo -->
+                            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-3">
+                                <div class="logo">
+                                  <a href="index.html"><img src="assets/img/logo/logo.png" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-8 col-md-7 col-sm-5">
+                                <!-- Main-menu -->
+                                <div class="main-menu f-right d-none d-lg-block">
+                                    <nav>                                                
+                                        <ul id="navigation">                                                                                                                                     
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="Catagori.html">Catagori</a></li>
+                                            <li class="hot"><a href="#">Latest</a>
+                                                <ul class="submenu">
+                                                    <li><a href="product_list.html"> Product list</a></li>
+                                                    <li><a href="single-product.html"> Product Details</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="blog.html">Blog</a>
+                                                <ul class="submenu">
+                                                    <li><a href="blog.html">Blog</a></li>
+                                                    <li><a href="single-blog.html">Blog Details</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Pages</a>
+                                                <ul class="submenu">
+                                                    <li><a href="login.html">Login</a></li>
+                                                    <li><a href="cart.html">Card</a></li>
+                                                    <li><a href="elements.html">Element</a></li>
+                                                    <li><a href="about.html">About</a></li>
+                                                    <li><a href="confirmation.html">Confirmation</a></li>
+                                                    <li><a href="cart.html">Shopping Cart</a></li>
+                                                    <li><a href="checkout.html">Product Checkout</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="contact.html">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div> 
+                            <div class="col-xl-5 col-lg-3 col-md-3 col-sm-3 fix-card">
+                                <ul class="header-right f-right d-none d-lg-block d-flex justify-content-between">
+                                    <li class="d-none d-xl-block">
+                                        <div class="form-box f-right ">
+                                            <input type="text" name="Search" placeholder="Search products">
+                                            <div class="search-icon">
+                                                <i class="fas fa-search special-tag"></i>
+                                            </div>
+                                        </div>
+                                     </li>
+                                    <li class=" d-none d-xl-block">
+                                        <div class="favorit-items">
+                                            <i class="far fa-heart"></i>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="shopping-card">
+                                            <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
+                                    </li>
+                                   <li class="d-none d-lg-block"> <a href="#" class="btn header-btn">Sign in</a></li>
+                                </ul>
+                            </div>
+                            <!-- Mobile Menu -->
+                            <div class="col-12">
+                                <div class="mobile_menu d-block d-lg-none"></div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+       </div>
+    </header>
+    <!-- Header End -->
+
+    <!-- Banner Section -->
+    <div class="offers-banner">
+        <div class="container">
+            <h1>Ưu Đãi Đặc Biệt</h1>
+            <p>Khám phá những ưu đãi hấp dẫn và độc quyền dành riêng cho bạn</p>
+        </div>
+    </div>
+
+    <!-- Hot Deals Section -->
+    <section class="hot-deals padding-top">
+        <div class="container">
+            <div class="section-title">
+                <h2>Ưu Đãi Hot</h2>
+                <p>Nhanh tay săn ngay những ưu đãi hấp dẫn trước khi hết hạn</p>
+            </div>
+            <div class="row">
+                <!-- Deal 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="offer-card">
+                        <span class="discount-tag">Giảm 50%</span>
+                        <h3>Thời Trang Mùa Hè</h3>
+                        <p>Áp dụng cho tất cả các sản phẩm thời trang mùa hè mới nhất</p>
+                        <div class="timer">
+                            <div class="timer-box">
+                                <span id="days1">21</span>
+                                <small>Ngày</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="hours1">09</span>
+                                <small>Giờ</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="mins1">17</span>
+                                <small>Phút</small>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="product_list.html" class="btn-shop">Mua Ngay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deal 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="offer-card">
+                        <span class="discount-tag">Giảm 30%</span>
+                        <h3>Phụ Kiện Thời Trang</h3>
+                        <p>Áp dụng cho các phụ kiện thời trang cao cấp</p>
+                        <div class="timer">
+                            <div class="timer-box">
+                                <span id="days2">01</span>
+                                <small>Ngày</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="hours2">12</span>
+                                <small>Giờ</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="mins2">17</span>
+                                <small>Phút</small>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="product_list.html" class="btn-shop">Mua Ngay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deal 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="offer-card">
+                        <span class="discount-tag">Mua 2 Tặng 1</span>
+                        <h3>Áo Thun Basic</h3>
+                        <p>Chương trình mua 2 tặng 1 cho tất cả áo thun basic</p>
+                        <div class="timer">
+                            <div class="timer-box">
+                                <span id="days3">03</span>
+                                <small>Ngày</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="hours3">20</span>
+                                <small>Giờ</small>
+                            </div>
+                            <div class="timer-box">
+                                <span id="mins3">17</span>
+                                <small>Phút</small>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="product_list.html" class="btn-shop">Mua Ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section class="special-offers section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Ưu Đãi Đặc Biệt</h2>
+                <p>Những ưu đãi độc quyền dành cho khách hàng thân thiết</p>
+            </div>
+            <div class="row">
+                <!-- Special Offer 1 -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="offer-card">
+                        <div class="offer-badge">Khách VIP</div>
+                        <h3>Giảm 100K cho đơn hàng đầu tiên</h3>
+                        <p>Áp dụng cho khách hàng mới khi đăng ký thành viên</p>
+                        <a href="register.html" class="btn btn-primary">Đăng ký Ngay</a>
+                    </div>
+                </div>
+
+                <!-- Special Offer 2 -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="offer-card">
+                        <span class="discount-tag">Sinh Nhật</span>
+                        <h3>Ưu đãi sinh nhật giảm 20%</h3>
+                        <p>Quà tặng đặc biệt trong tháng sinh nhật của bạn</p>
+                        <a href="#" class="btn-shop">Tìm Hiểu Thêm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section section-padding" style="background-color: #f8f9fa; padding: 80px 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 style="font-size: 36px; margin-bottom: 20px;">Nhận thông tin ưu đãi & cập nhật!</h2>
+                    <p style="color: #666; margin-bottom: 30px;">Đăng ký nhận thông tin để không bỏ lỡ những ưu đãi hấp dẫn và sản phẩm mới nhất từ chúng tôi</p>
+                    <div class="newsletter-form">
+                        <form action="#" class="d-flex justify-content-center">
+                            <input type="email" placeholder="Nhập email của bạn" style="width: 60%; padding: 15px; border: 1px solid #ddd; border-radius: 5px 0 0 5px; outline: none;">
+                            <button type="submit" style="padding: 15px 30px; background: #ff2020; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer; transition: all 0.3s ease;">Đăng Ký</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Start-->
+    <footer>
+       <div class="footer-area footer-padding">
+           <div class="container">
+               <div class="row d-flex justify-content-between">
+                   <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
+                      <div class="single-footer-caption mb-50">
+                        <div class="single-footer-caption mb-30">
+                             <!-- logo -->
+                            <div class="footer-logo">
+                                <a href="index.html"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
+                            </div>
+                            <div class="footer-tittle">
+                                <div class="footer-pera">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore.</p>
+                               </div>
+                            </div>
+                        </div>
+                      </div>
+                   </div>
+                   <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
+                       <div class="single-footer-caption mb-50">
+                           <div class="footer-tittle">
+                               <h4>Quick Links</h4>
+                               <ul>
+                                   <li><a href="about.html">About</a></li>
+                                   <li><a href="offers.html">Offers & Discounts</a></li>
+                                   <li><a href="#"> Get Coupon</a></li>
+                                   <li><a href="contact.html">Contact Us</a></li>
+                               </ul>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                       <div class="single-footer-caption mb-50">
+                           <div class="footer-tittle">
+                               <h4>New Products</h4>
+                               <ul>
+                                   <li><a href="#">Woman Cloth</a></li>
+                                   <li><a href="#">Fashion Accessories</a></li>
+                                   <li><a href="#"> Man Accessories</a></li>
+                                   <li><a href="#"> Rubber made Toys</a></li>
+                               </ul>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
+                       <div class="single-footer-caption mb-50">
+                           <div class="footer-tittle">
+                               <h4>Support</h4>
+                               <ul>
+                                <li><a href="#">Frequently Asked Questions</a></li>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Report a Payment Issue</a></li>
+                            </ul>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- Footer bottom -->
+               <div class="row">
+                <div class="col-xl-7 col-lg-7 col-md-7">
+                    <div class="footer-copy-right">
+                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                   
+                    </div>
+                </div>
+                 <div class="col-xl-5 col-lg-5 col-md-5">
+                    <div class="footer-copy-right f-right">
+                        <!-- social -->
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                            <a href="#"><i class="fas fa-globe"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           </div>
+       </div>
+    </footer>
+    <!-- Footer End -->
+
+    <!-- JS here -->
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+    <script src="./assets/js/owl.carousel.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <script src="./assets/js/wow.min.js"></script>
+    <script src="./assets/js/animated.headline.js"></script>
+    <script src="./assets/js/jquery.magnific-popup.js"></script>
+    <script src="./assets/js/jquery.nice-select.min.js"></script>
+    <script src="./assets/js/jquery.sticky.js"></script>
+    <script src="./assets/js/contact.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/mail-script.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="./assets/js/plugins.js"></script>
+    <script src="./assets/js/main.js"></script>
+
+    <script>
+        // Hàm để format số thành dạng 2 chữ số (thêm số 0 phía trước nếu cần)
+        function formatNumber(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        // Hàm tính thời gian còn lại và cập nhật giao diện
+        function updateTimer(daysId, hoursId, minsId, endDate) {
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const endTime = new Date(endDate).getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    // Nếu đã hết thời gian
+                    clearInterval(timer);
+                    document.getElementById(daysId).innerText = "00";
+                    document.getElementById(hoursId).innerText = "00";
+                    document.getElementById(minsId).innerText = "00";
+                    
+                    // Thêm class để làm mờ card đã hết hạn
+                    const timerElement = document.getElementById(daysId).closest('.offer-card');
+                    if (timerElement) {
+                        timerElement.style.opacity = "0.5";
+                        const discountTag = timerElement.querySelector('.discount-tag');
+                        if (discountTag) {
+                            discountTag.style.backgroundColor = "#999";
+                            discountTag.innerText = "Đã hết hạn";
+                        }
+                        const btnShop = timerElement.querySelector('.btn-shop');
+                        if (btnShop) {
+                            btnShop.style.backgroundColor = "#999";
+                            btnShop.innerText = "Đã kết thúc";
+                            btnShop.style.pointerEvents = "none";
+                        }
+                    }
+                } else {
+                    // Nếu còn thời gian thì tính toán và hiển thị
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+                    document.getElementById(daysId).innerText = formatNumber(days);
+                    document.getElementById(hoursId).innerText = formatNumber(hours);
+                    document.getElementById(minsId).innerText = formatNumber(minutes);
+                }
+            }, 1000);
+        }
+
+        // Thiết lập thời gian kết thúc cho từng ưu đãi
+        // Deal 1: Kết thúc sau 3 tuần
+        const deal1EndDate = new Date();
+        deal1EndDate.setDate(deal1EndDate.getDate() + (3 * 7)); // 3 tuần = 21 ngày
+        deal1EndDate.setHours(23, 59, 59, 0);
+
+        // Deal 2: Kết thúc sau 4 tuần
+        const deal2EndDate = new Date();
+        deal2EndDate.setDate(deal2EndDate.getDate() + (4 * 7)); // 4 tuần = 28 ngày
+        deal2EndDate.setHours(23, 59, 59, 0);
+
+        // Deal 3: Kết thúc sau 5 tuần (1 tháng + 1 tuần)
+        const deal3EndDate = new Date();
+        deal3EndDate.setDate(deal3EndDate.getDate() + (5 * 7)); // 5 tuần = 35 ngày
+        deal3EndDate.setHours(23, 59, 59, 0);
+
+        // Khởi tạo đồng hồ đếm ngược cho từng ưu đãi
+        updateTimer('days1', 'hours1', 'mins1', deal1EndDate);
+        updateTimer('days2', 'hours2', 'mins2', deal2EndDate);
+        updateTimer('days3', 'hours3', 'mins3', deal3EndDate);
+    </script>
+</body>
+</html> 
