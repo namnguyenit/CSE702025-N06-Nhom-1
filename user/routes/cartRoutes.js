@@ -6,6 +6,28 @@ router.post('/add', cartController.addToCart);
 router.get('/', cartController.getCart);
 router.get('/checkout', async (req, res) => {
     try {
+        if (req.query.buyNow === '1') {
+            // Lấy thông tin sản phẩm từ query
+            const { productId, name, type, size, price, qty } = req.query;
+            // Tìm sản phẩm trong DB để lấy ảnh, kiểm tra tồn tại
+            let product = null;
+            if (productId) {
+                product = await require('../models/ProductModel').findById(productId);
+            }
+            // Tạo object giống cart item
+            const cart = [{
+                product: {
+                    _id: productId,
+                    name: name || (product && product.name) || '',
+                    type: type || (product && product.type) || '',
+                    detail: [{ price: price, size: size }],
+                    image: product && product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : '/img/product-placeholder.png'
+                },
+                quantity: parseInt(qty) || 1
+            }];
+            const cartTotal = (parseFloat(price) || 0) * (parseInt(qty) || 1);
+            return res.render('pages/checkout', { title: 'Thanh toán', cart, cartTotal, buyNow: true });
+        }
         const userId = req.session.user._id;
         const user = await require('../models/UserModel').findById(userId).populate('carts.productID');
         const cart = user.carts.map(item => ({
@@ -19,9 +41,9 @@ router.get('/checkout', async (req, res) => {
             }
             return sum + (price * item.quantity);
         }, 0);
-        res.render('pages/checkout', { title: 'Thanh toán', cart, cartTotal });
+        res.render('pages/checkout', { title: 'Thanh toán', cart, cartTotal, buyNow: false });
     } catch (err) {
-        res.render('pages/checkout', { title: 'Thanh toán', cart: [], cartTotal: 0 });
+        res.render('pages/checkout', { title: 'Thanh toán', cart: [], cartTotal: 0, buyNow: false });
     }
 });
 router.post('/checkout', cartController.checkoutCart);

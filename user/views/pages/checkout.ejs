@@ -55,6 +55,16 @@
                     <button type="submit" class="btn_3 w-100 mt-3">Đặt Hàng</button>
                 </div>
             </div>
+            <% if (typeof buyNow !== 'undefined' && buyNow && cart && cart.length === 1) { %>
+                <input type="hidden" name="buyNow" value="1">
+                <input type="hidden" name="productId" value="<%= cart[0].product._id %>">
+                <input type="hidden" name="name" value="<%= cart[0].product.name %>">
+                <input type="hidden" name="type" value="<%= cart[0].product.type %>">
+                <input type="hidden" name="size" value="<%= cart[0].product.detail[0].size %>">
+                <input type="hidden" name="price" value="<%= cart[0].product.detail[0].price %>">
+                <input type="hidden" name="quantity" value="<%= cart[0].quantity %>">
+                <input type="hidden" name="image" value="<%= cart[0].product.image %>">
+            <% } %>
         </form>
     </div>
 </section>
@@ -78,15 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const result = await res.json();
         if (result.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Đặt hàng thành công!',
-            text: 'Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đã được ghi nhận.',
-            confirmButtonText: 'Xem lịch sử đơn',
-            allowOutsideClick: false
-          }).then(() => {
-            window.location.href = '/order/history';
-          });
+          window.location.href = '/order/checkout?orderId=' + result.orderId;
         } else {
           Swal.fire({
             icon: 'error',

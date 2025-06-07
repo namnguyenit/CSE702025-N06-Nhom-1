@@ -271,37 +271,18 @@
             address: 'Địa chỉ mẫu',
             city: 'Hà Nội'
         };
-        const res = await fetch('/order/quick-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: '<%= product.name %>',
-                type,
-                size,
-                price,
-                quantity: qty,
-                image,
-                shippingAddress
-            })
+        const productId = '<%= product._id %>';
+        // Chuyển hướng sang trang checkout với thông tin sản phẩm
+        const params = new URLSearchParams({
+            buyNow: 1,
+            productId,
+            name: '<%= product.name %>',
+            type,
+            size,
+            price,
+            qty
         });
-        const data = await res.json();
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Đặt hàng thành công!',
-                text: '',
-                showConfirmButton: true
-            }).then(() => {
-                window.location.href = '/order/checkout?orderId=' + data.orderId;
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Đặt hàng thất bại!',
-                text: data.message || '',
-                showConfirmButton: true
-            });
-        }
+        window.location.href = '/cart/checkout?' + params.toString();
     });
 
     document.getElementById('addToCartBtn').addEventListener('click', async function() {

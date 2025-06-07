@@ -1,5 +1,7 @@
 <%- include('../partials/header', { title: title }) %>
 
+<% const statusMap = { pending: 'Chờ duyệt', waiting: 'Chờ giao', shipping: 'Đang giao', delivered: 'Giao thành công', cancelled: 'Đã hủy' }; %>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">

@@ -13,15 +13,56 @@ function isAjax(req) {
 
 exports.quickOrder = async (req, res, next) => {
     try {
-        // Lấy thông tin từ form checkout
         const userId = req.session.user ? req.session.user._id : null;
-        const { firstName, lastName, address, phone, email } = req.body;
+        // Nếu có trường buyNow hoặc đủ thông tin sản phẩm => MUA NGAY
+        const { name, type, size, price, quantity, image, shippingAddress: shippingAddressData, productId } = req.body;
         if (!userId) {
             if (isAjax(req)) {
                 return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để đặt hàng.' });
             }
             return res.redirect('/auth/login');
         }
+        // Nếu có đủ thông tin sản phẩm (mua ngay)
+        if (name && type && size && price && quantity) {
+            // Lấy thông tin địa chỉ từ form nếu có
+            const fullName = req.body.firstName && req.body.lastName ? `${req.body.firstName} ${req.body.lastName}`.trim() : '';
+            const shippingAddress = {
+                fullName: fullName || (shippingAddressData && shippingAddressData.fullName) || '',
+                address: req.body.address || (shippingAddressData && shippingAddressData.address) || '',
+                phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
+                email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
+            };
+            const item = {
+                name,
+                group: type,
+                idSP: productId || '',
+                product: productId || undefined, // Đảm bảo đúng ObjectId nếu có
+                price: typeof price === 'string' ? parseFloat(price) : price,
+                quantity: typeof quantity === 'string' ? parseInt(quantity) : quantity,
+                size,
+                image: image || '/img/default-product.png'
+            };
+            const totalAmount = item.price * item.quantity;
+            const order = new Order({
+                user: userId,
+                items: [item],
+                totalAmount,
+                shippingAddress,
+                status: 'pending',
+                paymentMethod: 'COD',
+                paymentStatus: 'chưa thanh toán'
+            });
+            await order.save();
+            // Thêm order vào user.orders, KHÔNG xóa giỏ hàng
+            const user = await User.findById(userId);
+            user.orders.push(order._id);
+            await user.save();
+            if (isAjax(req)) {
+                return res.json({ success: true, orderId: order._id });
+            }
+            return res.redirect('/order/checkout?orderId=' + order._id);
+        }
+        // Nếu không phải mua ngay, giữ logic cũ: lấy từ giỏ hàng
         const user = await User.findById(userId).populate('carts.productID');
         if (!user || !user.carts.length) {
             if (isAjax(req)) {
@@ -29,14 +70,13 @@ exports.quickOrder = async (req, res, next) => {
             }
             return res.redirect('/cart');
         }
-        // Tạo shippingAddress object
+        const fullName = req.body.firstName && req.body.lastName ? `${req.body.firstName} ${req.body.lastName}`.trim() : '';
         const shippingAddress = {
-            fullName: `${firstName} ${lastName}`.trim(),
-            address,
-            phone,
-            email
+            fullName: fullName || (shippingAddressData && shippingAddressData.fullName) || '',
+            address: req.body.address || (shippingAddressData && shippingAddressData.address) || '',
+            phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
+            email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
         };
-        // Chuẩn bị items cho order
         const items = user.carts.map(item => ({
             product: item.productID._id,
             group: item.productID.type || '',
@@ -47,9 +87,7 @@ exports.quickOrder = async (req, res, next) => {
             size: item.productID.detail[0]?.size || '',
             image: item.productID.image && item.productID.image.imageData ? `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}` : '/img/default-product.png'
         }));
-        // Tính tổng tiền
         const totalAmount = items.reduce((sum, item) => sum + (typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity, 0);
-        // Tạo đơn hàng
         const order = new Order({
             user: userId,
             items,
@@ -60,15 +98,12 @@ exports.quickOrder = async (req, res, next) => {
             paymentStatus: 'chưa thanh toán'
         });
         await order.save();
-        // Thêm order vào user.orders, xóa giỏ hàng
         user.orders.push(order._id);
         user.carts = [];
         await user.save();
-        // Nếu là AJAX/fetch, trả về JSON
         if (isAjax(req)) {
             return res.json({ success: true, orderId: order._id });
         }
-        // Chuyển hướng về trang lịch sử mua hàng sau khi đặt hàng thành công
         return res.redirect('/order/history');
     } catch (err) {
         if (isAjax(req)) {
