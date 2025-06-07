@@ -147,11 +147,11 @@ exports.updateCartItem = async (req, res) => {
 exports.removeFromCart = async (req, res) => {
     try {
         const userId = req.session.user._id;
-        const { productId } = req.body;
-        if (!productId) return res.json({ success: false, message: 'Thiếu productId' });
+        const { productId, type, size } = req.body;
+        if (!productId || !type || !size) return res.json({ success: false, message: 'Thiếu thông tin sản phẩm' });
         const user = await User.findById(userId);
         const prevLength = user.carts.length;
-        user.carts = user.carts.filter(item => item.productID.toString() !== productId);
+        user.carts = user.carts.filter(item => !(item.productID.toString() === productId && item.type === type && item.size === size));
         if (user.carts.length === prevLength) return res.json({ success: false, message: 'Không tìm thấy sản phẩm để xóa' });
         await user.save();
         res.json({ success: true });

@@ -222,7 +222,7 @@
                     </thead>
                     <tbody>
                         <% cart.items.forEach(item => { %>
-                        <tr data-product-id="<%= item.product %>">
+                        <tr data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>">
                             <td>
                                 <div class="cart-product-info">
                                     <div class="cart-product-img">
@@ -247,7 +247,7 @@
                                 <span class="summary-value item-total"><%= (item.price * item.qty).toLocaleString('vi-VN') %> ₫</span>
                             </td>
                             <td>
-                                <button class="cart-remove-btn" data-product-id="<%= item.product %>"><i class="fas fa-trash-alt"></i></button>
+                                <button class="cart-remove-btn" data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                         <% }); %>
@@ -311,17 +311,17 @@ function updateCart(productId, qty) {
         }
     });
 }
-function removeFromCart(productId) {
+function removeFromCart(productId, type, size) {
     return fetch('/cart/remove', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId })
+        body: JSON.stringify({ productId, type, size })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             // Xóa dòng sản phẩm khỏi bảng
-            const row = document.querySelector(`tr[data-product-id='${productId}']`);
+            const row = document.querySelector(`tr[data-product-id='${productId}'][data-type='${type}'][data-size='${size}']`);
             if (row) row.remove();
             // Cập nhật lại tổng phụ và tổng cộng
             let subtotal = 0;
@@ -401,7 +401,9 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.dataset.productId;
-            if (updating[productId]) return;
+            const type = this.dataset.type;
+            const size = this.dataset.size;
+            if (updating[productId + '_' + type + '_' + size]) return;
             if (window.Swal) {
                 Swal.fire({
                     title: 'Xác nhận xóa',
@@ -413,14 +415,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        updating[productId] = true;
-                        removeFromCart(productId).finally(() => updating[productId] = false);
+                        updating[productId + '_' + type + '_' + size] = true;
+                        removeFromCart(productId, type, size).finally(() => updating[productId + '_' + type + '_' + size] = false);
                     }
                 });
             } else {
                 if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    updating[productId] = true;
-                    removeFromCart(productId).finally(() => updating[productId] = false);
+                    updating[productId + '_' + type + '_' + size] = true;
+                    removeFromCart(productId, type, size).finally(() => updating[productId + '_' + type + '_' + size] = false);
                 }
             }
         });
