@@ -16,9 +16,20 @@ exports.addToCart = async (req, res, next) => {
             user.carts.push({ productID, orderNumber });
         }
         await user.save();
-        res.json({ success: true });
+        // Nếu là AJAX request, trả về JSON để frontend show popup
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: true, addcart_success: true });
+        }
+        // Nếu là form submit, redirect về trang trước với query param
+        const referer = req.get('Referer') || '/';
+        const url = new URL(referer, `${req.protocol}://${req.get('host')}`);
+        url.searchParams.set('addcart_success', '1');
+        return res.redirect(url.pathname + url.search);
     } catch (err) {
-        res.json({ success: false, message: err.message });
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: false, message: err.message });
+        }
+        next(err);
     }
 };
 
@@ -78,7 +89,7 @@ exports.checkoutCart = async (req, res, next) => {
                 productNumber: item.orderNumber
             })),
             totalAmount,
-            status: 'chờ duyệt',
+            status: 'pending', // Use English status code
             shipAddress: user.address
         });
         await order.save();
@@ -86,7 +97,8 @@ exports.checkoutCart = async (req, res, next) => {
         user.orders.push(order._id);
         user.carts = [];
         await user.save();
-        res.redirect('/orders/history');
+        // Redirect to checkout page with success param for popup
+        res.redirect('/checkout?success=1');
     } catch (err) {
         next(err);
     }

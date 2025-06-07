@@ -13,16 +13,17 @@
                 </tr>
             </thead>
             <tbody>
+                <% const statusMap = { pending: 'Chờ duyệt', waiting: 'Chờ giao', shipping: 'Đang giao', delivered: 'Giao thành công', cancelled: 'Đã hủy' }; %>
                 <% orders.forEach(order => { %>
                     <tr>
                         <td><%= order._id %></td>
                         <td><%= order.orderDate ? order.orderDate.toLocaleDateString('vi-VN') : '' %></td>
-                        <td><%= order.status %></td>
+                        <td><%= statusMap[order.status] || order.status %></td>
                         <td><%= order.totalAmount %></td>
                         <td>
                             <ul>
                                 <% order.items.forEach(item => { %>
-                                    <li><%= item.productID ? item.productID.name : '' %> x <%= item.productNumber %></li>
+                                    <li><%= item.product ? item.product.name : '' %> x <%= item.quantity %></li>
                                 <% }) %>
                             </ul>
                         </td>

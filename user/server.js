@@ -71,7 +71,8 @@ app.use((req, res, next) => {
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes); // Route cho sản phẩm
-app.use('/orders', orderRoutes); // Route cho đặt hàng
+app.use('/order', orderRoutes); // Route cho đặt hàng (đúng path)
+// app.use('/orders', orderRoutes); // Xóa hoặc comment dòng này nếu có
 app.use('/cart', cartRoutes);
 // app.use('/shipper', shipperRoutes);
 

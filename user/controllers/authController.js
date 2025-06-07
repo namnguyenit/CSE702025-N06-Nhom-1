@@ -65,7 +65,8 @@ exports.postLogin = async (req, res, next) => {
         } else if (user.role === 'admin') {
             return res.redirect('/');
         }
-        res.redirect('/');
+        // Redirect to homepage with login_success=1 for popup
+        return res.redirect('/?login_success=1');
 
     } catch (err) {
         console.error('Lỗi postLogin:', err);

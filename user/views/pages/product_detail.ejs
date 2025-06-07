@@ -111,6 +111,12 @@
   </div>
 </div>
 
+<!-- Alert popup khi thêm vào giỏ hàng thành công -->
+<div id="addToCartAlert" class="alert alert-success alert-dismissible fade" role="alert" style="position: fixed; top: 80px; right: 30px; z-index: 9999; min-width: 250px; display: none;">
+    Đã thêm vào giỏ hàng!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <script>
     // Dữ liệu các loại sản phẩm và size
     const productTypes = JSON.parse('<%- JSON.stringify(product.types) %>');
@@ -269,7 +275,7 @@
             address: 'Địa chỉ mẫu',
             city: 'Hà Nội'
         };
-        const res = await fetch('/orders/quick-order', {
+        const res = await fetch('/order/quick-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -284,7 +290,7 @@
         });
         const data = await res.json();
         if (data.success) {
-            window.location.href = '/orders/checkout?orderId=' + data.orderId;
+            window.location.href = '/order/checkout?orderId=' + data.orderId;
         } else {
             alert('Đặt hàng thất bại!');
         }
@@ -312,7 +318,14 @@
         });
         const data = await res.json();
         if (data.success) {
-            alert('Đã thêm vào giỏ hàng!');
+            // Hiện popup thành công
+            const alertEl = document.getElementById('addToCartAlert');
+            alertEl.style.display = 'block';
+            alertEl.classList.add('show');
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+                alertEl.style.display = 'none';
+            }, 2000);
         } else {
             alert('Thêm vào giỏ hàng thất bại!');
         }

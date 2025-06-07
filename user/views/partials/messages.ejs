@@ -1,43 +1,31 @@
 <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
-    <div class="container mt-3">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%= success_msg %>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success_msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <% } %>
 
 <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
-    <div class="container mt-3">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= error_msg %>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error_msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <% } %>
 
-<% if (typeof error !== 'undefined' && error.length > 0 && (!Array.isArray(error))) { %> <div class="container mt-3">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= error %>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<% if (typeof error !== 'undefined' && error.length > 0 && (!Array.isArray(error))) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <% } %>
 
-<% if (typeof errors !== 'undefined' && errors.length > 0 && Array.isArray(errors)) { %> <div class="container mt-3">
-        <% errors.forEach(function(err) { %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <%= err.msg %>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        <% }); %>
+<% if (typeof errors !== 'undefined' && errors.length > 0 && Array.isArray(errors)) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul style="margin-bottom:0;">
+            <% errors.forEach(function(e) { %>
+                <li><%= e.msg %></li>
+            <% }); %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <% } %>

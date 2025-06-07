@@ -64,7 +64,7 @@
                                 <ul>
                                     <% if (currentUser) { %>
                                         <li><a href="/auth/profile">Tài khoản (<%= (currentUser.name || currentUser.fullName || '').split(' ').pop() %>)</a></li>
-                                        <li><a href="/orders/history">Lịch sử mua hàng</a></li>
+                                        <li><a href="/history">Lịch sử mua hàng</a></li>
                                         <li><a href="/auth/logout">Đăng xuất</a></li>
                                     <% } else { %>
                                         <li><a href="/auth/login">Đăng nhập</a></li>

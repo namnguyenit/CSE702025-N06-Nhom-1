@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const pageController = require('../controllers/pageController');
+const orderController = require('../controllers/orderController');
 // const { isAuthenticated, isGuest } = require('../middlewares/authMiddleware'); // Nếu bạn dùng
 
 // GET / - Trang chủ
@@ -18,6 +19,9 @@ router.get('/elements', pageController.getElementsPage);
 
 // POST /subscribe - Xử lý đăng ký nhận bản tin
 router.post('/subscribe', pageController.handleSubscription); // Route mới cho form đăng ký
+
+// GET /history - Lịch sử mua hàng
+router.get('/history', orderController.getOrderHistory);
 
 // Các route khác cho các trang tĩnh (ví dụ)
 // router.get('/faq', pageController.getFaqPage);

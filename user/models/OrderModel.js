@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderItemSchema = new Schema({
-    productID: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-    productNumber: { type: Number, required: true }
+    product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    quantity: { type: Number, required: true },
+    name: String,
+    price: Schema.Types.Mixed,
+    size: String,
+    image: String,
+    group: String,
+    idSP: String
 }, { _id: false });
 
 const orderSchema = new Schema({
@@ -14,7 +20,15 @@ const orderSchema = new Schema({
     totalAmount: Number,
     status: String,
     items: [orderItemSchema],
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    shippingAddress: {
+        fullName: String,
+        address: String,
+        phone: String,
+        email: String
+    },
+    paymentMethod: String,
+    paymentStatus: String
 });
 
 module.exports = mongoose.model('Order', orderSchema);

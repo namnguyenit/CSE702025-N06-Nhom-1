@@ -28,9 +28,9 @@
             <div><%= order.shippingAddress.address %>, <%= order.shippingAddress.city %></div>
           </div>
           <div class="mb-3">
-            <strong>Trạng thái:</strong> <span class="badge badge-warning"><%= order.status %></span>
+            <strong>Trạng thái:</strong> <span class="badge badge-warning"><%= statusMap[order.status] || order.status %></span>
           </div>
-          <a href="/" class="btn btn-outline-primary">Tiếp tục mua sắm</a>
+          <a href="/order/history" class="btn btn-outline-primary">Xem lịch sử mua hàng</a>
         </div>
       </div>
     </div>
