@@ -5,6 +5,9 @@ const Order = require('../models/OrderModel');
 // Thêm sản phẩm vào giỏ hàng
 exports.addToCart = async (req, res, next) => {
     try {
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để thêm vào giỏ hàng.' });
+        }
         const userId = req.session.user._id;
         const { productID, orderNumber } = req.body;
         const user = await User.findById(userId);
@@ -16,20 +19,10 @@ exports.addToCart = async (req, res, next) => {
             user.carts.push({ productID, orderNumber });
         }
         await user.save();
-        // Nếu là AJAX request, trả về JSON để frontend show popup
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.json({ success: true, addcart_success: true });
-        }
-        // Nếu là form submit, redirect về trang trước với query param
-        const referer = req.get('Referer') || '/';
-        const url = new URL(referer, `${req.protocol}://${req.get('host')}`);
-        url.searchParams.set('addcart_success', '1');
-        return res.redirect(url.pathname + url.search);
+        // Luôn trả về JSON cho mọi request POST /cart/add
+        return res.json({ success: true, addcart_success: true });
     } catch (err) {
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.json({ success: false, message: err.message });
-        }
-        next(err);
+        return res.json({ success: false, message: err.message });
     }
 };
 
@@ -72,9 +65,20 @@ exports.getCart = async (req, res, next) => {
 // Thanh toán toàn bộ giỏ hàng
 exports.checkoutCart = async (req, res, next) => {
     try {
+        if (!req.session.user || !req.session.user._id) {
+            if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+                return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để thanh toán.' });
+            }
+            return res.redirect('/auth/login');
+        }
         const userId = req.session.user._id;
         const user = await User.findById(userId).populate('carts.productID');
-        if (!user.carts.length) return res.redirect('/cart');
+        if (!user.carts.length) {
+            if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+                return res.status(400).json({ success: false, message: 'Giỏ hàng rỗng.' });
+            }
+            return res.redirect('/cart');
+        }
         // Tính tổng tiền
         let totalAmount = 0;
         user.carts.forEach(item => {
@@ -97,9 +101,16 @@ exports.checkoutCart = async (req, res, next) => {
         user.orders.push(order._id);
         user.carts = [];
         await user.save();
+        // Nếu là AJAX request, trả về JSON
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: true, orderId: order._id });
+        }
         // Redirect to checkout page with success param for popup
         res.redirect('/checkout?success=1');
     } catch (err) {
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: false, message: err.message });
+        }
         next(err);
     }
 };

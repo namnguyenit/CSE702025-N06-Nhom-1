@@ -7,9 +7,19 @@ exports.quickOrder = async (req, res, next) => {
         // Lấy thông tin từ form checkout
         const userId = req.session.user ? req.session.user._id : null;
         const { firstName, lastName, address, phone, email } = req.body;
-        if (!userId) return res.redirect('/auth/login');
+        if (!userId) {
+            if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+                return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để đặt hàng.' });
+            }
+            return res.redirect('/auth/login');
+        }
         const user = await User.findById(userId).populate('carts.productID');
-        if (!user || !user.carts.length) return res.redirect('/cart');
+        if (!user || !user.carts.length) {
+            if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+                return res.status(400).json({ success: false, message: 'Giỏ hàng rỗng.' });
+            }
+            return res.redirect('/cart');
+        }
         // Tạo shippingAddress object
         const shippingAddress = {
             fullName: `${firstName} ${lastName}`.trim(),
@@ -45,9 +55,16 @@ exports.quickOrder = async (req, res, next) => {
         user.orders.push(order._id);
         user.carts = [];
         await user.save();
+        // Nếu là AJAX request, trả về JSON
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: true, orderId: order._id });
+        }
         // Chuyển hướng về trang lịch sử mua hàng sau khi đặt hàng thành công
         return res.redirect('/order/history');
     } catch (err) {
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: false, message: err.message });
+        }
         next(err);
     }
 };

@@ -111,12 +111,8 @@
   </div>
 </div>
 
-<!-- Alert popup khi thêm vào giỏ hàng thành công -->
-<div id="addToCartAlert" class="alert alert-success alert-dismissible fade" role="alert" style="position: fixed; top: 80px; right: 30px; z-index: 9999; min-width: 250px; display: none;">
-    Đã thêm vào giỏ hàng!
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-
+<!-- Sử dụng SweetAlert2 từ CDN để đảm bảo luôn hoạt động -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.js"></script>
 <script>
     // Dữ liệu các loại sản phẩm và size
     const productTypes = JSON.parse('<%- JSON.stringify(product.types) %>');
@@ -290,9 +286,21 @@
         });
         const data = await res.json();
         if (data.success) {
-            window.location.href = '/order/checkout?orderId=' + data.orderId;
+            Swal.fire({
+                icon: 'success',
+                title: 'Đặt hàng thành công!',
+                text: '',
+                showConfirmButton: true
+            }).then(() => {
+                window.location.href = '/order/checkout?orderId=' + data.orderId;
+            });
         } else {
-            alert('Đặt hàng thất bại!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Đặt hàng thất bại!',
+                text: data.message || '',
+                showConfirmButton: true
+            });
         }
     });
 
@@ -307,27 +315,40 @@
         const typeObj = productTypes[typeIdx];
         const image = getTypeImage(typeObj);
         const productID = '<%= product._id %>';
-        const res = await fetch('/cart/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                productID,
-                orderNumber: qty,
-                image // gửi đúng ảnh type nếu backend cần
-            })
-        });
-        const data = await res.json();
-        if (data.success) {
-            // Hiện popup thành công
-            const alertEl = document.getElementById('addToCartAlert');
-            alertEl.style.display = 'block';
-            alertEl.classList.add('show');
-            setTimeout(() => {
-                alertEl.classList.remove('show');
-                alertEl.style.display = 'none';
-            }, 2000);
-        } else {
-            alert('Thêm vào giỏ hàng thất bại!');
+        try {
+            const res = await fetch('/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productID,
+                    orderNumber: qty,
+                    image
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thêm vào giỏ hàng thất bại!',
+                    text: data.message || '',
+                    showConfirmButton: true
+                });
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi kết nối!',
+                text: 'Không thể thêm vào giỏ hàng. Vui lòng thử lại.',
+                showConfirmButton: true
+            });
         }
     });
 
