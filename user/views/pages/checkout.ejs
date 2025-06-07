@@ -59,4 +59,52 @@
     </div>
 </section>
 
+<script>
+// Đảm bảo SweetAlert2 đã được nhúng qua footer
+
+document.addEventListener('DOMContentLoaded', function() {
+  const checkoutForm = document.querySelector('form[action="/order/quick-order"]');
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(checkoutForm);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
+      try {
+        const res = await fetch('/order/quick-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (result.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Đặt hàng thành công!',
+            text: 'Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đã được ghi nhận.',
+            confirmButtonText: 'Xem lịch sử đơn',
+            allowOutsideClick: false
+          }).then(() => {
+            window.location.href = '/order/history';
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Đặt hàng thất bại!',
+            text: result.message || 'Có lỗi xảy ra, vui lòng thử lại.',
+            confirmButtonText: 'OK'
+          });
+        }
+      } catch (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi kết nối!',
+          text: 'Không thể đặt hàng. Vui lòng thử lại.',
+          confirmButtonText: 'OK'
+        });
+      }
+    });
+  }
+});
+</script>
 <%- include('../partials/footer') %>
