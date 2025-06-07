@@ -48,12 +48,20 @@ exports.getProductListPage = async (req, res, next) => {
                 detail: prod.detail
             });
         });
+        // Lấy danh sách type duy nhất từ các sản phẩm
+        const typesSet = new Set();
+        products.forEach(prod => {
+            if (prod.type) typesSet.add(prod.type);
+        });
+        const types = Array.from(typesSet);
         res.render('pages/product_list', {
             title: pageTitle,
             products: Object.values(groupedProducts),
             categories,
             currentCategory: categoryName || 'all',
-            sortBy: sortBy || ''
+            sortBy: sortBy || '',
+            types, // truyền types cho EJS
+            currentType: req.query.type || ''
         });
     } catch (err) {
         next(err);
