@@ -9,14 +9,14 @@ exports.addToCart = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để thêm vào giỏ hàng.' });
         }
         const userId = req.session.user._id;
-        const { productID, orderNumber } = req.body;
+        const { productID, orderNumber, type, size } = req.body;
         const user = await User.findById(userId);
-        // Nếu sản phẩm đã có trong giỏ thì cộng dồn số lượng
-        const cartItem = user.carts.find(item => item.productID.toString() === productID);
+        // Nếu sản phẩm đã có trong giỏ (cùng productID, type, size) thì cộng dồn số lượng
+        const cartItem = user.carts.find(item => item.productID.toString() === productID && item.type === type && item.size === size);
         if (cartItem) {
             cartItem.orderNumber += orderNumber;
         } else {
-            user.carts.push({ productID, orderNumber });
+            user.carts.push({ productID, orderNumber, type, size });
         }
         await user.save();
         // Luôn trả về JSON cho mọi request POST /cart/add
@@ -34,16 +34,22 @@ exports.getCart = async (req, res, next) => {
         // Chuyển đổi carts thành dạng cart.items và tính tổng giá trị
         const items = await Promise.all(user.carts.map(async item => {
             const product = item.productID;
-            // Đảm bảo price là số
-            let price = product.detail[0]?.price || 0;
+            let price = product.detail.find(d => d.size === item.size)?.price || product.detail[0]?.price || 0;
             if (typeof price === 'string') price = parseFloat(price) || 0;
+            // Lấy đúng ảnh của biến thể (document Product)
+            let image = '/img/default-product.png';
+            if (product.image && product.image.imageData && product.image.imageType) {
+                image = `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}`;
+            }
             return {
                 product: product._id,
                 name: product.name,
-                image: product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : '/img/default-product.png',
+                type: item.type,
+                size: item.size,
+                image: image,
                 price: price,
                 qty: item.orderNumber,
-                countInStock: product.detail[0]?.stock || 0
+                countInStock: product.detail.find(d => d.size === item.size)?.stock || product.detail[0]?.stock || 0
             };
         }));
         const itemsPrice = items.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -89,11 +95,16 @@ exports.checkoutCart = async (req, res, next) => {
         const order = new Order({
             user: userId,
             items: user.carts.map(item => ({
-                productID: item.productID._id,
-                productNumber: item.orderNumber
+                product: item.productID._id,
+                name: item.productID.name,
+                type: item.type,
+                size: item.size,
+                price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
+                quantity: item.orderNumber,
+                image: item.productID.image && item.productID.image.imageData ? `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}` : '/img/default-product.png'
             })),
             totalAmount,
-            status: 'pending', // Use English status code
+            status: 'pending',
             shipAddress: user.address
         });
         await order.save();

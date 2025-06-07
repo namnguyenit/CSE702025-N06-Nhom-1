@@ -76,6 +76,7 @@ exports.getProductDetailPage = async (req, res, next) => {
             description: variants[0].description,
             image: variants[0].image && variants[0].image.imageData ? `data:${variants[0].image.imageType};base64,${variants[0].image.imageData.toString('base64')}` : '/img/product-placeholder.png',
             types: variants.map(v => ({
+                _id: v._id, // Thêm _id của từng biến thể
                 type: v.type,
                 detail: v.detail,
                 image: v.image && v.image.imageData ? {

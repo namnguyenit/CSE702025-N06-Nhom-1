@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 
 const cartSchema = new Schema({
     productID: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    type: { type: String, required: true },
+    size: { type: String, required: true },
     orderNumber: { type: Number, required: true, min: 1 }
 }, { _id: false });
 

@@ -261,17 +261,9 @@
         const detail = (productTypes[typeIdx]?.detail || [])[sizeIdx] || {};
         const price = parseInt(detail.price) || 0;
         const size = detail.size || '';
-        // Lấy đúng ảnh của type đang chọn
         const typeObj = productTypes[typeIdx];
         const image = getTypeImage(typeObj);
-        // Địa chỉ giao hàng mẫu, thực tế nên lấy từ user nhập
-        const shippingAddress = {
-            fullName: 'Khách lẻ',
-            phone: '0123456789',
-            address: 'Địa chỉ mẫu',
-            city: 'Hà Nội'
-        };
-        const productId = '<%= product._id %>';
+        const productId = productTypes[typeIdx]?._id || '<%= product._id %>';
         // Chuyển hướng sang trang checkout với thông tin sản phẩm
         const params = new URLSearchParams({
             buyNow: 1,
@@ -295,7 +287,7 @@
         const qty = parseInt(document.getElementById('qtyInput').value) || 1;
         const typeObj = productTypes[typeIdx];
         const image = getTypeImage(typeObj);
-        const productID = '<%= product._id %>';
+        const productID = productTypes[typeIdx]?._id || '<%= product._id %>';
         try {
             const res = await fetch('/cart/add', {
                 method: 'POST',
@@ -303,6 +295,8 @@
                 body: JSON.stringify({
                     productID,
                     orderNumber: qty,
+                    type: productTypes[typeIdx]?.type || '',
+                    size: (productTypes[typeIdx]?.detail || [])[sizeIdx]?.size || '',
                     image
                 })
             });

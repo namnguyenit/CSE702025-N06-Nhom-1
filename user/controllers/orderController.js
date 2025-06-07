@@ -24,14 +24,14 @@ exports.quickOrder = async (req, res, next) => {
         }
         // Nếu có đủ thông tin sản phẩm (mua ngay)
         if (name && type && size && price && quantity) {
-            // Lấy thông tin địa chỉ từ form nếu có
-            const fullName = req.body.firstName && req.body.lastName ? `${req.body.firstName} ${req.body.lastName}`.trim() : '';
-            const shippingAddress = {
-                fullName: fullName || (shippingAddressData && shippingAddressData.fullName) || '',
-                address: req.body.address || (shippingAddressData && shippingAddressData.address) || '',
-                phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
-                email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
-            };
+            // Lấy đúng ảnh biến thể nếu productId có trong DB
+            let imageUrl = image || '/img/default-product.png';
+            if (productId) {
+                const productDoc = await Product.findById(productId);
+                if (productDoc && productDoc.image && productDoc.image.imageData && productDoc.image.imageType) {
+                    imageUrl = `data:${productDoc.image.imageType};base64,${productDoc.image.imageData.toString('base64')}`;
+                }
+            }
             const item = {
                 name,
                 group: type,
@@ -40,7 +40,7 @@ exports.quickOrder = async (req, res, next) => {
                 price: typeof price === 'string' ? parseFloat(price) : price,
                 quantity: typeof quantity === 'string' ? parseInt(quantity) : quantity,
                 size,
-                image: image || '/img/default-product.png'
+                image: imageUrl
             };
             const totalAmount = item.price * item.quantity;
             const order = new Order({
@@ -82,9 +82,9 @@ exports.quickOrder = async (req, res, next) => {
             group: item.productID.type || '',
             idSP: item.productID._id.toString(),
             name: item.productID.name,
-            price: item.productID.detail[0]?.price || 0,
+            price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
             quantity: item.orderNumber,
-            size: item.productID.detail[0]?.size || '',
+            size: item.size,
             image: item.productID.image && item.productID.image.imageData ? `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}` : '/img/default-product.png'
         }));
         const totalAmount = items.reduce((sum, item) => sum + (typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity, 0);
