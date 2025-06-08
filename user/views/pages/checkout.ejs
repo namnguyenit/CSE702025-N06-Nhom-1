@@ -42,14 +42,46 @@
                     <h2>Đơn Hàng Của Bạn</h2>
                     <ul class="list">
                         <% if (cart && cart.length > 0) { %>
-                            <% cart.forEach(item => { %>
+                            <% cart.forEach(item => { 
+                                const p = item.product || {}; 
+                                const name = p.name || item.name || '';
+                                const quantity = item.quantity || item.qty || 1;
+                                let price = 0;
+                                if (typeof p.detail === 'object' && p.detail && p.detail[0]) {
+                                  price = typeof p.detail[0].price === 'string' ? parseFloat(p.detail[0].price) : p.detail[0].price;
+                                } else if (typeof item.price !== 'undefined') {
+                                  price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+                                }
+                                let image = '';
+                                if (typeof p.image === 'string' && p.image.startsWith('data:')) {
+                                  image = p.image;
+                                } else if (p.image && p.image.imageData && p.image.imageType) {
+                                  let base64 = '';
+                                  if (typeof p.image.imageData === 'string') {
+                                    base64 = p.image.imageData;
+                                  } else if (p.image.imageData && typeof p.image.imageData.toString === 'function') {
+                                    base64 = p.image.imageData.toString('base64');
+                                  }
+                                  image = base64 ? `data:${p.image.imageType};base64,${base64}` : '';
+                                } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+                                  image = item.image;
+                                } else if (item.image && item.image.imageData && item.image.imageType) {
+                                  let base64 = '';
+                                  if (typeof item.image.imageData === 'string') {
+                                    base64 = item.image.imageData;
+                                  } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
+                                    base64 = item.image.imageData.toString('base64');
+                                  }
+                                  image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
+                                }
+                            %>
                                 <li class="d-flex align-items-center">
-                                    <% if (item.image && item.image.startsWith('data:')) { %>
-                                        <img src="<%= item.image %>" alt="<%= item.name %>" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
+                                    <% if (image) { %>
+                                        <img src="<%= image %>" alt="<%= name %>" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
                                     <% } else { %>
                                         <img src="/img/no-image.png" alt="No image" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
                                     <% } %>
-                                    <%= item.name %> <span class="middle">x <%= item.quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((item.price || 0) * item.quantity) %></span>
+                                    <%= name %> <span class="middle">x <%= quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((price || 0) * quantity) %></span>
                                 </li>
                             <% }); %>
                         <% } else { %>

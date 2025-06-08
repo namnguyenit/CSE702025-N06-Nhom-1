@@ -10,11 +10,27 @@
           <h2 class="text-center mb-4 text-success">Đặt hàng thành công!</h2>
           <h5 class="mb-3">Mã đơn hàng: <span class="text-primary"><%= order._id %></span></h5>
           <ul class="list-group mb-3">
-            <% order.items.forEach(function(item) { %>
+            <% order.items.forEach(function(item) { 
+              let image = '';
+              if (item.image) {
+                if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+                  image = item.image;
+                } else if (item.image.imageData && item.image.imageType) {
+                  // Nếu imageData là Buffer hoặc object có .toString, chuyển sang base64
+                  let base64 = '';
+                  if (typeof item.image.imageData === 'string') {
+                    base64 = item.image.imageData;
+                  } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
+                    base64 = item.image.imageData.toString('base64');
+                  }
+                  image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
+                }
+              }
+            %>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                  <% if (item.image && item.image.imageData && item.image.imageType) { %>
-                    <img src="data:<%= item.image.imageType %>;base64,<%= item.image.imageData %>" alt="<%= item.name %>" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
+                  <% if (image) { %>
+                    <img src="<%= image %>" alt="<%= item.name %>" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
                   <% } else { %>
                     <img src="/img/no-image.png" alt="No image" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
                   <% } %>

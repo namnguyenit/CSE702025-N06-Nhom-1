@@ -11,8 +11,12 @@ router.get('/checkout', async (req, res) => {
             const { productId, name, type, size, price, qty } = req.query;
             // Tìm sản phẩm trong DB để lấy ảnh, kiểm tra tồn tại
             let product = null;
+            let image = '/img/product-placeholder.png';
             if (productId) {
                 product = await require('../models/ProductModel').findById(productId);
+                if (product && product.image && product.image.imageData && product.image.imageType) {
+                    image = `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}`;
+                }
             }
             // Tạo object giống cart item
             const cart = [{
@@ -21,7 +25,7 @@ router.get('/checkout', async (req, res) => {
                     name: name || (product && product.name) || '',
                     type: type || (product && product.type) || '',
                     detail: [{ price: price, size: size }],
-                    image: product && product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : '/img/product-placeholder.png'
+                    image: image
                 },
                 quantity: parseInt(qty) || 1
             }];
@@ -30,10 +34,19 @@ router.get('/checkout', async (req, res) => {
         }
         const userId = req.session.user._id;
         const user = await require('../models/UserModel').findById(userId).populate('carts.productID');
-        const cart = user.carts.map(item => ({
-            product: item.productID,
-            quantity: item.orderNumber
-        }));
+        const cart = user.carts.map(item => {
+            let image = '/img/product-placeholder.png';
+            if (item.productID.image && item.productID.image.imageData && item.productID.image.imageType) {
+                image = `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}`;
+            }
+            return {
+                product: {
+                    ...item.productID.toObject(),
+                    image: image
+                },
+                quantity: item.orderNumber
+            };
+        });
         const cartTotal = cart.reduce((sum, item) => {
             let price = 0;
             if (item.product && item.product.detail && item.product.detail[0]) {
