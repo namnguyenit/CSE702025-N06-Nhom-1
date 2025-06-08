@@ -1,15 +1,31 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const orders = new Schema({
-  userID: String,
-  orderDate: {
-    type: Date,
-    default: Date.now,
+const itemList = new Schema(
+  {
+    product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+    quantity: { type: Number, required: true },
+    name: String,
+    price: Schema.Types.Mixed,
+    size: String,
+    image: String,
+    group: String,
   },
-  shippedDate: Date,
-  shippingAddress: String,
-  totalAmount: Number,
+  { _id: false }
+);
+
+const orders = new Schema({
+  shippingAddress: {
+    fullName: String,
+    address: String,
+    phone: String,
+    email: String,
+  },
+  paymentMethod: String,
+  paymentStatus: String,
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  status: String,
+  items: [itemList],
 });
 
 module.exports = mongoose.model("orders", orders);

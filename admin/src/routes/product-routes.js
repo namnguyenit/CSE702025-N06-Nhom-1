@@ -1,10 +1,10 @@
 const express = require("express");
 const route = express.Router();
 const authenticateMiddleware = require("../middleware/authenticate-middleware");
+const authorizationMiddleware = require("../middleware/authorization-middleware");
 const ProductControllers = require("../controllers/product-controllers");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
-const authorizationMiddleware = require("../middleware/authorization-middleware");
 
 //-------------------------------------
 
