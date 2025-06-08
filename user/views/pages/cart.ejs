@@ -1,103 +1,133 @@
 <%- include('../partials/header') %>
 
 <style>
-    .cart-area {
-        padding: 40px 0;
-        background: #fff;
+    .cart-area-modern {
+        background: #f7faff;
+        padding: 48px 0 64px 0;
+        min-height: 60vh;
     }
-    .cart-table {
+    .cart-card-modern {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 32px rgba(37,109,255,0.08), 0 1.5px 8px rgba(0,0,0,0.06);
+        padding: 32px 24px 24px 24px;
+        margin-bottom: 32px;
+        overflow-x: auto;
+    }
+    .cart-table-modern {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 24px;
+        border-spacing: 0 18px;
     }
-    .cart-table th, .cart-table td {
-        font-size: 1.1rem;
+    .cart-table-modern th, .cart-table-modern td {
+        font-size: 1.13rem;
         font-weight: 500;
         text-align: left;
-        padding: 0 0 32px 0;
         background: #fff;
         vertical-align: middle;
         border: none;
+        padding: 18px 0 18px 0;
     }
-    .cart-table th {
+    .cart-table-modern th {
         color: #888;
-        font-weight: 600;
-        border-bottom: 1px solid #eaeaea;
-        padding-bottom: 16px;
+        font-weight: 700;
+        border-bottom: 2px solid #eaeaea;
+        padding-bottom: 12px;
+        background: transparent;
     }
-    .cart-table tr:not(:last-child) td {
+    .cart-table-modern tr:not(:last-child) td {
         border-bottom: 1px solid #eaeaea;
     }
-    .cart-product-info {
+    .cart-product-info-modern {
         display: flex;
         align-items: center;
         gap: 24px;
     }
-    .cart-product-img {
+    .cart-product-img-modern {
         width: 110px;
         height: 110px;
-        border-radius: 8px;
+        border-radius: 14px;
         overflow: hidden;
-        background: #f8f8f8;
+        background: linear-gradient(135deg,#f7faff 60%,#eaf1ff 100%);
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 2px 8px rgba(37,109,255,0.07);
+        transition: box-shadow 0.2s;
     }
-    .cart-product-img img {
+    .cart-product-img-modern img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-        border-radius: 8px;
+        border-radius: 14px;
+        transition: transform 0.3s;
     }
-    .cart-product-name {
-        font-size: 1.1rem;
-        font-weight: 500;
+    .cart-product-img-modern:hover img {
+        transform: scale(1.06) rotate(-1.5deg);
+    }
+    .cart-product-name-modern {
+        font-size: 1.13rem;
+        font-weight: 600;
         color: #222;
         margin-bottom: 0;
     }
-    .cart-qty-group {
+    .cart-badge-modern {
+        display: inline-block;
+        background: #256DFF;
+        color: #fff;
+        border-radius: 12px;
+        font-size: 0.98rem;
+        padding: 2px 12px;
+        margin-left: 8px;
+        font-weight: 500;
+    }
+    .cart-badge-secondary-modern {
+        background: #ff003c;
+    }
+    .cart-qty-group-modern {
         display: flex;
         align-items: center;
-        gap: 0;
-        border: 1px solid #eaeaea;
-        border-radius: 6px;
-        overflow: hidden;
+        border: 1.5px solid #eaeaea;
+        border-radius: 12px;
         background: #fafbfc;
         width: 120px;
-        height: 40px;
+        height: 44px;
+        overflow: hidden;
     }
-    .cart-qty-btn {
-        width: 40px;
-        height: 40px;
+    .cart-qty-btn-modern {
+        width: 44px;
+        height: 44px;
         border: none;
         background: #f4f6fa;
-        color: #222;
-        font-size: 1.2rem;
+        color: #256DFF;
+        font-size: 1.3rem;
         font-weight: 700;
+        border-radius: 12px 0 0 12px;
         cursor: pointer;
         transition: background 0.2s;
-        outline: none;
     }
-    .cart-qty-btn:active {
-        background: #e0e7ef;
+    .cart-qty-btn-modern:last-child {
+        border-radius: 0 12px 12px 0;
     }
-    .cart-qty-input {
-        width: 40px;
-        height: 40px;
+    .cart-qty-btn-modern:hover {
+        background: #256DFF;
+        color: #fff;
+    }
+    .cart-qty-input-modern {
+        width: 32px;
+        border: none;
         text-align: center;
         font-size: 1.1rem;
-        border: none;
         background: transparent;
-        font-weight: 600;
         outline: none;
     }
-    .cart-remove-btn {
+    .cart-remove-btn-modern {
         width: 38px;
         height: 38px;
         background: #f4f6fa;
         color: #888;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -105,89 +135,144 @@
         cursor: pointer;
         transition: background 0.2s, color 0.2s;
     }
-    .cart-remove-btn:hover {
+    .cart-remove-btn-modern:hover {
         background: #ffeded;
         color: #ff4d4f;
     }
-    .cart-summary {
-        margin-top: 32px;
-        text-align: right;
-        border-top: 1px solid #eaeaea;
-        padding-top: 24px;
-        max-width: 400px;
-        float: right;
+    .cart-summary-modern {
+        margin: 40px auto 0 auto;
+        text-align: center;
+        border-top: none;
+        padding: 32px 32px 28px 32px;
+        max-width: 380px;
+        background: #fff;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(37,109,255,0.13), 0 2px 12px rgba(0,0,0,0.07);
+        position: relative;
+        z-index: 2;
+        min-width: 260px;
     }
-    .cart-summary h5 {
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 8px;
-        color: #888;
-    }
-    .cart-summary .summary-value {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #222;
-        margin-left: 8px;
-    }
-    .cart-actions {
-        margin-top: 32px;
+    .cart-actions-modern {
         display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        margin: 32px auto 0 auto;
+        max-width: 420px;
+        flex-wrap: wrap;
     }
-    .btn_1 {
-        background: #256DFF;
+    .btn-modern {
+        background: linear-gradient(90deg,#256DFF 0%,#ff003c 100%);
         color: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 12px 32px;
-        font-size: 1.1rem;
-        font-weight: 600;
+        border: 2px solid #256DFF;
+        border-radius: 24px;
+        padding: 14px 38px;
+        font-size: 1.15rem;
+        font-weight: 800;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.2s, box-shadow 0.2s, transform 0.2s, color 0.2s, border 0.2s;
         text-decoration: none;
         display: inline-block;
         text-align: center;
+        box-shadow: 0 4px 16px rgba(37,109,255,0.13), 0 1.5px 8px rgba(0,0,0,0.08);
+        margin-bottom: 0;
+        letter-spacing: 0.5px;
     }
-    .btn_1:hover {
-        background: #174bb3;
+    .btn-modern:hover, .btn-modern:focus {
+        background: linear-gradient(90deg,#ff003c 0%,#256DFF 100%);
         color: #fff;
+        border: 2px solid #ff003c;
+        box-shadow: 0 6px 24px rgba(255,0,60,0.13), 0 2px 12px rgba(37,109,255,0.10);
+        transform: translateY(-2px) scale(1.05);
     }
-    .checkout_btn_1 {
+    .btn-outline-modern {
         background: #fff;
         color: #256DFF;
-        border: 1.5px solid #256DFF;
+        border: 2.5px solid #256DFF;
+        font-weight: 800;
+        box-shadow: 0 2px 8px rgba(37,109,255,0.10);
     }
-    .checkout_btn_1:hover {
+    .btn-outline-modern:hover, .btn-outline-modern:focus {
         background: #256DFF;
         color: #fff;
+        border: 2.5px solid #ffffff;
+        box-shadow: 0 6px 24px rgba(255,0,60,0.13), 0 2px 12px rgba(37,109,255,0.10);
     }
-    @media (max-width: 900px) {
-        .cart-summary {
-            float: none;
-            max-width: 100%;
-            text-align: left;
-        }
-        .cart-table th, .cart-table td {
-            font-size: 1rem;
-        }
+    .cart-summary-modern .summary-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #256DFF;
+        margin-bottom: 18px;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .cart-summary-modern .summary-title i {
+        font-size: 1.5rem;
+        color: #ff003c;
+    }
+    .cart-summary-modern .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.08rem;
+        margin-bottom: 10px;
+        color: #888;
+        font-weight: 500;
+    }
+    .cart-summary-modern .summary-row .summary-label {
+        color: #888;
+        font-weight: 500;
+    }
+    .cart-summary-modern .summary-row .summary-value {
+        color: #222;
+        font-weight: 700;
+        font-size: 1.13rem;
+    }
+    .cart-summary-modern .summary-row.shipping .summary-value {
+        color: #00c48c;
+        font-weight: 700;
+        font-size: 1.13rem;
+    }
+    .cart-summary-modern .summary-row.total {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #ff003c;
+        margin-top: 18px;
+        margin-bottom: 0;
+        background: linear-gradient(90deg,#256DFF 0%,#ff003c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 0.5px;
+    }
+    .cart-summary-modern .summary-row.total .summary-label {
+        color: #222;
+        font-weight: 700;
+        font-size: 1.18rem;
+        -webkit-text-fill-color: initial;
+    }
+    .cart-summary-modern .summary-row.total .summary-value {
+        color: #ff003c;
+        font-size: 1.45rem;
+        font-weight: 900;
+        -webkit-text-fill-color: initial;
     }
     @media (max-width: 600px) {
-        .cart-product-img {
-            width: 60px;
-            height: 60px;
+        .cart-summary-modern {
+            padding: 18px 8px 18px 8px;
+            min-width: 0;
         }
-        .cart-table th, .cart-table td {
-            padding: 0 0 16px 0;
+        .cart-actions-modern {
+            flex-direction: column;
+            gap: 14px;
+            max-width: 100%;
         }
-        .cart-qty-group {
-            width: 90px;
-            height: 32px;
-        }
-        .cart-qty-btn, .cart-qty-input {
-            width: 30px;
-            height: 32px;
-            font-size: 1rem;
+        .btn-modern {
+            width: 100%;
+            min-width: 0 !important;
         }
     }
 </style>
@@ -206,74 +291,89 @@
             </div>
         </div>
     </div>
-    <section class="cart-area">
+    <section class="cart-area-modern">
         <div class="container">
             <% if (cart && cart.items && cart.items.length > 0) { %>
-            <div class="table-responsive">
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 45%">Sản phẩm</th>
-                            <th style="width: 15%">Đơn giá</th>
-                            <th style="width: 20%">Số lượng</th>
-                            <th style="width: 15%">Thành tiền</th>
-                            <th style="width: 5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% cart.items.forEach(item => { %>
-                        <tr data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>">
-                            <td>
-                                <div class="cart-product-info">
-                                    <div class="cart-product-img">
-                                      <% if (item.image && item.image.startsWith('data:')) { %>
-                                        <img src="<%= item.image %>" alt="<%= item.name %>" />
-                                      <% } else { %>
-                                        <img src="/img/no-image.png" alt="No image" />
-                                      <% } %>
+            <div class="cart-card-modern">
+                <div class="table-responsive">
+                    <table class="cart-table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%">Sản phẩm</th>
+                                <th style="width: 15%">Đơn giá</th>
+                                <th style="width: 20%">Số lượng</th>
+                                <th style="width: 15%">Thành tiền</th>
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cart.items.forEach(item => { %>
+                            <tr data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>">
+                                <td>
+                                    <div class="cart-product-info-modern">
+                                        <div class="cart-product-img-modern">
+                                          <% if (item.image && item.image.startsWith('data:')) { %>
+                                            <img src="<%= item.image %>" alt="<%= item.name %>" />
+                                          <% } else { %>
+                                            <img src="/img/no-image.png" alt="No image" />
+                                          <% } %>
+                                        </div>
+                                        <div>
+                                            <div class="cart-product-name-modern"><%= item.name %>
+                                                <span class="cart-badge-modern"><%= item.size %></span>
+                                                <span class="cart-badge-modern cart-badge-secondary-modern"><%= item.type %></span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div class="cart-product-name"><%= item.name %> <span class="badge badge-info ml-2"><%= item.size %></span> <span class="badge badge-secondary ml-2"><%= item.type %></span></div>
+                                </td>
+                                <td>
+                                    <span class="summary-value"><%= item.price.toLocaleString('vi-VN') %> ₫</span>
+                                </td>
+                                <td>
+                                    <div class="cart-qty-group-modern">
+                                        <button class="cart-qty-btn-modern cart-qty-down" type="button" data-product-id="<%= item.product %>">-</button>
+                                        <input class="cart-qty-input-modern cart-qty-input" type="number" name="quantity" value="<%= item.qty %>" min="1" max="<%= item.countInStock %>" data-product-id="<%= item.product %>" aria-label="Số lượng">
+                                        <button class="cart-qty-btn-modern cart-qty-up" type="button" data-product-id="<%= item.product %>" data-stock="<%= item.countInStock %>">+</button>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="summary-value"><%= item.price.toLocaleString('vi-VN') %> ₫</span>
-                            </td>
-                            <td>
-                                <div class="cart-qty-group">
-                                    <button class="cart-qty-btn cart-qty-down" type="button" data-product-id="<%= item.product %>">-</button>
-                                    <input class="cart-qty-input" type="number" name="quantity" value="<%= item.qty %>" min="1" max="<%= item.countInStock %>" data-product-id="<%= item.product %>" aria-label="Số lượng">
-                                    <button class="cart-qty-btn cart-qty-up" type="button" data-product-id="<%= item.product %>" data-stock="<%= item.countInStock %>">+</button>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="summary-value item-total"><%= (item.price * item.qty).toLocaleString('vi-VN') %> ₫</span>
-                            </td>
-                            <td>
-                                <button class="cart-remove-btn" data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>"><i class="fas fa-trash-alt"></i></button>
-                            </td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
+                                </td>
+                                <td>
+                                    <span class="summary-value item-total"><%= (item.price * item.qty).toLocaleString('vi-VN') %> ₫</span>
+                                </td>
+                                <td>
+                                    <button class="cart-remove-btn-modern cart-remove-btn" data-product-id="<%= item.product %>" data-type="<%= item.type %>" data-size="<%= item.size %>"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="cart-actions">
-                <a class="btn_1" href="/products">Tiếp tục mua sắm</a>
-                <a class="btn_1 checkout_btn_1" href="/cart/checkout" style="min-width:160px;">Thanh toán</a>
+            <div class="cart-summary-modern">
+                <div class="summary-title"><i class="fas fa-receipt"></i> Thông tin đơn hàng</div>
+                <div class="summary-row">
+                    <span class="summary-label">Tạm tính</span>
+                    <span class="summary-value" id="cart-subtotal"><%= cart.items.reduce((sum, item) => sum + item.price * item.qty, 0).toLocaleString('vi-VN') %> ₫</span>
+                </div>
+                <div class="summary-row shipping">
+                    <span class="summary-label">Vận chuyển</span>
+                    <span class="summary-value">Miễn phí</span>
+                </div>
+                <div class="summary-row total">
+                    <span class="summary-label">Tổng cộng</span>
+                    <span class="summary-value" id="cart-total">
+                        <%= (cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)).toLocaleString('vi-VN') %> ₫
+                    </span>
+                </div>
             </div>
-            <div class="cart-summary">
-                <h5>Tạm tính <span class="summary-value" id="cart-subtotal"><%= cart.items.reduce((sum, item) => sum + item.price * item.qty, 0).toLocaleString('vi-VN') %> ₫</span></h5>
-                <h5>Vận chuyển <span class="summary-value">Miễn phí</span></h5>
-                <h5 style="margin-top:18px; color:#222; font-size:1.2rem;">Tổng cộng <span class="summary-value" id="cart-total">
-                    <%= (cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)).toLocaleString('vi-VN') %> ₫
-                </span></h5>
+            <div class="cart-actions-modern" style="justify-content:center; margin-top: 32px;">
+                <a class="btn-modern" href="/products">Tiếp tục mua sắm</a>
+                <a class="btn-modern btn-outline-modern" href="/cart/checkout" style="min-width:160px;">Thanh toán</a>
             </div>
             <% } else { %>
             <div class="text-center section_padding">
                 <h4>Giỏ hàng của bạn đang trống.</h4>
                 <p>Vui lòng thêm sản phẩm vào giỏ trước khi thanh toán.</p>
-                <a href="/shop" class="btn_1">Tiếp tục mua sắm</a>
+                <a href="/shop" class="btn-modern">Tiếp tục mua sắm</a>
             </div>
             <% } %>
         </div>
