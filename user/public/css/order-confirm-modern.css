@@ -120,8 +120,9 @@
   background: linear-gradient(90deg, #0dcaf0 60%, #0d6efd 100%);
   color: #fff;
 }
-.order-confirm-modern, .order-confirm-modern * {
-  font-family: 'Roboto', Arial, Helvetica, 'Segoe UI', 'sans-serif' !important;
+body, .order-confirm-modern, .order-confirm-modern * {
+  font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif !important;
+  letter-spacing: 0.01em;
 }
 @media (max-width: 991px) {
   .order-confirm-modern { padding: 12px 2px; }

@@ -1,4 +1,4 @@
-body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; }
+body, .shipper-navbar, .shipper-panel, .shipper-footer, .shipper-sidebar, .shipper-navbar *, .shipper-panel *, .shipper-footer *, .shipper-sidebar * { font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif !important; letter-spacing: 0.01em; }
 .shipper-navbar { box-shadow: 0 2px 8px #0001; }
 .shipper-sidebar { min-height: 300px; }
 .shipper-sidebar .nav-link { transition: background 0.2s, color 0.2s; }

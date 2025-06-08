@@ -164,6 +164,10 @@
   color: #fff;
   box-shadow: 0 4px 16px #0d6efd33;
 }
+body, .order-history-modern-container, .order-history-modern-title, .order-history-list, .order-history-card, .order-history-info, .order-history-products, .order-history-product, .order-history-status, .order-history-total, .order-history-date, .order-history-actions, .btn-cancel-modern, .btn-detail-modern {
+  font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif !important;
+  letter-spacing: 0.01em;
+}
 @media (max-width: 991px) {
   .order-history-modern-container { padding: 10px 0; }
   .order-history-card { flex-direction: column; gap: 12px; padding: 18px 8px 14px 8px; }
