@@ -1,138 +1,172 @@
 /* Modern order history styles */
 .order-history-modern-container {
-  background: #f7fafd;
-  border-radius: 18px;
-  box-shadow: 0 4px 32px #0001;
-  padding: 32px 24px 24px 24px;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  background: linear-gradient(135deg, #f7fafd 60%, #eaf1ff 100%);
+  border-radius: 2rem;
+  box-shadow: 0 8px 40px #0d6efd18, 0 1.5px 8px #0d6efd0a;
+  padding: 40px 28px 32px 28px;
+  margin-top: 36px;
+  margin-bottom: 36px;
+  animation: fadeInUp 0.7s cubic-bezier(.39,.575,.56,1.000);
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
 }
 .order-history-modern-title {
-  font-size: 2.1rem;
-  font-weight: 700;
+  font-size: 2.3rem;
+  font-weight: 900;
   color: #0d6efd;
-  margin-bottom: 24px;
-  letter-spacing: 1px;
+  margin-bottom: 30px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px #0d6efd22;
 }
 .order-history-list {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 28px;
 }
 .order-history-card {
-  background: #fff;
-  border-radius: 1.1rem;
-  box-shadow: 0 2px 12px #0001;
-  padding: 22px 20px 18px 20px;
+  background: linear-gradient(120deg, #fff 80%, #eaf1ff 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px #0d6efd13, 0 1.5px 8px #0d6efd0a;
+  padding: 28px 24px 20px 24px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 18px;
-  transition: box-shadow 0.2s;
-  border: 1.5px solid #e3e6ee;
+  gap: 22px;
+  transition: box-shadow 0.25s, border 0.2s, transform 0.18s;
+  border: 2.5px solid #e3e6ee;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 .order-history-card:hover {
-  box-shadow: 0 6px 32px #0d6efd22;
-  border-color: #0d6efd33;
+  box-shadow: 0 12px 48px #0d6efd33, 0 2px 16px #0d6efd11;
+  border-color: #0d6efd55;
+  transform: translateY(-2px) scale(1.012);
+  background: linear-gradient(120deg, #f7fafd 60%, #eaf1ff 100%);
 }
 .order-history-info {
-  flex: 1 1 220px;
-  min-width: 180px;
+  flex: 1 1 240px;
+  min-width: 200px;
 }
 .order-history-products {
-  flex: 2 1 320px;
+  flex: 2 1 340px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 24px;
+  gap: 14px 28px;
 }
 .order-history-product {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #f7fafd;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 1.05rem;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 1.09rem;
+  box-shadow: 0 2px 8px #0d6efd0a;
+  transition: box-shadow 0.18s;
 }
 .order-history-product img {
-  width: 38px;
-  height: 38px;
-  object-fit: contain;
-  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
   background: #fff;
+  box-shadow: 0 1px 4px #0d6efd11;
 }
 .order-history-product .product-name {
-  font-weight: 600;
+  font-weight: 700;
+  color: #222;
 }
 .order-history-product .product-qty {
   color: #0d6efd;
-  font-weight: 500;
-  margin-left: 4px;
+  font-weight: 600;
+  margin-left: 6px;
+  font-size: 1.01rem;
 }
 .order-history-status {
-  font-size: 1.08rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.order-history-status .badge {
-  font-size: 1.01rem;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 12px;
-}
-.order-history-total {
   font-size: 1.13rem;
   font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.order-history-status .badge {
+  font-size: 1.07rem;
+  font-weight: 700;
+  padding: 7px 20px;
+  border-radius: 16px;
+  box-shadow: 0 1px 6px #0d6efd11;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.order-history-status .badge-success::before { content: '\2714'; color: #27ae60; margin-right: 6px; }
+.order-history-status .badge-warning::before { content: '\23F3'; color: #f39c12; margin-right: 6px; }
+.order-history-status .badge-primary::before { content: '\1F69A'; color: #0d6efd; margin-right: 6px; }
+.order-history-status .badge-info::before { content: '\1F6F5'; color: #17a2b8; margin-right: 6px; }
+.order-history-status .badge-secondary::before { content: '\2716'; color: #888; margin-right: 6px; }
+.order-history-total {
+  font-size: 1.19rem;
+  font-weight: 900;
   color: #e74c3c;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 .order-history-date {
   color: #888;
-  font-size: 0.98rem;
-  margin-bottom: 6px;
+  font-size: 1.01rem;
+  margin-bottom: 8px;
+  font-style: italic;
 }
 .order-history-actions {
-  margin-top: 10px;
+  margin-top: 14px;
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 .btn-cancel-modern {
-  background: #ff003c;
+  background: linear-gradient(90deg, #ff003c 60%, #ff6a00 100%);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-radius: 0.7rem;
-  padding: 8px 22px;
-  font-size: 1.05rem;
-  box-shadow: 0 2px 8px #ff003c22;
-  transition: background 0.2s, color 0.2s;
+  border-radius: 1rem;
+  padding: 10px 28px;
+  font-size: 1.09rem;
+  box-shadow: 0 2px 12px #ff003c22;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s;
 }
 .btn-cancel-modern:disabled {
   background: #e3e6ee;
   color: #aaa;
   cursor: not-allowed;
+  box-shadow: none;
 }
 .btn-cancel-modern:hover:not(:disabled) {
-  background: #c9002b;
+  background: linear-gradient(90deg, #c9002b 60%, #ff003c 100%);
   color: #fff;
+  box-shadow: 0 4px 16px #ff003c33;
 }
 .btn-detail-modern {
   background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-radius: 0.7rem;
-  padding: 8px 22px;
-  font-size: 1.05rem;
-  box-shadow: 0 2px 8px #0d6efd22;
-  transition: background 0.2s, color 0.2s;
+  border-radius: 1rem;
+  padding: 10px 28px;
+  font-size: 1.09rem;
+  box-shadow: 0 2px 12px #0d6efd22;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s;
 }
 .btn-detail-modern:hover {
   background: linear-gradient(90deg, #0dcaf0 60%, #0d6efd 100%);
   color: #fff;
+  box-shadow: 0 4px 16px #0d6efd33;
 }
 @media (max-width: 991px) {
-  .order-history-modern-container { padding: 12px 2px; }
-  .order-history-card { flex-direction: column; gap: 10px; }
+  .order-history-modern-container { padding: 10px 0; }
+  .order-history-card { flex-direction: column; gap: 12px; padding: 18px 8px 14px 8px; }
   .order-history-products { gap: 8px 8px; }
+  .order-history-modern-title { font-size: 1.5rem; }
 }
