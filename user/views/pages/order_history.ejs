@@ -1,51 +1,100 @@
 <%- include('../partials/header', { title: 'Lịch sử mua hàng' }) %>
-<div class="container mt-5">
-    <h2>Lịch sử mua hàng</h2>
-    <% if (orders && orders.length > 0) { %>
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>Mã đơn</th>
-                    <th>Ngày đặt</th>
-                    <th>Trạng thái</th>
-                    <th>Tổng tiền</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% const statusMap = { pending: 'Chờ duyệt', waiting: 'Chờ giao', shipping: 'Đang giao', delivered: 'Giao thành công', cancelled: 'Đã hủy' }; %>
-                <% orders.forEach(order => { %>
-                    <tr>
-                        <td><%= order._id %></td>
-                        <td><%= order.orderDate ? order.orderDate.toLocaleDateString('vi-VN') : '' %></td>
-                        <td><%= statusMap[order.status] || order.status %></td>
-                        <td><%= order.totalAmount %></td>
-                        <td>
-                            <ul>
-                                <% order.items.forEach(item => { %>
-                                    <li class="d-flex align-items-center">
-                                        <% let image = '';
-                                           if (item.image && item.image.imageData && item.image.imageType) {
-                                               image = `data:${item.image.imageType};base64,${typeof item.image.imageData === 'string' ? item.image.imageData : (item.image.imageData.toString ? item.image.imageData.toString('base64') : '')}`;
-                                           } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
-                                               image = item.image;
-                                           } %>
-                                        <% if (image) { %>
-                                            <img src="<%= image %>" alt="<%= item.name %>" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;" />
-                                        <% } else { %>
-                                            <img src="/public/img/default_product.png" alt="No image" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;" />
-                                        <% } %>
-                                        <%= item.name %> x <%= item.quantity %>
-                                    </li>
-                                <% }) %>
-                            </ul>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>Bạn chưa có đơn hàng nào.</p>
-    <% } %>
+<link rel="stylesheet" href="/css/order-history-modern.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="order-history-modern-container">
+  <div class="order-history-modern-title">Lịch sử mua hàng</div>
+  <% if (orders && orders.length > 0) { %>
+    <div class="order-history-list">
+      <% const statusMap = { pending: 'Chờ duyệt', waiting: 'Chờ giao', shipping: 'Đang giao', delivered: 'Giao thành công', cancelled: 'Đã hủy' }; %>
+      <% orders.forEach(order => { %>
+        <div class="order-history-card" data-order-id="<%= order._id %>">
+          <div class="order-history-info">
+            <div class="order-history-status">
+              <span class="badge badge-<%= order.status==='delivered' ? 'success' : order.status==='cancelled' ? 'secondary' : order.status==='shipping' ? 'info' : order.status==='waiting' ? 'primary' : 'warning' %>"><%= statusMap[order.status] || order.status %></span>
+            </div>
+            <div class="order-history-total">Tổng: <%= order.totalAmount.toLocaleString('vi-VN') %>₫</div>
+            <div class="order-history-date">Ngày đặt: <%= order.orderDate ? new Date(order.orderDate).toLocaleDateString('vi-VN') : '' %></div>
+            <div class="order-history-actions">
+              <% if (order.status === 'pending' || order.status === 'waiting') { %>
+                <button class="btn-cancel-modern" onclick="cancelOrder('<%= order._id %>', this)">Hủy đơn</button>
+              <% } else { %>
+                <button class="btn-cancel-modern" disabled>Hủy đơn</button>
+              <% } %>
+              <a href="/order/checkout?orderId=<%= order._id %>" class="btn-detail-modern">Xem chi tiết</a>
+            </div>
+          </div>
+          <div class="order-history-products">
+            <% order.items.forEach(item => { %>
+              <% let image = '';
+                 if (item.image && item.image.imageData && item.image.imageType) {
+                     image = `data:${item.image.imageType};base64,${typeof item.image.imageData === 'string' ? item.image.imageData : (item.image.imageData.toString ? item.image.imageData.toString('base64') : '')}`;
+                 } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+                     image = item.image;
+                 } %>
+              <div class="order-history-product">
+                <% if (image) { %>
+                  <img src="<%= image %>" alt="<%= item.name %>" />
+                <% } else { %>
+                  <img src="/img/no-image.png" alt="No image" />
+                <% } %>
+                <span class="product-name"><%= item.name %></span>
+                <span class="product-qty">x<%= item.quantity %></span>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info text-center">Bạn chưa có đơn hàng nào.</div>
+  <% } %>
 </div>
+<script>
+function cancelOrder(orderId, btn) {
+  Swal.fire({
+    title: 'Bạn chắc chắn muốn hủy đơn hàng này?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Hủy đơn',
+    cancelButtonText: 'Không',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    reverseButtons: true
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+    btn.disabled = true;
+    fetch('/order/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Đã hủy đơn hàng!',
+          showConfirmButton: false,
+          timer: 1200
+        }).then(() => location.reload());
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: data.message || 'Có lỗi xảy ra!',
+        });
+        btn.disabled = false;
+      }
+    });
+  });
+}
+// Click vào card cũng chuyển sang trang chi tiết
+Array.from(document.querySelectorAll('.order-history-card')).forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+    const orderId = this.getAttribute('data-order-id');
+    if (orderId) window.location.href = '/order/checkout?orderId=' + orderId;
+  });
+});
+</script>
 <%- include('../partials/footer') %>

@@ -1,0 +1,138 @@
+/* Modern order history styles */
+.order-history-modern-container {
+  background: #f7fafd;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #0001;
+  padding: 32px 24px 24px 24px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.order-history-modern-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+.order-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.order-history-card {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 12px #0001;
+  padding: 22px 20px 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+  border: 1.5px solid #e3e6ee;
+}
+.order-history-card:hover {
+  box-shadow: 0 6px 32px #0d6efd22;
+  border-color: #0d6efd33;
+}
+.order-history-info {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+.order-history-products {
+  flex: 2 1 320px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.order-history-product {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f7fafd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1.05rem;
+}
+.order-history-product img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+}
+.order-history-product .product-name {
+  font-weight: 600;
+}
+.order-history-product .product-qty {
+  color: #0d6efd;
+  font-weight: 500;
+  margin-left: 4px;
+}
+.order-history-status {
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.order-history-status .badge {
+  font-size: 1.01rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 12px;
+}
+.order-history-total {
+  font-size: 1.13rem;
+  font-weight: 700;
+  color: #e74c3c;
+  margin-bottom: 6px;
+}
+.order-history-date {
+  color: #888;
+  font-size: 0.98rem;
+  margin-bottom: 6px;
+}
+.order-history-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+.btn-cancel-modern {
+  background: #ff003c;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 8px 22px;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px #ff003c22;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-cancel-modern:disabled {
+  background: #e3e6ee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.btn-cancel-modern:hover:not(:disabled) {
+  background: #c9002b;
+  color: #fff;
+}
+.btn-detail-modern {
+  background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 8px 22px;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px #0d6efd22;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-detail-modern:hover {
+  background: linear-gradient(90deg, #0dcaf0 60%, #0d6efd 100%);
+  color: #fff;
+}
+@media (max-width: 991px) {
+  .order-history-modern-container { padding: 12px 2px; }
+  .order-history-card { flex-direction: column; gap: 10px; }
+  .order-history-products { gap: 8px 8px; }
+}

@@ -159,3 +159,23 @@ exports.getOrderHistory = async (req, res, next) => {
         next(err);
     }
 };
+
+// Hủy đơn hàng (user)
+exports.cancelOrder = async (req, res) => {
+    try {
+        const userId = req.session.user && req.session.user._id;
+        const { orderId } = req.body;
+        if (!userId || !orderId) return res.status(400).json({ success: false, message: 'Thiếu thông tin.' });
+        const order = await Order.findById(orderId);
+        if (!order) return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng.' });
+        if (String(order.user) !== String(userId)) return res.status(403).json({ success: false, message: 'Bạn không có quyền hủy đơn này.' });
+        if (order.status !== 'pending' && order.status !== 'waiting') {
+            return res.status(400).json({ success: false, message: 'Chỉ có thể hủy đơn khi đang chờ duyệt hoặc chờ giao.' });
+        }
+        order.status = 'cancelled';
+        await order.save();
+        return res.json({ success: true });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message || 'Hủy đơn thất bại.' });
+    }
+};

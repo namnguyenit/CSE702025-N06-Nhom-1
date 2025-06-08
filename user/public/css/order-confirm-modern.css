@@ -1,0 +1,129 @@
+/* Modern order confirmation page styles */
+.order-confirm-modern {
+  background: #f7fafd;
+  border-radius: 22px;
+  box-shadow: 0 6px 32px #0001;
+  padding: 38px 32px 32px 32px;
+  margin-top: 36px;
+  margin-bottom: 36px;
+  max-width: 650px;
+}
+.order-confirm-modern .success-title {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #22b573;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.order-confirm-modern .order-id {
+  font-size: 1.1rem;
+  color: #0d6efd;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 18px;
+  word-break: break-all;
+}
+.order-confirm-modern .order-summary {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 12px #0001;
+  padding: 22px 18px 18px 18px;
+  margin-bottom: 18px;
+}
+.order-confirm-modern .order-summary .item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f2f7;
+  padding: 10px 0;
+}
+.order-confirm-modern .order-summary .item-row:last-child {
+  border-bottom: none;
+}
+.order-confirm-modern .order-summary img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  margin-right: 12px;
+  border-radius: 8px;
+  background: #f7fafd;
+}
+.order-confirm-modern .order-summary .item-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.order-confirm-modern .order-summary .item-name {
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+.order-confirm-modern .order-summary .item-badge {
+  font-size: 0.95rem;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #e7f1ff;
+  color: #0d6efd;
+  font-weight: 500;
+}
+.order-confirm-modern .order-summary .item-group {
+  background: #f7e7ff;
+  color: #a100c2;
+}
+.order-confirm-modern .order-summary .item-qty {
+  font-size: 1.05rem;
+  color: #222;
+  margin-left: 8px;
+}
+.order-confirm-modern .order-summary .item-price {
+  font-size: 1.13rem;
+  font-weight: 700;
+  color: #e74c3c;
+  margin-left: 8px;
+}
+.order-confirm-modern .order-summary .total-row {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.order-confirm-modern .order-info {
+  margin-bottom: 18px;
+}
+.order-confirm-modern .order-info strong {
+  color: #222;
+  font-weight: 700;
+}
+.order-confirm-modern .order-info .badge {
+  font-size: 1.01rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 12px;
+}
+.order-confirm-modern .btn-modern {
+  background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 1.5rem;
+  padding: 16px 0;
+  width: 100%;
+  margin-top: 18px;
+  box-shadow: 0 2px 12px #0d6efd22;
+  transition: background 0.2s, color 0.2s;
+}
+.order-confirm-modern .btn-modern:hover, .order-confirm-modern .btn-modern:focus {
+  background: linear-gradient(90deg, #0dcaf0 60%, #0d6efd 100%);
+  color: #fff;
+}
+.order-confirm-modern, .order-confirm-modern * {
+  font-family: 'Roboto', Arial, Helvetica, 'Segoe UI', 'sans-serif' !important;
+}
+@media (max-width: 991px) {
+  .order-confirm-modern { padding: 12px 2px; }
+  .order-confirm-modern .order-summary { padding: 10px 4px; }
+}

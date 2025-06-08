@@ -1,151 +1,131 @@
 <%- include('../partials/header', { title: title }) %>
-
-<div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="hero-cap text-center">
-                        <h2>Thanh Toán</h2>
-                    </div>
-                </div>
-            </div>
+<link rel="stylesheet" href="/css/checkout-modern.css">
+<div class="container checkout-modern-container">
+  <form action="/order/quick-order" method="POST" class="row checkout-modern-form" id="checkoutForm" autocomplete="off" novalidate>
+    <div class="col-lg-7 mb-4 mb-lg-0">
+      <div class="checkout-modern-title">Thông Tin Giao Hàng</div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="firstName">Họ <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Nhập họ" required />
         </div>
+        <div class="col-md-6">
+          <label for="lastName">Tên <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nhập tên" required />
+        </div>
+        <div class="col-md-12">
+          <label for="address">Địa chỉ <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ nhận hàng" required />
+        </div>
+        <div class="col-md-6">
+          <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" required pattern="[0-9]{9,12}" />
+        </div>
+        <div class="col-md-6">
+          <label for="email">Email <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email" required />
+        </div>
+      </div>
     </div>
+    <div class="col-lg-5">
+      <div class="checkout-modern-summary">
+        <h2>Đơn Hàng Của Bạn</h2>
+        <ul class="list">
+          <% if (cart && cart.length > 0) { %>
+            <% cart.forEach(item => { 
+              const p = item.product || {}; 
+              const name = p.name || item.name || '';
+              const quantity = item.quantity || item.qty || 1;
+              let price = 0;
+              if (typeof p.detail === 'object' && p.detail && p.detail[0]) {
+                price = typeof p.detail[0].price === 'string' ? parseFloat(p.detail[0].price) : p.detail[0].price;
+              } else if (typeof item.price !== 'undefined') {
+                price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+              }
+              let image = '';
+              if (typeof p.image === 'string' && p.image.startsWith('data:')) {
+                image = p.image;
+              } else if (p.image && p.image.imageData && p.image.imageType) {
+                let base64 = '';
+                if (typeof p.image.imageData === 'string') {
+                  base64 = p.image.imageData;
+                } else if (p.image.imageData && typeof p.image.imageData.toString === 'function') {
+                  base64 = p.image.imageData.toString('base64');
+                }
+                image = base64 ? `data:${p.image.imageType};base64,${base64}` : '';
+              } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+                image = item.image;
+              } else if (item.image && item.image.imageData && item.image.imageType) {
+                let base64 = '';
+                if (typeof item.image.imageData === 'string') {
+                  base64 = item.image.imageData;
+                } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
+                  base64 = item.image.imageData.toString('base64');
+                }
+                image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
+              }
+            %>
+              <li>
+                <span class="d-flex align-items-center">
+                  <% if (image) { %>
+                    <img src="<%= image %>" alt="<%= name %>" />
+                  <% } else { %>
+                    <img src="/img/no-image.png" alt="No image" />
+                  <% } %>
+                  <span><%= name %> x <%= quantity %></span>
+                </span>
+                <span class="fw-bold text-danger"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((price || 0) * quantity) %></span>
+              </li>
+            <% }); %>
+          <% } else { %>
+            <li>Không có sản phẩm trong giỏ hàng.</li>
+          <% } %>
+        </ul>
+        <ul class="list list_2">
+          <li><span>Tổng</span> <span><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cartTotal || 0) %></span></li>
+        </ul>
+        <button type="submit" class="btn-checkout-modern">Đặt Hàng</button>
+      </div>
+    </div>
+    <% if (typeof buyNow !== 'undefined' && buyNow && cart && cart.length === 1) { %>
+      <input type="hidden" name="buyNow" value="1">
+      <input type="hidden" name="productId" value="<%= cart[0].product._id %>">
+      <input type="hidden" name="name" value="<%= cart[0].product.name %>">
+      <input type="hidden" name="type" value="<%= cart[0].product.type %>">
+      <input type="hidden" name="size" value="<%= cart[0].product.detail[0].size %>">
+      <input type="hidden" name="price" value="<%= cart[0].product.detail[0].price %>">
+      <input type="hidden" name="quantity" value="<%= cart[0].quantity %>">
+      <input type="hidden" name="image" value="<%= cart[0].product.image %>">
+    <% } %>
+  </form>
 </div>
-
-<section class="checkout_area section_padding">
-    <div class="container">
-        <form action="/order/quick-order" method="POST" class="row contact_form" novalidate="novalidate">
-            <div class="col-lg-8">
-                <h3>Thông Tin Đặt Hàng</h3>
-                <div class="row">
-                    <div class="col-md-6 form-group p_star">
-                        <input type="text" class="form-control" name="firstName" placeholder="Họ" required />
-                    </div>
-                    <div class="col-md-6 form-group p_star">
-                        <input type="text" class="form-control" name="lastName" placeholder="Tên" required />
-                    </div>
-                    <div class="col-md-12 form-group">
-                        <input type="text" class="form-control" name="address" placeholder="Địa chỉ" required />
-                    </div>
-                    <div class="col-md-6 form-group p_star">
-                        <input type="text" class="form-control" name="phone" placeholder="Số điện thoại" required />
-                    </div>
-                    <div class="col-md-6 form-group p_star">
-                        <input type="email" class="form-control" name="email" placeholder="Email" required />
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="order_box">
-                    <h2>Đơn Hàng Của Bạn</h2>
-                    <ul class="list">
-                        <% if (cart && cart.length > 0) { %>
-                            <% cart.forEach(item => { 
-                                const p = item.product || {}; 
-                                const name = p.name || item.name || '';
-                                const quantity = item.quantity || item.qty || 1;
-                                let price = 0;
-                                if (typeof p.detail === 'object' && p.detail && p.detail[0]) {
-                                  price = typeof p.detail[0].price === 'string' ? parseFloat(p.detail[0].price) : p.detail[0].price;
-                                } else if (typeof item.price !== 'undefined') {
-                                  price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
-                                }
-                                let image = '';
-                                if (typeof p.image === 'string' && p.image.startsWith('data:')) {
-                                  image = p.image;
-                                } else if (p.image && p.image.imageData && p.image.imageType) {
-                                  let base64 = '';
-                                  if (typeof p.image.imageData === 'string') {
-                                    base64 = p.image.imageData;
-                                  } else if (p.image.imageData && typeof p.image.imageData.toString === 'function') {
-                                    base64 = p.image.imageData.toString('base64');
-                                  }
-                                  image = base64 ? `data:${p.image.imageType};base64,${base64}` : '';
-                                } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
-                                  image = item.image;
-                                } else if (item.image && item.image.imageData && item.image.imageType) {
-                                  let base64 = '';
-                                  if (typeof item.image.imageData === 'string') {
-                                    base64 = item.image.imageData;
-                                  } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
-                                    base64 = item.image.imageData.toString('base64');
-                                  }
-                                  image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
-                                }
-                            %>
-                                <li class="d-flex align-items-center">
-                                    <% if (image) { %>
-                                        <img src="<%= image %>" alt="<%= name %>" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
-                                    <% } else { %>
-                                        <img src="/img/no-image.png" alt="No image" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
-                                    <% } %>
-                                    <%= name %> <span class="middle">x <%= quantity %></span> <span class="last"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format((price || 0) * quantity) %></span>
-                                </li>
-                            <% }); %>
-                        <% } else { %>
-                            <li>Không có sản phẩm trong giỏ hàng.</li>
-                        <% } %>
-                    </ul>
-                    <ul class="list list_2">
-                        <li><span>Tổng</span> <span><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cartTotal || 0) %></span></li>
-                    </ul>
-                    <button type="submit" class="btn_3 w-100 mt-3">Đặt Hàng</button>
-                </div>
-            </div>
-            <% if (typeof buyNow !== 'undefined' && buyNow && cart && cart.length === 1) { %>
-                <input type="hidden" name="buyNow" value="1">
-                <input type="hidden" name="productId" value="<%= cart[0].product._id %>">
-                <input type="hidden" name="name" value="<%= cart[0].product.name %>">
-                <input type="hidden" name="type" value="<%= cart[0].product.type %>">
-                <input type="hidden" name="size" value="<%= cart[0].product.detail[0].size %>">
-                <input type="hidden" name="price" value="<%= cart[0].product.detail[0].price %>">
-                <input type="hidden" name="quantity" value="<%= cart[0].quantity %>">
-                <input type="hidden" name="image" value="<%= cart[0].product.image %>">
-            <% } %>
-        </form>
-    </div>
-</section>
-
 <script>
-// Đảm bảo SweetAlert2 đã được nhúng qua footer
-
-document.addEventListener('DOMContentLoaded', function() {
-  const checkoutForm = document.querySelector('form[action="/order/quick-order"]');
-  if (checkoutForm) {
-    checkoutForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(checkoutForm);
-      const data = {};
-      formData.forEach((value, key) => { data[key] = value; });
-      try {
-        const res = await fetch('/order/quick-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        if (result.success) {
-          window.location.href = '/order/checkout?orderId=' + result.orderId;
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Đặt hàng thất bại!',
-            text: result.message || 'Có lỗi xảy ra, vui lòng thử lại.',
-            confirmButtonText: 'OK'
-          });
-        }
-      } catch (err) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi kết nối!',
-          text: 'Không thể đặt hàng. Vui lòng thử lại.',
-          confirmButtonText: 'OK'
-        });
+// Validate bắt buộc các trường trước khi submit
+const checkoutForm = document.getElementById('checkoutForm');
+if (checkoutForm) {
+  checkoutForm.addEventListener('submit', function(e) {
+    let valid = true;
+    checkoutForm.querySelectorAll('input[required]').forEach(input => {
+      if (!input.value.trim()) {
+        input.classList.add('is-invalid');
+        valid = false;
+      } else {
+        input.classList.remove('is-invalid');
       }
     });
-  }
-});
+    // Validate phone
+    const phone = checkoutForm.querySelector('input[name="phone"]');
+    if (phone && !/^\d{9,12}$/.test(phone.value.trim())) {
+      phone.classList.add('is-invalid');
+      valid = false;
+    }
+    if (!valid) {
+      e.preventDefault();
+      e.stopPropagation();
+      Swal && Swal.fire({ icon: 'warning', title: 'Vui lòng nhập đầy đủ và đúng thông tin giao hàng!' });
+      return false;
+    }
+  });
+}
 </script>
 <%- include('../partials/footer') %>

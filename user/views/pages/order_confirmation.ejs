@@ -1,63 +1,58 @@
 <%- include('../partials/header', { title: title }) %>
-
+<link rel="stylesheet" href="/css/order-confirm-modern.css">
 <% const statusMap = { pending: 'Chờ duyệt', waiting: 'Chờ giao', shipping: 'Đang giao', delivered: 'Giao thành công', cancelled: 'Đã hủy' }; %>
-
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10">
-      <div class="card shadow" style="border-radius: 1rem;">
-        <div class="card-body">
-          <h2 class="text-center mb-4 text-success">Đặt hàng thành công!</h2>
-          <h5 class="mb-3">Mã đơn hàng: <span class="text-primary"><%= order._id %></span></h5>
-          <ul class="list-group mb-3">
-            <% order.items.forEach(function(item) { 
-              let image = '';
-              if (item.image) {
-                if (typeof item.image === 'string' && item.image.startsWith('data:')) {
-                  image = item.image;
-                } else if (item.image.imageData && item.image.imageType) {
-                  // Nếu imageData là Buffer hoặc object có .toString, chuyển sang base64
-                  let base64 = '';
-                  if (typeof item.image.imageData === 'string') {
-                    base64 = item.image.imageData;
-                  } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
-                    base64 = item.image.imageData.toString('base64');
-                  }
-                  image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
-                }
-              }
-            %>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                  <% if (image) { %>
-                    <img src="<%= image %>" alt="<%= item.name %>" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
-                  <% } else { %>
-                    <img src="/img/no-image.png" alt="No image" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
-                  <% } %>
-                  <strong><%= item.name %></strong> 
-                  <span class="badge badge-info ml-2"><%= item.size %></span>
-                  <span class="badge badge-secondary ml-2"><%= item.group %></span>
-                </div>
-                <span>x<%= item.quantity %> - <span class="text-danger font-weight-bold"><%= item.price.toLocaleString() %>₫</span></span>
-              </li>
-            <% }) %>
-          </ul>
-          <div class="mb-3">
-            <strong>Tổng tiền:</strong> <span class="text-danger font-weight-bold"><%= order.totalAmount.toLocaleString() %>₫</span>
-          </div>
-          <div class="mb-3">
-            <strong>Địa chỉ giao hàng:</strong>
-            <div><%= order.shippingAddress.fullName %> | <%= order.shippingAddress.phone %></div>
-            <div><%= order.shippingAddress.address %>, <%= order.shippingAddress.city %></div>
-          </div>
-          <div class="mb-3">
-            <strong>Trạng thái:</strong> <span class="badge badge-warning"><%= statusMap[order.status] || order.status %></span>
-          </div>
-          <a href="/order/history" class="btn btn-outline-primary">Xem lịch sử mua hàng</a>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="order-confirm-modern w-100">
+    <div class="success-title mb-2">Đặt hàng thành công!</div>
+    <div class="order-id mb-3">Mã đơn hàng: <a href="/order/history" style="color:#0d6efd;"><%= order._id %></a></div>
+    <div class="order-summary mb-3">
+      <% order.items.forEach(function(item) { 
+        let image = '';
+        if (item.image) {
+          if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+            image = item.image;
+          } else if (item.image.imageData && item.image.imageType) {
+            let base64 = '';
+            if (typeof item.image.imageData === 'string') {
+              base64 = item.image.imageData;
+            } else if (item.image.imageData && typeof item.image.imageData.toString === 'function') {
+              base64 = item.image.imageData.toString('base64');
+            }
+            image = base64 ? `data:${item.image.imageType};base64,${base64}` : '';
+          }
+        }
+      %>
+        <div class="item-row">
+          <span class="item-info">
+            <% if (image) { %>
+              <img src="<%= image %>" alt="<%= item.name %>" />
+            <% } else { %>
+              <img src="/img/no-image.png" alt="No image" />
+            <% } %>
+            <span class="item-name"><%= item.name %></span>
+            <% if (item.size) { %><span class="item-badge"><%= item.size %></span><% } %>
+            <% if (item.group) { %><span class="item-badge item-group"><%= item.group %></span><% } %>
+          </span>
+          <span>
+            <span class="item-qty">x<%= item.quantity %></span>
+            <span class="item-price"><%= item.price.toLocaleString() %>₫</span>
+          </span>
         </div>
+      <% }) %>
+      <div class="total-row mt-2">
+        <span>Tổng tiền:</span>
+        <span class="text-danger"><%= order.totalAmount.toLocaleString() %>₫</span>
       </div>
     </div>
+    <div class="order-info mb-2">
+      <div><strong>Địa chỉ giao hàng:</strong></div>
+      <div><%= order.shippingAddress.fullName %> | <%= order.shippingAddress.phone %></div>
+      <div><%= order.shippingAddress.address %><% if(order.shippingAddress.city){ %>, <%= order.shippingAddress.city %><% } %></div>
+    </div>
+    <div class="order-info mb-3">
+      <strong>Trạng thái:</strong> <span class="badge badge-warning"><%= statusMap[order.status] || order.status %></span>
+    </div>
+    <a href="/order/history" class="btn btn-modern">Xem Lịch Sử Mua Hàng</a>
   </div>
 </div>
-
 <%- include('../partials/footer') %>
