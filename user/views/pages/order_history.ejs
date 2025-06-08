@@ -24,12 +24,18 @@
                             <ul>
                                 <% order.items.forEach(item => { %>
                                     <li class="d-flex align-items-center">
-                                        <% if (item.image && item.image.imageData && item.image.imageType) { %>
-                                            <img src="data:<%= item.image.imageType %>;base64,<%= item.image.imageData %>" alt="<%= item.product ? item.product.name : '' %>" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
+                                        <% let image = '';
+                                           if (item.image && item.image.imageData && item.image.imageType) {
+                                               image = `data:${item.image.imageType};base64,${typeof item.image.imageData === 'string' ? item.image.imageData : (item.image.imageData.toString ? item.image.imageData.toString('base64') : '')}`;
+                                           } else if (typeof item.image === 'string' && item.image.startsWith('data:')) {
+                                               image = item.image;
+                                           } %>
+                                        <% if (image) { %>
+                                            <img src="<%= image %>" alt="<%= item.name %>" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;" />
                                         <% } else { %>
-                                            <img src="/img/no-image.png" alt="No image" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
+                                            <img src="/public/img/default_product.png" alt="No image" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;" />
                                         <% } %>
-                                        <%= item.product ? item.product.name : '' %> x <%= item.quantity %>
+                                        <%= item.name %> x <%= item.quantity %>
                                     </li>
                                 <% }) %>
                             </ul>
