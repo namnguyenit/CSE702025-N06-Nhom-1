@@ -1,0 +1,16 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow" style="border-radius: 1rem;">
+        <div class="card-body text-center">
+          <h2 class="mb-4 text-danger">Tài khoản Shipper</h2>
+          <p class="lead"><%= message %></p>
+          <a href="/auth/login" class="btn btn-primary mt-4">Quay Lại Trang Đăng Nhập</a>
+          <a href="/auth/shipper-login" class="btn btn-success mt-4">Đăng Nhập Dành Cho Shipper</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,19 @@
+body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; }
+.shipper-navbar { box-shadow: 0 2px 8px #0001; }
+.shipper-sidebar { min-height: 300px; }
+.shipper-sidebar .nav-link { transition: background 0.2s, color 0.2s; }
+.shipper-sidebar .nav-link.active, .shipper-sidebar .nav-link:hover { background: #e7f1ff; color: #0d6efd; }
+.card { border-radius: 1rem; }
+.bg-gradient-info { background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%) !important; }
+.shipper-navbar .btn-logout, .shipper-navbar .btn-logout:visited {
+  background: #dc3545 !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #0001;
+  transition: background 0.2s, color 0.2s;
+}
+.shipper-navbar .btn-logout:hover, .shipper-navbar .btn-logout:focus {
+  background: #b52a37 !important;
+  color: #fff !important;
+}

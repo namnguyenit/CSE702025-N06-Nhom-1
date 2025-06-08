@@ -38,5 +38,12 @@ router.get('/profile', isLoggedIn, authController.getUserProfilePage);
 // POST /auth/profile - Cập nhật thông tin cá nhân (Ví dụ)
 router.post('/profile', isLoggedIn, authController.postUpdateUserProfile);
 
+// Đăng nhập dành cho shipper
+router.get('/shipper-login', isLoggedOut, authController.getShipperLoginPage);
+router.post('/shipper-login', isLoggedOut, [
+    check('account', 'Tài khoản không được để trống').not().isEmpty(),
+    check('password', 'Mật khẩu không được để trống').not().isEmpty()
+], authController.postShipperLogin);
+
 
 module.exports = router;

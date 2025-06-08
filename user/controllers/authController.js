@@ -3,6 +3,7 @@ const User = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const Category = require('../models/CategoryModel'); // Đã import ở trên
+const Shipper = require('../models/ShipperModel');
 
 exports.getLoginPage = async (req, res, next) => {
     try {
@@ -61,7 +62,15 @@ exports.postLogin = async (req, res, next) => {
         console.log('Đăng nhập thành công:', account, 'role:', user.role);
 
         if (user.role === 'shipper') {
-            return res.redirect('/shipper/dashboard'); 
+            // Chỉ chuyển thông tin cá nhân sang model Shipper nếu chưa có
+            let shipper = await Shipper.findOne({ user: user._id });
+            if (!shipper) {
+                await Shipper.create({ user: user._id });
+            }
+            req.session.destroy(() => {
+                res.render('pages/shipper_blocked', { title: 'Tài khoản Shipper', message: 'Tài khoản này đã được chuyển sang Shipper. Vui lòng đăng nhập ở khu vực dành cho Shipper hoặc liên hệ Admin.' });
+            });
+            return;
         } else if (user.role === 'admin') {
             return res.redirect('/');
         }
@@ -195,6 +204,57 @@ exports.postUpdateUserProfile = async (req, res, next) => {
 
         req.flash('success_msg', 'Cập nhật thông tin thành công!');
         res.redirect('/auth/profile');
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getShipperLoginPage = async (req, res, next) => {
+    try {
+        res.render('pages/shipper_login', {
+            title: 'Đăng Nhập Shipper',
+            path: '/auth/shipper-login',
+            error_msg: '',
+            oldInput: { account: '' }
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.postShipperLogin = async (req, res, next) => {
+    const { account, password } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).render('pages/shipper_login', {
+            title: 'Đăng Nhập Shipper',
+            path: '/auth/shipper-login',
+            error_msg: errors.array()[0].msg,
+            oldInput: { account }
+        });
+    }
+    try {
+        const user = await User.findOne({ $or: [ { account }, { gmail: account } ] });
+        if (!user || user.role !== 'shipper') {
+            return res.render('pages/shipper_login', {
+                title: 'Đăng Nhập Shipper',
+                path: '/auth/shipper-login',
+                error_msg: 'Tài khoản không tồn tại hoặc không phải là shipper.',
+                oldInput: { account }
+            });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.render('pages/shipper_login', {
+                title: 'Đăng Nhập Shipper',
+                path: '/auth/shipper-login',
+                error_msg: 'Mật khẩu không đúng.',
+                oldInput: { account }
+            });
+        }
+        req.session.user = user;
+        req.session.isLoggedIn = true;
+        return res.redirect('/shipper/dashboard');
     } catch (err) {
         next(err);
     }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Shipper Dashboard' %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/shipper-modern.css">
+  <style>
+    body { background: #f4f8fb; }
+    .shipper-navbar { background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%); }
+    .shipper-navbar .navbar-brand { color: #fff; font-weight: bold; letter-spacing: 1px; }
+    .shipper-navbar .nav-link, .shipper-navbar .navbar-text { color: #fff; }
+    .shipper-navbar .nav-link.active { font-weight: bold; text-decoration: underline; }
+    .shipper-sidebar { background: #fff; border-radius: 1rem; box-shadow: 0 2px 12px #0001; }
+    .shipper-sidebar .nav-link { color: #0d6efd; font-weight: 500; }
+    .shipper-sidebar .nav-link.active { background: #e7f1ff; border-radius: .5rem; }
+    .shipper-content { min-height: 80vh; }
+    .shipper-footer { color: #888; font-size: .95rem; }
+  </style>
+  <% if (typeof customHead !== 'undefined') { %><%- customHead %><% } %>
+</head>
+<body>
+<nav class="navbar shipper-navbar navbar-expand-lg mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/shipper/dashboard"><i class="fas fa-truck-fast me-2"></i>ShipperZone</a>
+    <span class="navbar-text ms-auto">Xin chào, <%= currentUser ? currentUser.name : '' %></span>
+    <a href="/auth/logout" class="btn btn-outline-light ms-3">Đăng xuất</a>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <aside class="col-md-2 mb-4">
+      <div class="shipper-sidebar p-3">
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link <%= activePage==='dashboard'?'active':'' %>" href="/shipper/dashboard"><i class="fas fa-chart-line me-2"></i>Thống kê</a>
+          <a class="nav-link <%= activePage==='orders'?'active':'' %>" href="/shipper/orders"><i class="fas fa-list me-2"></i>Đơn chờ nhận</a>
+          <a class="nav-link <%= activePage==='shipping'?'active':'' %>" href="/shipper/shipping"><i class="fas fa-truck me-2"></i>Đơn đang giao</a>
+          <a class="nav-link <%= activePage==='history'?'active':'' %>" href="/shipper/history"><i class="fas fa-clock-rotate-left me-2"></i>Lịch sử giao hàng</a>
+        </nav>
+      </div>
+    </aside>
+    <main class="col-md-10 shipper-content">
+      <%- body %>
+    </main>
+  </div>
+</div>
+<footer class="text-center py-3 shipper-footer">
+  &copy; <%= new Date().getFullYear() %> ShipperZone. All rights reserved.
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<% if (typeof customScript !== 'undefined') { %><%- customScript %><% } %>
+</body>
+</html>
