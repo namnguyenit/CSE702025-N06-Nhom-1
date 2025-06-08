@@ -1,0 +1,109 @@
+/* Modern profile page for e-commerce */
+.profile-modern-container {
+  background: linear-gradient(135deg, #f7fafd 60%, #eaf1ff 100%);
+  border-radius: 2rem;
+  box-shadow: 0 8px 40px #0d6efd18, 0 1.5px 8px #0d6efd0a;
+  padding: 40px 28px 32px 28px;
+  margin-top: 36px;
+  margin-bottom: 36px;
+  animation: fadeInUp 0.7s cubic-bezier(.39,.575,.56,1.000);
+  max-width: 600px;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
+}
+.profile-modern-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #0d6efd;
+  margin-bottom: 18px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px #0d6efd22;
+  text-align: center;
+}
+.profile-modern-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 12px #0d6efd22;
+  margin: 0 auto 18px auto;
+  display: block;
+  background: #fff;
+}
+.profile-modern-info {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px #0d6efd11;
+  padding: 22px 20px 10px 20px;
+  margin-bottom: 18px;
+}
+.profile-modern-info p {
+  font-size: 1.09rem;
+  margin-bottom: 10px;
+  color: #222;
+}
+.profile-modern-info strong {
+  color: #0d6efd;
+  min-width: 120px;
+  display: inline-block;
+}
+.profile-modern-form {
+  background: #f7fafd;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px #0d6efd0a;
+  padding: 22px 20px 10px 20px;
+  margin-bottom: 18px;
+}
+.profile-modern-form label {
+  font-weight: 600;
+  color: #0d6efd;
+}
+.profile-modern-form .form-control {
+  border-radius: 0.7rem;
+  border: 1.5px solid #e3e6ee;
+  margin-bottom: 14px;
+  font-size: 1.08rem;
+  background: #fff;
+  box-shadow: none;
+}
+.profile-modern-form .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 2px 8px #0d6efd22;
+}
+.profile-modern-form button.primary-btn {
+  background: linear-gradient(90deg, #0d6efd 60%, #0dcaf0 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 1rem;
+  padding: 10px 28px;
+  font-size: 1.09rem;
+  box-shadow: 0 2px 12px #0d6efd22;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s;
+}
+.profile-modern-form button.primary-btn:hover {
+  background: linear-gradient(90deg, #0dcaf0 60%, #0d6efd 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px #0d6efd33;
+}
+.profile-modern-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 18px;
+}
+.profile-modern-actions .btn {
+  border-radius: 0.8rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 8px 22px;
+  box-shadow: 0 2px 8px #0d6efd11;
+  transition: background 0.2s, color 0.2s;
+}
+@media (max-width: 767px) {
+  .profile-modern-container { padding: 10px 2px; }
+  .profile-modern-title { font-size: 1.3rem; }
+  .profile-modern-info, .profile-modern-form { padding: 12px 6px 6px 6px; }
+}
