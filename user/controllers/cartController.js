@@ -94,15 +94,25 @@ exports.checkoutCart = async (req, res, next) => {
         // Tạo order
         const order = new Order({
             user: userId,
-            items: user.carts.map(item => ({
-                product: item.productID._id,
-                name: item.productID.name,
-                type: item.type,
-                size: item.size,
-                price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
-                quantity: item.orderNumber,
-                image: item.productID.image && item.productID.image.imageData ? `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}` : '/img/default-product.png'
-            })),
+            items: user.carts.map(item => {
+                let imageObj = null;
+                if (item.productID.image && item.productID.image.imageData && item.productID.image.imageType) {
+                    imageObj = {
+                        imageName: item.productID.image.imageName,
+                        imageType: item.productID.image.imageType,
+                        imageData: item.productID.image.imageData
+                    };
+                }
+                return {
+                    product: item.productID._id,
+                    name: item.productID.name,
+                    type: item.type,
+                    size: item.size,
+                    price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
+                    quantity: item.orderNumber,
+                    image: imageObj
+                };
+            }),
             totalAmount,
             status: 'pending',
             shipAddress: user.address

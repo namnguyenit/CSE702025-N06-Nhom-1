@@ -23,7 +23,14 @@
                         <td>
                             <ul>
                                 <% order.items.forEach(item => { %>
-                                    <li><%= item.product ? item.product.name : '' %> x <%= item.quantity %></li>
+                                    <li class="d-flex align-items-center">
+                                        <% if (item.image && item.image.imageData && item.image.imageType) { %>
+                                            <img src="data:<%= item.image.imageType %>;base64,<%= item.image.imageData %>" alt="<%= item.product ? item.product.name : '' %>" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
+                                        <% } else { %>
+                                            <img src="/img/no-image.png" alt="No image" style="width:32px;height:32px;object-fit:contain;margin-right:8px;" />
+                                        <% } %>
+                                        <%= item.product ? item.product.name : '' %> x <%= item.quantity %>
+                                    </li>
                                 <% }) %>
                             </ul>
                         </td>

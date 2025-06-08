@@ -7,7 +7,11 @@ const orderItemSchema = new Schema({
     name: String,
     price: Schema.Types.Mixed,
     size: String,
-    image: String,
+    image: {
+        imageName: String,
+        imageType: String,
+        imageData: Buffer
+    },
     group: String,
     idSP: String
 }, { _id: false });

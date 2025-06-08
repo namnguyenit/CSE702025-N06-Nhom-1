@@ -12,7 +12,12 @@
           <ul class="list-group mb-3">
             <% order.items.forEach(function(item) { %>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
+                <div class="d-flex align-items-center">
+                  <% if (item.image && item.image.imageData && item.image.imageType) { %>
+                    <img src="data:<%= item.image.imageType %>;base64,<%= item.image.imageData %>" alt="<%= item.name %>" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
+                  <% } else { %>
+                    <img src="/img/no-image.png" alt="No image" style="width:48px;height:48px;object-fit:contain;margin-right:12px;" />
+                  <% } %>
                   <strong><%= item.name %></strong> 
                   <span class="badge badge-info ml-2"><%= item.size %></span>
                   <span class="badge badge-secondary ml-2"><%= item.group %></span>

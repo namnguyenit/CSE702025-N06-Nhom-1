@@ -25,11 +25,15 @@ exports.quickOrder = async (req, res, next) => {
         // Nếu có đủ thông tin sản phẩm (mua ngay)
         if (name && type && size && price && quantity) {
             // Lấy đúng ảnh biến thể nếu productId có trong DB
-            let imageUrl = image || '/img/default-product.png';
+            let imageObj = null;
             if (productId) {
                 const productDoc = await Product.findById(productId);
                 if (productDoc && productDoc.image && productDoc.image.imageData && productDoc.image.imageType) {
-                    imageUrl = `data:${productDoc.image.imageType};base64,${productDoc.image.imageData.toString('base64')}`;
+                    imageObj = {
+                        imageName: productDoc.image.imageName,
+                        imageType: productDoc.image.imageType,
+                        imageData: productDoc.image.imageData
+                    };
                 }
             }
             const item = {
@@ -40,7 +44,7 @@ exports.quickOrder = async (req, res, next) => {
                 price: typeof price === 'string' ? parseFloat(price) : price,
                 quantity: typeof quantity === 'string' ? parseInt(quantity) : quantity,
                 size,
-                image: imageUrl
+                image: imageObj
             };
             const totalAmount = item.price * item.quantity;
             const order = new Order({
@@ -77,16 +81,26 @@ exports.quickOrder = async (req, res, next) => {
             phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
             email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
         };
-        const items = user.carts.map(item => ({
-            product: item.productID._id,
-            group: item.productID.type || '',
-            idSP: item.productID._id.toString(),
-            name: item.productID.name,
-            price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
-            quantity: item.orderNumber,
-            size: item.size,
-            image: item.productID.image && item.productID.image.imageData ? `data:${item.productID.image.imageType};base64,${item.productID.image.imageData.toString('base64')}` : '/img/default-product.png'
-        }));
+        const items = user.carts.map(item => {
+            let imageObj = null;
+            if (item.productID.image && item.productID.image.imageData && item.productID.image.imageType) {
+                imageObj = {
+                    imageName: item.productID.image.imageName,
+                    imageType: item.productID.image.imageType,
+                    imageData: item.productID.image.imageData
+                };
+            }
+            return {
+                product: item.productID._id,
+                group: item.productID.type || '',
+                idSP: item.productID._id.toString(),
+                name: item.productID.name,
+                price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
+                quantity: item.orderNumber,
+                size: item.size,
+                image: imageObj
+            };
+        });
         const totalAmount = items.reduce((sum, item) => sum + (typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity, 0);
         const order = new Order({
             user: userId,
