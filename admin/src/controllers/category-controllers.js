@@ -80,7 +80,26 @@ class CategoryControllers {
     return res.redirect("/categories");
   }
   async assign(req, res) {
-    const products = await ProductModels.find({});
+    const products = await ProductModels.aggregate([
+      { $unwind: "$detail" }, // Tách từng phần tử trong mảng detail
+      {
+        $sort: {
+          name: 1,
+          "detail.price": 1, // Ưu tiên giá thấp nhất
+        },
+      },
+      {
+        $group: {
+          _id: "$name",
+          doc: { $first: "$$ROOT" }, // Lấy sản phẩm đầu tiên theo giá
+        },
+      },
+      {
+        $replaceRoot: { newRoot: "$doc" }, // Đưa document về gốc
+      },
+      { $sort: { createdAt: -1 } },
+    ]);
+    // const products = await ProductModels.find({});
     const categories = await CategoryModels.find({});
     const nameTable = "Assign products to categories";
     res.render("categories/assign", { nameTable, products, categories });
@@ -88,37 +107,67 @@ class CategoryControllers {
   async assignHandler(req, res) {
     const body = req.body;
     const categoryID = body.categoryID;
-    const productID = body.productID;
+    const productName = body.productName;
+    //------------------------------
+
     const category = await CategoryModels.findById(categoryID);
     if (!category) {
+      PopupService.message(req, res, "error", "Hãy lựa chọn danh mục!");
       return res.redirect("/categories/assign");
     }
-    if (!category.products.includes(productID)) {
-      category.products.push(productID);
-      await category.save();
-    }
+    const products = await ProductModels.find({ name: productName });
+    products.forEach((item) => {
+      if (!category.products.some((p) => p.id == item.id)) {
+        category.products.push(item);
+      }
+    });
+    await category.save();
+
     PopupService.message(req, res, "success", "Success");
     return res.redirect("/categories/assign");
   }
   async show(req, res) {
-    const categoryID = req.params.id;
-    const categories = await CategoryModels.findById(categoryID);
-    const products = await ProductModels.find({
-      _id: { $in: categories.products },
-    });
+    const categoryID = new mongoose.Types.ObjectId(req.params.id);
+    const products = await CategoryModels.aggregate([
+      // 1. Lọc theo category ID
+      { $match: { _id: categoryID } },
+
+      // 2. Tách từng product
+      { $unwind: "$products" },
+
+      // 3. Tách từng chi tiết (để lấy giá rẻ nhất)
+      { $unwind: "$products.detail" },
+
+      // 4. Sắp xếp theo tên + giá tăng dần
+      { $sort: { "products.name": 1, "products.detail.price": 1 } },
+
+      // 5. Gom nhóm theo tên sản phẩm, lấy bản rẻ nhất
+      {
+        $group: {
+          _id: "$products.name",
+          product: { $first: "$products" },
+        },
+      },
+
+      // 6. Sắp xếp tiếp theo ngày tạo mới nhất
+      { $sort: { "product.createdAt": -1 } },
+
+      // 7. Trả về product ra ngoài document
+      { $replaceRoot: { newRoot: "$product" } },
+    ]);
     const nameTable = "Category detail";
     return res.render("categories/show", { nameTable, categoryID, products });
   }
   async unassign(req, res) {
     const body = req.body;
     const categoryID = body.categoryID;
-    const productID = body.productID;
+    const productName = body.productName;
     //Gỡ
+    const products = await ProductModels.find({ name: productName });
     const category = await CategoryModels.findById(categoryID);
-    const index = category.products.indexOf(productID);
-    if (index !== -1) {
-      category.products.splice(index, 1); // xóa 1 phần tử tại vị trí index
-    }
+    products.forEach((item) => {
+      category.products = category.products.filter((p) => p.name != item.name);
+    });
     await category.save();
     PopupService.message(req, res, "success", "Gỡ sản phẩm thành công");
     return res.redirect(`/categories/show/${categoryID}`);

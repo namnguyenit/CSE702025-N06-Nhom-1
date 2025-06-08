@@ -27,6 +27,7 @@ class ProductController {
       {
         $replaceRoot: { newRoot: "$doc" }, // Đưa document về gốc
       },
+      { $sort: { createdAt: -1 } },
     ]);
 
     // res.send(products);

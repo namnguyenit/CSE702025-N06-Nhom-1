@@ -73,7 +73,6 @@
                                                         <tr>
                                                             <td>Image</td>
                                                             <td>Name</td>
-                                                            <td>Type</td>
                                                             <td>Description</td>
                                                             <td>Price</td>
                                                             <th style="width: 10%">Action</th>
@@ -83,7 +82,6 @@
                                                         <tr>
                                                             <td>Image</td>
                                                             <td>Name</td>
-                                                            <td>Type</td>
                                                             <td>Description</td>
                                                             <td>Price</td>
                                                             <th>Action</th>
@@ -94,27 +92,24 @@
                                                             <tr>
                                                                 <td><img style="width: 100px;height: 75px;"
                                                                         class="image"
-                                                                        src="/products/image/<%=product.id%>"
+                                                                        src="/products/image/<%=product._id%>"
                                                                         alt="<%=product.image?.imageName%>">
                                                                 </td>
                                                                 <td>
                                                                     <%=product.name %>
                                                                 </td>
                                                                 <td>
-                                                                    <%=product.type %>
-                                                                </td>
-                                                                <td>
                                                                     <%=product.description %>
                                                                 </td>
                                                                 <td>
-                                                                    <%=product.detail[0].price %> <u>đ</u>
+                                                                    <%=product.detail.price %> <u>đ</u>
                                                                 </td>
                                                                 <td>
                                                                     <form action="/categories/unassign" method="post">
                                                                         <input type="hidden" name="categoryID"
                                                                             value="<%=categoryID  %>">
-                                                                        <input type="hidden" name="productID"
-                                                                            value="<%=product.id  %>">
+                                                                        <input type="hidden" name="productName"
+                                                                            value="<%=product.name  %>">
                                                                         <div class="form-button-action">
                                                                             <div class="form-button-action">
                                                                                 <button type="submit"
