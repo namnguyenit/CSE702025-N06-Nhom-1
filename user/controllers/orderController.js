@@ -36,6 +36,14 @@ exports.quickOrder = async (req, res, next) => {
                     };
                 }
             }
+            // Tạo shippingAddress cho mua ngay
+            const fullName = req.body.firstName && req.body.lastName ? `${req.body.firstName} ${req.body.lastName}`.trim() : '';
+            const shippingAddress = {
+                fullName: fullName || (shippingAddressData && shippingAddressData.fullName) || '',
+                address: req.body.address || (shippingAddressData && shippingAddressData.address) || '',
+                phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
+                email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
+            };
             const item = {
                 name,
                 group: type,
