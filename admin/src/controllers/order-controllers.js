@@ -10,6 +10,10 @@ class OrderControllers {
   async approved(req, res) {
     const id = req.body?.id;
     const order = await OrderModels.findById(id);
+    if (order.status != "pending") {
+      PopupService.message(req, res, "error", "Trạng thái không hợp lệ!");
+      return res.redirect("/orders");
+    }
     order.status = "waiting";
     await order.save();
     PopupService.message(req, res, "success", "- Đã duyệt đơn hàng -");
