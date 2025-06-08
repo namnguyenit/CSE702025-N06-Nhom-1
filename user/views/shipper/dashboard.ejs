@@ -1,0 +1,144 @@
+<%- include('../partials/header', { title: title || 'Bảng điều khiển giao hàng' }) %>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h2 class="mb-2 text-info">Bảng điều khiển giao hàng</h2>
+          <p class="lead">Chào mừng <strong><%= currentUser ? currentUser.name : '' %></strong> đến với khu vực Shipper.</p>
+          <div class="mt-2">
+            <span class="badge badge-success" style="font-size:1.1rem;">Tổng tiền đã giao thành công: <span class="text-danger font-weight-bold"><%= totalEarnings.toLocaleString('vi-VN') %>₫</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Đơn hàng chờ giao -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-primary text-white">Đơn hàng chờ nhận</div>
+        <div class="card-body p-2">
+          <% if (waitingOrders && waitingOrders.length > 0) { %>
+            <% waitingOrders.forEach(order => { %>
+              <div class="order-card mb-3 p-3 border rounded shadow-sm bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Mã đơn:</strong> <%= order._id %><br>
+                    <strong>Khách:</strong> <%= order.shippingAddress.fullName %> <br>
+                    <strong>Tổng tiền:</strong> <%= order.totalAmount.toLocaleString('vi-VN') %>₫
+                  </div>
+                  <button class="btn btn-success btn-sm accept-btn" data-id="<%= order._id %>">Nhận đơn</button>
+                </div>
+                <div class="mt-2"><strong>Địa chỉ:</strong> <%= order.shippingAddress.address %></div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center text-muted">Không có đơn chờ nhận.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- Đơn đang giao -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-warning text-dark">Đơn đang giao</div>
+        <div class="card-body p-2">
+          <% if (shippingOrders && shippingOrders.length > 0) { %>
+            <% shippingOrders.forEach(order => { %>
+              <div class="order-card mb-3 p-3 border rounded shadow-sm bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Mã đơn:</strong> <%= order._id %><br>
+                    <strong>Khách:</strong> <%= order.shippingAddress.fullName %> <br>
+                    <strong>Tổng tiền:</strong> <%= order.totalAmount.toLocaleString('vi-VN') %>₫
+                  </div>
+                  <div>
+                    <button class="btn btn-success btn-sm deliver-btn" data-id="<%= order._id %>">Giao thành công</button>
+                    <button class="btn btn-danger btn-sm cancel-btn" data-id="<%= order._id %>">Hủy đơn</button>
+                  </div>
+                </div>
+                <div class="mt-2"><strong>Địa chỉ:</strong> <%= order.shippingAddress.address %></div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center text-muted">Không có đơn đang giao.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- Lịch sử đơn đã giao -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-success text-white">Đơn đã giao thành công</div>
+        <div class="card-body p-2">
+          <% if (deliveredOrders && deliveredOrders.length > 0) { %>
+            <% deliveredOrders.forEach(order => { %>
+              <div class="order-card mb-3 p-3 border rounded shadow-sm bg-light">
+                <div><strong>Mã đơn:</strong> <%= order._id %></div>
+                <div><strong>Khách:</strong> <%= order.shippingAddress.fullName %></div>
+                <div><strong>Tổng tiền:</strong> <%= order.totalAmount.toLocaleString('vi-VN') %>₫</div>
+                <div><strong>Địa chỉ:</strong> <%= order.shippingAddress.address %></div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center text-muted">Chưa có đơn giao thành công.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- Lịch sử đơn đã hủy -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-danger text-white">Đơn đã hủy</div>
+        <div class="card-body p-2">
+          <% if (cancelledOrders && cancelledOrders.length > 0) { %>
+            <% cancelledOrders.forEach(order => { %>
+              <div class="order-card mb-3 p-3 border rounded shadow-sm bg-light">
+                <div><strong>Mã đơn:</strong> <%= order._id %></div>
+                <div><strong>Khách:</strong> <%= order.shippingAddress.fullName %></div>
+                <div><strong>Tổng tiền:</strong> <%= order.totalAmount.toLocaleString('vi-VN') %>₫</div>
+                <div><strong>Địa chỉ:</strong> <%= order.shippingAddress.address %></div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center text-muted">Chưa có đơn bị hủy.</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Xử lý các nút nhận đơn, giao thành công, hủy đơn
+function postOrderAction(url, orderId, confirmMsg) {
+  if (confirmMsg && !confirm(confirmMsg)) return;
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) location.reload();
+    else alert(data.message || 'Có lỗi xảy ra!');
+  });
+}
+document.querySelectorAll('.accept-btn').forEach(btn => {
+  btn.onclick = function() {
+    postOrderAction('/shipper/accept', this.dataset.id, 'Bạn chắc chắn muốn nhận đơn này?');
+  };
+});
+document.querySelectorAll('.deliver-btn').forEach(btn => {
+  btn.onclick = function() {
+    postOrderAction('/shipper/deliver', this.dataset.id, 'Xác nhận đã giao thành công đơn này?');
+  };
+});
+document.querySelectorAll('.cancel-btn').forEach(btn => {
+  btn.onclick = function() {
+    postOrderAction('/shipper/cancel', this.dataset.id, 'Bạn chắc chắn muốn hủy đơn này?');
+  };
+});
+</script>
+
+<%- include('../partials/footer') %>
