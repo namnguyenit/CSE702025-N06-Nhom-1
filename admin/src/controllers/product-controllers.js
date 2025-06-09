@@ -45,11 +45,6 @@ class ProductController {
     const inputName = body.name;
     const inputDescription = body.description;
     const inputType = body.type;
-    const inputSize = Array.isArray(body.size)
-      ? body.size
-      : body.size
-      ? [body.size]
-      : ["M"];
     const inputPrice = body.price;
     const inputStock = body.stock;
     const file = req.file;
@@ -59,6 +54,7 @@ class ProductController {
       imageData: file?.buffer,
     };
     //-----------------------------------------
+
     //Thiếu dữ liệu
     if (!inputName || !inputType) {
       PopupService.message(req, res, "error", "Thiếu dữ liệu");
@@ -85,11 +81,17 @@ class ProductController {
     newProduct.description = inputDescription;
     newProduct.type = inputType;
     newProduct.image = inputImage;
-    for (const item of inputSize) {
+    for (const item in inputPrice) {
+      if (!inputPrice[item]) {
+        inputPrice[item] = 0;
+      }
+      if (!inputStock[item]) {
+        inputStock[item] = 0;
+      }
       newProduct.detail.push({
         size: item,
-        price: inputPrice,
-        stock: inputStock,
+        price: inputPrice[item],
+        stock: inputStock[item],
       });
     }
     await newProduct.save();
@@ -114,11 +116,6 @@ class ProductController {
     const inputName = body.name;
     const inputDescription = body.description;
     const inputType = body.type;
-    const inputSize = Array.isArray(body.size)
-      ? body.size
-      : body.size
-      ? [body.size]
-      : undefined;
     const inputPrice = body.price;
     const inputStock = body.stock;
     const file = req.file;
@@ -127,39 +124,36 @@ class ProductController {
       imageType: file?.mimetype,
       imageData: file?.buffer,
     };
+
     //-----------------------------------------
-    //Missing data then kick
-    // for (const key in req.body) {
-    //   console.log(key, req.body[key]);
-    // }
     //Thiếu dữ liệu
-    if (!(inputName && inputDescription && inputType)) {
+    if (!(inputName && inputType)) {
       PopupService.message(req, res, "error", "Thiếu dữ liệu 😔");
       return res.redirect(`/products/edit/${encodeURIComponent(redirect)}`);
     }
     const product = await ProductModels.findById(id);
     if (!product) {
       PopupService.message(req, res, "error", "Không tìm thấy sản phẩm 😔");
-      return res.redirect("/products");
+      return res.redirect(`/products/edit/${encodeURIComponent(redirect)}`);
     }
     //Update new data
     product.name = inputName;
     product.description = inputDescription;
     product.type = inputType;
     //Detail
-    if (inputSize && inputPrice && inputStock) {
-      //xóa cũ
-      product.detail = product.detail.filter(
-        (item) => !inputSize.includes(item.size)
-      );
-      //mới
-      for (const item of inputSize) {
-        product.detail.push({
-          size: item,
-          price: inputPrice,
-          stock: inputStock,
-        });
+    product.detail = [];
+    for (const item in inputPrice) {
+      if (!inputPrice[item]) {
+        inputPrice[item] = 0;
       }
+      if (!inputStock[item]) {
+        inputStock[item] = 0;
+      }
+      product.detail.push({
+        size: item,
+        price: inputPrice[item],
+        stock: inputStock[item],
+      });
     }
     //hasImage will save
     if (inputImage.imageData) {
@@ -167,7 +161,7 @@ class ProductController {
     }
     await product.save();
     PopupService.message(req, res, "success", "Cập nhật thành công");
-    return res.redirect("/products");
+    return res.redirect(`/products/edit/${encodeURIComponent(inputName)}`);
   }
   async destroy(req, res) {
     await ProductModels.deleteMany({ name: req.params.id });

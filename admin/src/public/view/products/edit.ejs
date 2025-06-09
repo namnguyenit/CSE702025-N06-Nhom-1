@@ -94,55 +94,69 @@
                                                                 <input type="text" name="type" value="<%=item.type %>"
                                                                     class="form-control" id="type" placeholder="Type" />
                                                             </div>
+                                                            <style>
+                                                                .seven-col {
+                                                                    width: calc(100% / 7);
+                                                                    float: left;
+                                                                    text-align: center;
+                                                                    padding: 0;
+
+                                                                }
+
+                                                                .size-border {
+                                                                    border: 1px solid #00000029;
+                                                                    border-radius: 5px;
+                                                                    padding: 7px;
+                                                                    user-select: none;
+                                                                    font-weight: bold;
+                                                                    color: darkgray;
+                                                                }
+                                                            </style>
                                                             <div class="form-group">
-                                                                <label class="form-label">Size</label>
-                                                                <div class="selectgroup w-100">
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="XS"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">XS</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="S"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">S</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="M"
-                                                                            class="selectgroup-input" checked />
-                                                                        <span class="selectgroup-button">M</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="L"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">L</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="XL"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">XL</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="XXL"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">XXL</span>
-                                                                    </label>
-                                                                    <label class="selectgroup-item">
-                                                                        <input type="checkbox" name="size" value="XXXL"
-                                                                            class="selectgroup-input" />
-                                                                        <span class="selectgroup-button">XXXL</span>
-                                                                    </label>
+                                                                <label for="size">Size</label>
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="seven-col size-border">XS</div>
+                                                                        <div class="seven-col size-border">S</div>
+                                                                        <div class="seven-col size-border">M</div>
+                                                                        <div class="seven-col size-border">L</div>
+                                                                        <div class="seven-col size-border">XL</div>
+                                                                        <div class="seven-col size-border">XXL</div>
+                                                                        <div class="seven-col size-border">XXXL</div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="price">Price</label>
-                                                                <input type="text" name="price" class="form-control"
-                                                                    id="price" placeholder="Price" />
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <% item.detail.forEach(detail=>{ %>
+                                                                            <div class="seven-col"><input type="number"
+                                                                                    step="any"
+                                                                                    name="price[<%=detail.size %>]"
+                                                                                    value="<%=detail.price %>"
+                                                                                    class="form-control"
+                                                                                    placeholder="<%=detail.size %> Price" />
+                                                                            </div>
+                                                                            <% }) %>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="stock">Stock</label>
-                                                                <input type="text" name="stock" class="form-control"
-                                                                    id="stock" placeholder="Stock" />
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <% item.detail.forEach(detail=>{ %>
+                                                                            <div class="seven-col"><input type="number"
+                                                                                    step="any"
+                                                                                    name="stock[<%=detail.size %>]"
+                                                                                    value="<%=detail.stock %>"
+                                                                                    class="form-control"
+                                                                                    placeholder="<%=detail.size %> Price" />
+                                                                            </div>
+                                                                            <% }) %>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="image">Image file

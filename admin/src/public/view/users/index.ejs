@@ -121,17 +121,21 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-button-action">
-                                                                        <a href="/users/edit/<%=user.id%>"
-                                                                            class="btn btn-link btn-primary btn-lg"
-                                                                            data-original-title="Edit Task">
-                                                                            <i class="fa fa-edit"></i>
+                                                                        <a href="/users/edit/<%=user.id%>">
+                                                                            <button type="button"
+                                                                                data-bs-toggle="tooltip" title="Edit"
+                                                                                class="btn btn-link btn-primary">
+                                                                                <i class="fa fa-edit"></i>
+                                                                            </button>
                                                                         </a>
                                                                         <form action="/users/destroy" method="post"
-                                                                            class="btn btn-link btn-danger btn-destroy">
+                                                                            class="btn-destroy">
                                                                             <input type="hidden" name="id"
                                                                                 value="<%=user.id%>">
-                                                                            <button type="submit"><i
-                                                                                    class="fa fa-times"></i></button>
+                                                                            <button type="submit" title="Destroy"
+                                                                                class="btn btn-link btn-danger">
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
                                                                         </form>
                                                                     </div>
                                                                 </td>

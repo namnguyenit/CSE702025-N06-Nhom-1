@@ -83,55 +83,90 @@
                                                             <input type="text" name="type" class="form-control"
                                                                 id="type" placeholder="Type" />
                                                         </div>
+                                                        <style>
+                                                            .seven-col {
+                                                                width: calc(100% / 7);
+                                                                float: left;
+                                                                text-align: center;
+                                                                padding: 0;
+                                                            }
+                                                        </style>
                                                         <div class="form-group">
-                                                            <label class="form-label">Size</label>
-                                                            <div class="selectgroup w-100">
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="XS"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">XS</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="S"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">S</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="M"
-                                                                        class="selectgroup-input" checked />
-                                                                    <span class="selectgroup-button">M</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="L"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">L</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="XL"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">XL</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="XXL"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">XXL</span>
-                                                                </label>
-                                                                <label class="selectgroup-item">
-                                                                    <input type="checkbox" name="size" value="XXXL"
-                                                                        class="selectgroup-input" />
-                                                                    <span class="selectgroup-button">XXXL</span>
-                                                                </label>
+                                                            <label for="price">Price</label>
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[XS]"
+                                                                            class="form-control"
+                                                                            placeholder="XS Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[S]"
+                                                                            class="form-control"
+                                                                            placeholder="S Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[M]"
+                                                                            class="form-control"
+                                                                            placeholder="M Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[L]"
+                                                                            class="form-control"
+                                                                            placeholder="L Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[XL]"
+                                                                            class="form-control"
+                                                                            placeholder="XL Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[XXL]"
+                                                                            class="form-control"
+                                                                            placeholder="XXL Price" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            step="any" name="price[XXXL]"
+                                                                            class="form-control"
+                                                                            placeholder="XXXL Price" />
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="price">Price</label>
-                                                            <input type="text" name="price" class="form-control"
-                                                                id="price" placeholder="Price" />
-                                                        </div>
-                                                        <div class="form-group">
                                                             <label for="stock">Stock</label>
-                                                            <input type="text" name="stock" class="form-control"
-                                                                id="stock" placeholder="Stock" />
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[XS]" class="form-control"
+                                                                            placeholder="XS Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[S]" class="form-control"
+                                                                            placeholder="S Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[M]" class="form-control"
+                                                                            placeholder="M Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[L]" class="form-control"
+                                                                            placeholder="L Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[XL]" class="form-control"
+                                                                            placeholder="XL Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[XXL]" class="form-control"
+                                                                            placeholder="XXL Stock" />
+                                                                    </div>
+                                                                    <div class="seven-col"><input type="number"
+                                                                            name="stock[XXXL]" class="form-control"
+                                                                            placeholder="XXXL Stock" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="image">Image file
