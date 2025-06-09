@@ -11,6 +11,8 @@ route.use(authorizationMiddleware);
 
 route.get("/", OrderControllers.index);
 route.post("/approved", OrderControllers.approved);
+route.post("/detail", OrderControllers.detail);
+route.post("/cancelled", OrderControllers.cancelled);
 
 //--------------------------------
 

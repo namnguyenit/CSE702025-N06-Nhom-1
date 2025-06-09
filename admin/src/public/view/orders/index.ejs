@@ -71,6 +71,7 @@
                                                             <td>Payment Method</td>
                                                             <td>Payment Status</td>
                                                             <td>Status</td>
+                                                            <td>Total Amount</td>
                                                             <th style="width: 10%">Action</th>
                                                         </tr>
                                                     </thead>
@@ -82,6 +83,7 @@
                                                             <td>Payment Method</td>
                                                             <td>Payment Status</td>
                                                             <td>Status</td>
+                                                            <td>Total Amount</td>
                                                             <th style="width: 10%">Action</th>
                                                         </tr>
                                                     </tfoot>
@@ -107,32 +109,73 @@
                                                                     <%=order.status %>
                                                                 </td>
                                                                 <td>
-                                                                    <% if(order.status=="pending" ){ %>
-                                                                        <form action="/orders/approved" method="post">
-                                                                            <input type="hidden" name="id"
-                                                                                value="<%=order.id %>">
-                                                                            <div class="form-button-action">
+                                                                    <%=order.totalAmount %>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-button-action">
+                                                                        <% if(order.status=="pending" ){ %>
+                                                                            <form action="/orders/approved"
+                                                                                method="post">
+                                                                                <input type="hidden" name="id"
+                                                                                    value="<%=order.id %>">
+                                                                                <div class="form-button-action">
+                                                                                    <div class="form-button-action">
+                                                                                        <button type="submit"
+                                                                                            data-bs-toggle="tooltip"
+                                                                                            title="approve"
+                                                                                            class="btn btn-link btn-warning">
+                                                                                            <i
+                                                                                                class="fa fa-hourglass-half"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                            <% } else{ %>
                                                                                 <div class="form-button-action">
                                                                                     <button type="submit"
                                                                                         data-bs-toggle="tooltip"
                                                                                         title="approved"
-                                                                                        class="btn btn-warning">
+                                                                                        class="btn btn-link btn-success">
                                                                                         <i
                                                                                             class="fa fa-hourglass-half"></i>
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>
-                                                                        </form>
-                                                                        <% } else{ %>
-                                                                            <div class="form-button-action">
-                                                                                <button type="submit"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    title="waiting"
-                                                                                    class="btn btn-success">
-                                                                                    <i class="fa fa-hourglass-half"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                            <% } %>
+                                                                                <% } %>
+                                                                                    <form action="/orders/detail"
+                                                                                        method="post">
+                                                                                        <input type="hidden" name="id"
+                                                                                            value="<%=order.id %>">
+                                                                                        <div class="form-button-action">
+                                                                                            <div
+                                                                                                class="form-button-action">
+                                                                                                <button type="submit"
+                                                                                                    data-bs-toggle="tooltip"
+                                                                                                    title="Detail"
+                                                                                                    class="btn btn-link btn-info">
+                                                                                                    <i
+                                                                                                        class="fa fa-eye"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                    <form action="/orders/cancelled"
+                                                                                        method="post">
+                                                                                        <input type="hidden" name="id"
+                                                                                            value="<%=order.id %>">
+                                                                                        <div class="form-button-action">
+                                                                                            <div
+                                                                                                class="form-button-action">
+                                                                                                <button type="submit"
+                                                                                                    data-bs-toggle="tooltip"
+                                                                                                    title="Cancelled"
+                                                                                                    class="btn btn-link btn-danger">
+                                                                                                    <i
+                                                                                                        class="fa fa-times"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                             <% }) %>

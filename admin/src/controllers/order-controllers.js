@@ -19,6 +19,15 @@ class OrderControllers {
     PopupService.message(req, res, "success", "- Đã duyệt đơn hàng -");
     return res.redirect("/orders");
   }
+  async detail(req, res) {
+    const nameForm = "Order";
+    const nameTable = "Detail";
+    const order = await OrderModels.findById(req.body.id);
+    return res.render("orders/detail", { nameForm, nameTable, order });
+  }
+  async cancelled(req, res) {
+    return res.send("DE");
+  }
 }
 
 module.exports = new OrderControllers();

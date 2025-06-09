@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head -->
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <%- include('../partials/sidebar') %>
+                <div class="main-panel">
+                    <div class="main-header">
+                        <div class="main-header-logo">
+                            <!-- Logo Header -->
+                            <div class="logo-header" data-background-color="dark">
+                                <div class="nav-toggle">
+                                    <button class="btn btn-toggle toggle-sidebar">
+                                        <i class="gg-menu-right"></i>
+                                    </button>
+                                    <button class="btn btn-toggle sidenav-toggler">
+                                        <i class="gg-menu-left"></i>
+                                    </button>
+                                </div>
+                                <button class="topbar-toggler more">
+                                    <i class="gg-more-vertical-alt"></i>
+                                </button>
+                            </div>
+                            <!-- End Logo Header -->
+                        </div>
+                        <!-- Navbar Header -->
+                        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                            <div class="container-fluid">
+                                <nav
+                                    class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-search pe-1">
+                                                <i class="fa fa-search search-icon"></i>
+                                            </button>
+                                        </div>
+                                        <input type="text" placeholder="Search ..." class="form-control" />
+                                    </div>
+                                </nav>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+
+                    <div class="container">
+                        <div class="page-inner">
+                            <div class="page-header">
+                                <!-- Name Table -->
+                                <%- include('../partials/name-table') %>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <%- include('../partials/name-form') %>
+                                                    <a href="/orders" class="btn btn-danger btn-round ms-auto">
+                                                        <i class="fa fa-arrow-left"></i>
+                                                        Back
+                                                    </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- Data Table -->
+                                            <div class="table-responsive">
+                                                <table id="add-row" class="display table table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <td>Image</td>
+                                                            <td>Name</td>
+                                                            <td>Type</td>
+                                                            <td>Size</td>
+                                                            <td>Price</td>
+                                                            <td>Quantity</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td>Image</td>
+                                                            <td>Name</td>
+                                                            <td>Type</td>
+                                                            <td>Size</td>
+                                                            <td>Price</td>
+                                                            <td>Quantity</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <% if(order){ %>
+                                                        <tbody>
+                                                            <% order.items.forEach(product=>{ %>
+                                                                <tr>
+                                                                    <td><img style="width: 100px;height: 75px;"
+                                                                            class="image"
+                                                                            src="/products/image/<%=product.product%>"
+                                                                            alt="<%=product.image?.imageName%>">
+                                                                    </td>
+                                                                    <td>
+                                                                        <%=product.name %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%=product.group %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%=product.size %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%=product.price %> <u>đ</u>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%=product.quantity %>
+                                                                    </td>
+                                                                </tr>
+                                                                <% }) %>
+                                                        </tbody>
+                                                        <% } %>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <%- include('../partials/footer') %>
+                </div>
+        </div>
+        <!-- Table Script -->
+        <%- include('../partials/table-script') %>
+            <!-- My Script -->
+            <%- include('../partials/my-script') %>
+    </body>
+
+</html>
