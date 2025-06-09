@@ -163,12 +163,15 @@ class CategoryControllers {
     const categoryID = body.categoryID;
     const productName = body.productName;
     //Gỡ
-    const products = await ProductModels.find({ name: productName });
-    const category = await CategoryModels.findById(categoryID);
-    products.forEach((item) => {
-      category.products = category.products.filter((p) => p.name != item.name);
-    });
-    await category.save();
+    await CategoryModels.updateOne(
+      { _id: categoryID },
+      {
+        $pull: {
+          products: { name: productName },
+        },
+      }
+    );
+
     PopupService.message(req, res, "success", "Gỡ sản phẩm thành công");
     return res.redirect(`/categories/show/${categoryID}`);
   }
