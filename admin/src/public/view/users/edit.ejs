@@ -91,24 +91,34 @@
                                                             <label>Role</label><br />
                                                             <div class="d-flex">
                                                                 <div class="form-check">
-                                                                    <label class="form-check-label" for="admin">
-                                                                        Admin
-                                                                    </label>
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="role" value="Admin" id="admin" <%
-                                                                        if(user.role=='Admin' ){ %>
-                                                                    checked
-                                                                    <% } %>
-                                                                        />
-
-                                                                </div>
-                                                                <div class="form-check">
                                                                     <label class="form-check-label" for="user">
                                                                         User
                                                                     </label>
                                                                     <input class="form-check-input" type="radio"
                                                                         name="role" value="User" id="user" <%
                                                                         if(user.role=='User' ){ %>
+                                                                    checked
+                                                                    <% } %>
+                                                                        />
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label" for="shipper">
+                                                                        Shipper
+                                                                    </label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="role" value="Shipper" id="shipper" <%
+                                                                        if(user.role=='Shipper' ){ %>
+                                                                    checked
+                                                                    <% } %>
+                                                                        />
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label" for="admin">
+                                                                        Admin
+                                                                    </label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="role" value="Admin" id="admin" <%
+                                                                        if(user.role=='Admin' ){ %>
                                                                     checked
                                                                     <% } %>
                                                                         />

@@ -27,7 +27,9 @@ class UserControllers {
       const inputPassword = body?.password;
       const inputPasswordConfirm = body?.passwordConfirm;
       const inputRole =
-        body?.role != "Admin" && body?.role != "User" ? "User" : body.role;
+        body?.role != "Admin" && body?.role != "User" && body?.role != "Shipper"
+          ? "User"
+          : body.role;
       const inputName = body?.name;
       const inputPhone = body?.phone;
       const inputGmail = body?.gmail;
@@ -106,7 +108,9 @@ class UserControllers {
       const inputPassword = body?.password;
       const inputPasswordConfirm = body?.passwordConfirm;
       const inputRole =
-        body?.role != "Admin" && body?.role != "User" ? "User" : body.role;
+        body?.role != "Admin" && body?.role != "User" && body?.role != "Shipper"
+          ? "User"
+          : body.role;
       const inputName = body?.name;
       const inputPhone = body?.phone;
       const inputGmail = body?.gmail;
