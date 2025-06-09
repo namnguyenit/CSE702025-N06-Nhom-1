@@ -8,10 +8,10 @@ const detailSchema = new Schema({
 }, { _id: false });
 
 const reviewProductSchema = new Schema({
-    productID: { type: Schema.Types.ObjectId, ref: 'Product' },
-    rating: Number,
+    userid: { type: Schema.Types.ObjectId, ref: 'User' },
+    star: { type: Number, min: 1, max: 5 },
     comment: String,
-    commentAt: Date
+    commentAt: { type: Date, default: Date.now }
 }, { _id: false });
 
 const productSchema = new Schema({

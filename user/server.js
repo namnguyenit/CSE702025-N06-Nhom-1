@@ -16,6 +16,7 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
 const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
 const shipperRoutes = require('./routes/shipperRoutes'); // Sẽ thêm
+const reviewRoutes = require('./routes/reviewRoutes'); // Thêm reviewRoutes
 
 // Connect to Database
 connectDB();
@@ -75,6 +76,7 @@ app.use('/order', orderRoutes); // Route cho đặt hàng (đúng path)
 // app.use('/orders', orderRoutes); // Xóa hoặc comment dòng này nếu có
 app.use('/cart', cartRoutes);
 app.use('/shipper', shipperRoutes);
+app.use('/review', reviewRoutes); // Thêm mount reviewRoutes vào app
 
 // 404 Handler
 app.use((req, res, next) => {

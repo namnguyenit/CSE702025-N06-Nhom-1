@@ -1,5 +1,8 @@
 <%- include('../partials/header', { title: title }) %>
 
+<!-- Thêm Font Awesome 4.7.0 CDN để đảm bảo icon ngôi sao hiển thị đúng -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
     .product-detail-modern {
         background: #fff;
@@ -161,6 +164,143 @@
             min-width: 0;
         }
     }
+
+    /* Tab hiện đại, bỏ gradient, dùng border xanh nhạt */
+    .nav-tabs {
+      border-bottom: 2px solid #e3e9f7;
+      display: flex;
+      justify-content: center;
+      background: #f7faff;
+      border-radius: 16px 16px 0 0;
+      overflow: hidden;
+    }
+    .nav-tabs .nav-link {
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #256DFF;
+      background: #f7faff;
+      border: none;
+      border-radius: 0;
+      padding: 13px 32px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-tabs .nav-link.active {
+      background: #fff;
+      color: #ff003c;
+      border-bottom: 3px solid #ff003c;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 2px 8px #e3e9f7;
+    }
+
+    /* Đánh giá hiện đại */
+    .review-modern-box {
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid #e3e9f7;
+      box-shadow: 0 2px 8px rgba(37,109,255,0.04);
+      padding: 16px 20px 10px 20px;
+      margin-bottom: 16px;
+    }
+    .review-modern-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .review-modern-username {
+      font-weight: 700;
+      color: #256DFF;
+      font-size: 1.07rem;
+    }
+    .review-modern-stars {
+      color: #ffb400;
+      font-size: 1.12rem;
+      letter-spacing: 1px;
+    }
+    .review-modern-time {
+      color: #888;
+      font-size: 0.97rem;
+    }
+    .review-modern-comment {
+      color: #222;
+      font-size: 1.07rem;
+      margin-top: 2px;
+      word-break: break-word;
+    }
+    .review-modern-empty {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    #reviewForm .form-control, #reviewForm textarea {
+      border-radius: 12px;
+      border: 1.5px solid #e3e9f7;
+      font-size: 1.07rem;
+      background: #f7faff;
+      transition: border 0.2s;
+    }
+    #reviewForm .form-control:focus, #reviewForm textarea:focus {
+      border-color: #256DFF;
+      background: #fff;
+    }
+    #reviewForm label {
+      font-weight: 600;
+      color: #256DFF;
+      margin-bottom: 6px;
+      display: block;
+    }
+    #reviewForm .btn-primary {
+      background: #256DFF;
+      border: none;
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 1.18rem;
+      padding: 16px 48px;
+      margin-top: 12px;
+      box-shadow: 0 2px 8px #e3e9f7;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      letter-spacing: 0.5px;
+    }
+    #reviewForm .btn-primary:hover {
+      background: #1746a2;
+      color: #fff;
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 4px 16px #dbeafe;
+    }
+    #reviewForm .form-group {
+      margin-bottom: 18px;
+    }
+    #reviewForm select.form-control {
+      min-width: 200px;
+      display: inline-block;
+      background: #f7faff;
+      border: 1.5px solid #e3e9f7;
+      border-radius: 12px;
+      font-size: 1.07rem;
+      color: #222;
+      box-shadow: none;
+      margin-right: 10px;
+    }
+    #reviewForm select.form-control:focus {
+      border-color: #256DFF;
+      background: #fff;
+      color: #222;
+    }
+    #reviewForm .form-control:focus, #reviewForm textarea:focus {
+      border-color: #256DFF;
+      background: #fff;
+      color: #222;
+    }
+    #reviewForm .form-control option {
+      color: #222;
+    }
+    #reviewForm .form-control option:checked {
+      background: #e3e9f7;
+      color: #256DFF;
+    }
+    /* ...existing code... */
 </style>
 
 <div class="container product-detail-modern mt-4">
@@ -232,7 +372,50 @@
                     <%= product.description %>
                 </div>
                 <div class="tab-pane fade p-3" id="review" role="tabpanel">
-                    <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                    <div class="form-group mb-3" style="max-width:320px;">
+                      <label for="filterReviewType" style="font-weight:600;">Xem đánh giá theo loại sản phẩm:</label>
+                      <select class="form-control" id="filterReviewType">
+                        <option value="all">Tất cả loại</option>
+                        <% product.types.forEach((type, idx) => { %>
+                          <option value="<%= type.type %>"><%= type.type %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                    <div id="reviewList"></div>
+                    <hr/>
+                    <% if (currentUser) { %>
+                    <form id="reviewForm" class="mb-3">
+                      <div class="form-group">
+                        <label for="reviewType">Chọn loại sản phẩm muốn đánh giá:</label>
+                        <select class="form-control" id="reviewType" name="type" required>
+                          <option value="">-- Chọn loại sản phẩm --</option>
+                          <% product.types.forEach((type, idx) => { %>
+                            <option value="<%= type.type %>"><%= type.type %></option>
+                          <% }) %>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Đánh giá:</label>
+                        <div id="starRatingGroup" style="display:flex;justify-content:space-between;max-width:520px;margin:0 auto 8px auto;gap:8px;">
+                          <% const starLabels = ['Rất Tệ', 'Tệ', 'Bình thường', 'Tốt', 'Tuyệt vời']; %>
+                          <% for(let i=1;i<=5;i++){ %>
+                            <div class="star-rating-item" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                              <i class="fa fa-star-o star-icon" data-star="<%=i%>" style="font-size:2.2rem;transition:color 0.2s;"></i>
+                              <span class="star-label" style="font-size:1.05rem;margin-top:4px;color:#444;"><%= starLabels[i-1] %></span>
+                            </div>
+                          <% } %>
+                        </div>
+                        <input type="hidden" id="reviewStar" name="star" value="0" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="reviewComment">Bình luận:</label>
+                        <textarea class="form-control" id="reviewComment" name="comment" rows="2" maxlength="300" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Gửi Đánh Giá</button>
+                    </form>
+                    <% } else { %>
+                    <div class="alert alert-info text-center">Bạn cần <a href="/auth/login">đăng nhập</a> để đánh giá sản phẩm.</div>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -516,5 +699,155 @@
         let val = parseInt(input.value) || 1;
         input.value = val + 1;
     };
+
+    // Đánh giá sản phẩm
+    const reviewTab = document.getElementById('review-tab');
+    const productId = '<%= product._id %>';
+    const reviewList = document.getElementById('reviewList');
+    let allReviews = [];
+    function renderReviews(reviews) {
+      const filterType = document.getElementById('filterReviewType').value;
+      let filtered = reviews;
+      if (filterType && filterType !== 'all') {
+        filtered = reviews.filter(r => r.type === filterType);
+      }
+      if (!filtered.length) {
+        reviewList.innerHTML = '<div class="review-modern-empty">Chưa có đánh giá nào cho loại này.</div>';
+        return;
+      }
+      reviewList.innerHTML = filtered.map(r => `
+        <div class="review-modern-box">
+          <div class="review-modern-header">
+            <span class="review-modern-username">${r.username || 'Ẩn danh'}</span>
+            <span class="review-modern-stars">${'★'.repeat(r.star)}${'☆'.repeat(5-r.star)}</span>
+            <span class="review-modern-time">${r.createdAt ? new Date(r.createdAt).toLocaleString('vi-VN') : ''}</span>
+            <span class="badge badge-light ml-2">${r.type ? r.type : ''}</span>
+          </div>
+          <div class="review-modern-comment">${r.comment}</div>
+        </div>
+      `).join('');
+    }
+    async function fetchReviews() {
+      reviewList.innerHTML = '<div class="text-center text-muted">Đang tải đánh giá...</div>';
+      const filterType = document.getElementById('filterReviewType').value;
+      let url = '';
+      if (filterType === 'all') {
+        // Gọi API lấy tất cả review mọi type theo tên sản phẩm
+        url = `/review/by-name/<%= encodeURIComponent(product.name) %>`;
+      } else {
+        // Lấy _id của biến thể theo type
+        let productTypeId = null;
+        for (let i = 0; i < productTypes.length; i++) {
+          if (productTypes[i].type === filterType) {
+            productTypeId = productTypes[i]._id;
+            break;
+          }
+        }
+        if (!productTypeId) {
+          reviewList.innerHTML = '<div class="text-danger">Không xác định được loại sản phẩm.</div>';
+          return;
+        }
+        url = `/review/${productTypeId}`;
+      }
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.success) {
+          allReviews = data.reviews;
+          renderReviews(allReviews);
+        } else reviewList.innerHTML = '<div class="text-danger">Không thể tải đánh giá.</div>';
+      } catch {
+        reviewList.innerHTML = '<div class="text-danger">Lỗi kết nối.</div>';
+      }
+    }
+    document.getElementById('filterReviewType').addEventListener('change', fetchReviews);
+    // Star rating UI nâng cấp với nhãn
+    const starRatingGroup = document.getElementById('starRatingGroup');
+    if (starRatingGroup) {
+      let lastStar = 0;
+      const stars = starRatingGroup.querySelectorAll('.star-icon');
+      stars.forEach((starEl, idx) => {
+        starEl.addEventListener('mouseover', function() {
+          stars.forEach((el, i) => {
+            el.className = i <= idx ? 'fa fa-star star-icon hovered' : 'fa fa-star-o star-icon';
+            el.style.color = i <= idx ? '#ffb400' : '#bbb';
+          });
+        });
+        starEl.addEventListener('mouseout', function() {
+          stars.forEach((el, i) => {
+            el.className = i < lastStar ? 'fa fa-star star-icon selected' : 'fa fa-star-o star-icon';
+            el.style.color = i < lastStar ? '#ffb400' : '#bbb';
+          });
+        });
+        starEl.addEventListener('click', function() {
+          lastStar = idx + 1;
+          document.getElementById('reviewStar').value = lastStar;
+          stars.forEach((el, i) => {
+            el.className = i < lastStar ? 'fa fa-star star-icon selected' : 'fa fa-star-o star-icon';
+            el.style.color = i < lastStar ? '#ffb400' : '#bbb';
+          });
+        });
+      });
+    }
+    // Gửi đánh giá
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+      reviewForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const type = document.getElementById('reviewType').value;
+        const star = parseInt(document.getElementById('reviewStar').value, 10);
+        const comment = document.getElementById('reviewComment').value.trim();
+        // Lấy _id của biến thể (type) đang chọn
+        let productTypeId = null;
+        for (let i = 0; i < productTypes.length; i++) {
+          if (productTypes[i].type === type) {
+            productTypeId = productTypes[i]._id;
+            break;
+          }
+        }
+        if (!type) return Swal.fire('Vui lòng chọn loại sản phẩm muốn đánh giá!');
+        if (!star || star < 1) return Swal.fire('Vui lòng chọn số sao đánh giá!');
+        if (!comment) return Swal.fire('Vui lòng nhập bình luận!');
+        if (!productTypeId) return Swal.fire('Không xác định được loại sản phẩm!');
+        try {
+          const res = await fetch(`/review/${productTypeId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, star, comment })
+          });
+          const data = await res.json();
+          if (data.success) {
+            Swal.fire('Đánh giá của bạn đã được gửi!', '', 'success');
+            reviewForm.reset();
+            document.getElementById('reviewStar').value = 0;
+            Array.from(document.querySelectorAll('#starRatingGroup .star-icon')).forEach(el => el.className = 'fa fa-star-o star-icon');
+            fetchReviews();
+          } else {
+            Swal.fire(data.message || 'Gửi đánh giá thất bại!', '', 'error');
+          }
+        } catch {
+          Swal.fire('Lỗi kết nối!', '', 'error');
+        }
+      });
+    }
+    // Tải đánh giá khi vào tab
+    const reviewTabBtn = document.getElementById('review-tab');
+    if (reviewTabBtn) {
+      reviewTabBtn.addEventListener('click', fetchReviews);
+    }
+    if (window.location.hash === '#review') fetchReviews();
+
+    // Fix select[required] bị display:none khi dùng custom select (Nice Select)
+document.querySelectorAll('select[required]').forEach(function(sel) {
+  if (sel.style.display === 'none') {
+    sel.style.display = '';
+    sel.style.opacity = 0;
+    sel.style.position = 'absolute';
+    sel.style.left = '-9999px';
+    sel.style.width = '1px';
+    sel.style.height = '1px';
+    sel.style.pointerEvents = 'none';
+  }
+});
 </script>
 <%- include('../partials/footer') %>
