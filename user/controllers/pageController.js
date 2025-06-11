@@ -114,9 +114,16 @@ exports.getWishlistPage = async (req, res, next) => {
         if (!req.session.user) return res.redirect('/auth/login');
         const User = require('../models/UserModel');
         const Product = require('../models/ProductModel');
-        const user = await User.findById(req.session.user._id).populate('wishlist');
+        const user = await User.findById(req.session.user._id);
         const categories = await Category.find({});
-        const wishlistProducts = user.wishlist || [];
+        const wishlistNames = user.wishlist || [];
+        let wishlistProducts = [];
+        if (wishlistNames.length > 0) {
+            // Lấy mỗi tên chỉ 1 sản phẩm đại diện (nếu có nhiều biến thể)
+            const allProducts = await Product.find({ name: { $in: wishlistNames } });
+            // Đảm bảo thứ tự theo wishlist
+            wishlistProducts = wishlistNames.map(name => allProducts.find(p => p.name === name)).filter(Boolean);
+        }
         res.render('pages/wishlist', {
             title: 'Sản phẩm yêu thích',
             products: wishlistProducts,

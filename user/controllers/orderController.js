@@ -14,7 +14,6 @@ function isAjax(req) {
 exports.quickOrder = async (req, res, next) => {
     try {
         const userId = req.session.user ? req.session.user._id : null;
-        // Nếu có trường buyNow hoặc đủ thông tin sản phẩm => MUA NGAY
         const { name, type, size, price, quantity, image, shippingAddress: shippingAddressData, productId } = req.body;
         if (!userId) {
             if (isAjax(req)) {
@@ -35,6 +34,22 @@ exports.quickOrder = async (req, res, next) => {
                         imageData: productDoc.image.imageData
                     };
                 }
+            }
+            // Giảm tồn kho một cách an toàn (atomic)
+            const product = await Product.findOneAndUpdate(
+                {
+                    _id: productId,
+                    type: type,
+                    "detail.size": size,
+                    "detail.stock": { $gte: quantity }
+                },
+                { $inc: { "detail.$.stock": -quantity } },
+                { new: true }
+            );
+            if (!product) {
+                return isAjax(req)
+                    ? res.status(400).json({ success: false, message: 'Sản phẩm không đủ tồn kho hoặc đã hết hàng.' })
+                    : res.redirect('/cart?error=outofstock');
             }
             // Tạo shippingAddress cho mua ngay
             const fullName = req.body.firstName && req.body.lastName ? `${req.body.firstName} ${req.body.lastName}`.trim() : '';
@@ -89,44 +104,80 @@ exports.quickOrder = async (req, res, next) => {
             phone: req.body.phone || (shippingAddressData && shippingAddressData.phone) || '',
             email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
         };
-        const items = user.carts.map(item => {
-            let imageObj = null;
-            if (item.productID.image && item.productID.image.imageData && item.productID.image.imageType) {
-                imageObj = {
-                    imageName: item.productID.image.imageName,
-                    imageType: item.productID.image.imageType,
-                    imageData: item.productID.image.imageData
-                };
+        // Bắt đầu transaction giảm tồn kho cho từng sản phẩm trong giỏ
+        const session = await Product.startSession();
+        session.startTransaction();
+        try {
+            const updatedProducts = [];
+            for (const item of user.carts) {
+                const updated = await Product.findOneAndUpdate(
+                    {
+                        _id: item.productID._id,
+                        type: item.type,
+                        "detail.size": item.size,
+                        "detail.stock": { $gte: item.orderNumber }
+                    },
+                    { $inc: { "detail.$.stock": -item.orderNumber } },
+                    { new: true, session }
+                );
+                if (!updated) {
+                    // Rollback
+                    await session.abortTransaction();
+                    session.endSession();
+                    return isAjax(req)
+                        ? res.status(400).json({ success: false, message: `Sản phẩm ${item.productID.name} (${item.size}) không đủ tồn kho.` })
+                        : res.redirect('/cart?error=outofstock');
+                }
+                updatedProducts.push(updated);
             }
-            return {
-                product: item.productID._id,
-                group: item.productID.type || '',
-                idSP: item.productID._id.toString(),
-                name: item.productID.name,
-                price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
-                quantity: item.orderNumber,
-                size: item.size,
-                image: imageObj
-            };
-        });
-        const totalAmount = items.reduce((sum, item) => sum + (typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity, 0);
-        const order = new Order({
-            user: userId,
-            items,
-            totalAmount,
-            shippingAddress,
-            status: 'pending',
-            paymentMethod: 'COD',
-            paymentStatus: 'chưa thanh toán'
-        });
-        await order.save();
-        user.orders.push(order._id);
-        user.carts = [];
-        await user.save();
-        if (isAjax(req)) {
-            return res.json({ success: true, orderId: order._id });
+            const items = user.carts.map(item => {
+                let imageObj = null;
+                if (item.productID.image && item.productID.image.imageData && item.productID.image.imageType) {
+                    imageObj = {
+                        imageName: item.productID.image.imageName,
+                        imageType: item.productID.image.imageType,
+                        imageData: item.productID.image.imageData
+                    };
+                }
+                return {
+                    product: item.productID._id,
+                    group: item.productID.type || '',
+                    idSP: item.productID._id.toString(),
+                    name: item.productID.name,
+                    price: item.productID.detail.find(d => d.size === item.size)?.price || item.productID.detail[0]?.price || 0,
+                    quantity: item.orderNumber,
+                    size: item.size,
+                    image: imageObj
+                };
+            });
+            const totalAmount = items.reduce((sum, item) => sum + (typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity, 0);
+            const order = new Order({
+                user: userId,
+                items,
+                totalAmount,
+                shippingAddress,
+                status: 'pending',
+                paymentMethod: 'COD',
+                paymentStatus: 'chưa thanh toán'
+            });
+            await order.save({ session });
+            user.orders.push(order._id);
+            user.carts = [];
+            await user.save({ session });
+            await session.commitTransaction();
+            session.endSession();
+            if (isAjax(req)) {
+                return res.json({ success: true, orderId: order._id });
+            }
+            return res.redirect('/order/history');
+        } catch (err) {
+            await session.abortTransaction();
+            session.endSession();
+            if (isAjax(req)) {
+                return res.status(500).json({ success: false, message: err.message || 'Đặt hàng thất bại.' });
+            }
+            return next(err);
         }
-        return res.redirect('/order/history');
     } catch (err) {
         if (isAjax(req)) {
             return res.status(500).json({ success: false, message: err.message || 'Đặt hàng thất bại.' });

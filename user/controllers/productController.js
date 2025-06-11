@@ -41,13 +41,22 @@ exports.getProductListPage = async (req, res, next) => {
                     image: prod.image && prod.image.imageData ? `data:${prod.image.imageType};base64,${prod.image.imageData.toString('base64')}` : '/img/product-placeholder.png',
                     types: [],
                     detail: prod.detail,
-                    reviewProducts: prod.reviewProducts
+                    reviewProducts: prod.reviewProducts,
+                    isOutOfStock: false // default
                 };
             }
             groupedProducts[prod.name].types.push({
                 type: prod.type,
                 detail: prod.detail
             });
+        });
+        // Đánh dấu hết hàng nếu tất cả các biến thể đều hết stock
+        Object.values(groupedProducts).forEach(product => {
+            let allOut = true;
+            product.types.forEach(type => {
+                if (type.detail.some(d => d.stock > 0)) allOut = false;
+            });
+            product.isOutOfStock = allOut;
         });
         // Lấy danh sách type duy nhất từ các sản phẩm
         const typesSet = new Set();
@@ -59,7 +68,7 @@ exports.getProductListPage = async (req, res, next) => {
         if (req.session.user) {
             const User = require('../models/UserModel');
             const user = await User.findById(req.session.user._id);
-            if (user && user.wishlist) wishlist = user.wishlist.map(id => id.toString());
+            if (user && user.wishlist) wishlist = user.wishlist;
         }
         res.render('pages/product_list', {
             title: pageTitle,
@@ -92,7 +101,7 @@ exports.getProductDetailPage = async (req, res, next) => {
             description: variants[0].description,
             image: variants[0].image && variants[0].image.imageData ? `data:${variants[0].image.imageType};base64,${variants[0].image.imageData.toString('base64')}` : '/img/product-placeholder.png',
             types: variants.map(v => ({
-                _id: v._id, // Thêm _id của từng biến thể
+                _id: v._id,
                 type: v.type,
                 detail: v.detail,
                 image: v.image && v.image.imageData ? {
@@ -101,13 +110,21 @@ exports.getProductDetailPage = async (req, res, next) => {
                 } : null
             })),
             detail: variants[0].detail,
-            reviewProducts: variants[0].reviewProducts
+            reviewProducts: variants[0].reviewProducts,
+            isOutOfStock: variants.every(v => v.detail.every(d => d.stock === 0))
         };
         const categories = await Category.find({});
+        let wishlist = [];
+        if (req.session.user) {
+            const User = require('../models/UserModel');
+            const user = await User.findById(req.session.user._id);
+            if (user && user.wishlist) wishlist = user.wishlist;
+        }
         res.render('pages/product_detail', {
             title: productName,
             product: productDetail,
-            categories
+            categories,
+            wishlist // truyền wishlist cho EJS
         });
     } catch (err) {
         next(err);
@@ -171,29 +188,22 @@ exports.toggleWishlist = async (req, res) => {
         return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để sử dụng chức năng này.' });
     }
     const userId = req.session.user._id;
-    let { productId } = req.body;
-    if (!productId) return res.status(400).json({ success: false, message: 'Thiếu productId.' });
-    const mongoose = require('mongoose');
+    let { productName } = req.body;
+    if (!productName) return res.status(400).json({ success: false, message: 'Thiếu productName.' });
     try {
-        // Đảm bảo productId là ObjectId
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ success: false, message: 'productId không hợp lệ.' });
-        }
-        productId = new mongoose.Types.ObjectId(productId);
         const User = require('../models/UserModel');
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ success: false, message: 'Không tìm thấy user.' });
         let action;
-        if (user.wishlist.some(id => id.equals(productId))) {
-            // Xóa bằng $pull với ObjectId
-            await User.updateOne({ _id: userId }, { $pull: { wishlist: productId } });
+        if (user.wishlist.includes(productName)) {
+            await User.updateOne({ _id: userId }, { $pull: { wishlist: productName } });
             action = 'removed';
         } else {
-            await User.updateOne({ _id: userId }, { $addToSet: { wishlist: productId } });
+            await User.updateOne({ _id: userId }, { $addToSet: { wishlist: productName } });
             action = 'added';
         }
-        res.json({ success: true, action });
-    } catch (e) {
-        res.status(500).json({ success: false, message: 'Lỗi server.' });
+        return res.json({ success: true, action });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi server.' });
     }
 };

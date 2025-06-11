@@ -30,7 +30,7 @@ const userSchema = new Schema({
     carts: [cartSchema],
     reviewProducts: [reviewProductSchema],
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
-    wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
+    wishlist: [{ type: String }]
 });
 
 module.exports = mongoose.model('User', userSchema);

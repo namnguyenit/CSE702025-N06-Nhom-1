@@ -363,6 +363,36 @@
 .wishlist-btn:hover {
   background: #ffe6ef;
 }
+/* Wishlist button trên trang chi tiết sản phẩm */
+.product-img-gallery .wishlist-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #fff;
+  border: none;
+  outline: none;
+  z-index: 10;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px #ff4b7d22;
+  font-size: 1.1em;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+}
+.product-img-gallery .wishlist-btn i {
+  color: #bbb;
+  font-size: 2em;
+  transition: color 0.2s;
+}
+.product-img-gallery .wishlist-btn.active i,
+.product-img-gallery .wishlist-btn:hover i {
+  color: #ff4b7d;
+}
+.product-img-gallery .wishlist-btn:hover {
+  background: #ffe6ef;
+  box-shadow: 0 2px 8px #ff4b7d44;
+  transform: scale(1.09) rotate(-6deg);
+}
 @media (max-width: 991px) {
   .product_sidebar {
     padding: 0;

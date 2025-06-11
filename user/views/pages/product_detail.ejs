@@ -38,7 +38,7 @@
         margin-bottom: 10px;
         color: #222;
     }
-    .single-product-details .badge-success {
+    .badge-success {
         background: linear-gradient(90deg,#256DFF 0%,#00c48c 100%);
         color: #fff;
         font-size: 1rem;
@@ -46,6 +46,23 @@
         padding: 6px 18px;
         font-weight: 600;
         margin-bottom: 8px;
+        display: inline-block;
+        box-shadow: 0 2px 8px rgba(37,109,255,0.10);
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+    }
+    .badge-outofstock {
+        background: linear-gradient(90deg,#ff003c 0%,#ff6a00 100%);
+        color: #fff;
+        font-size: 1rem;
+        border-radius: 16px;
+        padding: 6px 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: inline-block;
+        box-shadow: 0 2px 8px rgba(37,109,255,0.10);
+        letter-spacing: 0.5px;
+        line-height: 1.2;
     }
     .single-product-details p {
         color: #444;
@@ -306,11 +323,18 @@
 <div class="container product-detail-modern mt-4">
     <div class="row">
         <div class="col-lg-6 col-md-6">
-            <div class="product-img-gallery mb-4">
+            <div class="product-img-gallery mb-4 position-relative">
                 <img id="mainProductImg"
                     src="<%= product.image %>"
                     alt="<%= product.name %>"
                     class="img-fluid" />
+                <!-- Wishlist button -->
+                <button class="wishlist-btn<% if (wishlist && wishlist.includes(product.name)) { %> active<% } %>" 
+                        data-product-name="<%= product.name %>" 
+                        title="<%= (wishlist && wishlist.includes(product.name)) ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích' %>"
+                        style="position:absolute;top:18px;right:18px;">
+                    <i class="fas fa-heart"></i>
+                </button>
             </div>
         </div>
         <div class="col-lg-6 col-md-6">
@@ -318,6 +342,7 @@
                 <h3><%= product.name %></h3>
                 <div class="mb-2">
                     <span class="badge badge-success">Còn hàng</span>
+                    <span class="badge-outofstock" style="display:none;font-size:1.1rem;padding:8px 22px;border-radius:18px;">Hết hàng</span>
                 </div>
                 <p><%= product.description %></p>
                 <form id="productOptionsForm" autocomplete="off">
@@ -501,6 +526,37 @@
         document.getElementById('productPrice').innerText = price.toLocaleString('vi-VN') + '₫';
         document.getElementById('productStock').innerText = detail.stock;
     }
+    function updateStockStatus() {
+        const typeIdx = parseInt(document.getElementById('typeSelect').value, 10);
+        const sizeIdx = parseInt(document.getElementById('sizeSelect').value, 10);
+        const details = productTypes[typeIdx]?.detail || [];
+        const detail = details[sizeIdx] || details[0] || { price: 0, stock: 0 };
+        const stock = detail.stock || 0;
+        // Badge trạng thái
+        const badgeSuccess = document.querySelector('.single-product-details .badge-success');
+        const badgeDanger = document.querySelector('.single-product-details .badge-outofstock');
+        if (stock === 0) {
+            if (badgeSuccess) badgeSuccess.style.display = 'none';
+            if (badgeDanger) badgeDanger.style.display = '';
+            // Disable nút mua
+            document.getElementById('addToCartBtn').disabled = true;
+            document.getElementById('addToCartBtn').classList.add('disabled');
+            document.getElementById('buyNowBtn').disabled = true;
+            document.getElementById('buyNowBtn').classList.add('disabled');
+        } else {
+            if (badgeSuccess) badgeSuccess.style.display = '';
+            if (badgeDanger) badgeDanger.style.display = 'none';
+            document.getElementById('addToCartBtn').disabled = false;
+            document.getElementById('addToCartBtn').classList.remove('disabled');
+            document.getElementById('buyNowBtn').disabled = false;
+            document.getElementById('buyNowBtn').classList.remove('disabled');
+        }
+    }
+    // Gọi khi chọn type/size
+    function updatePriceAndStockStatus() {
+        updatePrice();
+        updateStockStatus();
+    }
     function bindTypeSelectEvents() {
         // Remove old event handlers to prevent duplicate binding
         const typeSelect = document.getElementById('typeSelect');
@@ -538,12 +594,12 @@
     function bindSizeSelectEvents() {
         const sizeSelect = document.getElementById('sizeSelect');
         sizeSelect.onchange = null;
-        sizeSelect.removeEventListener('change', updatePrice);
-        sizeSelect.addEventListener('change', updatePrice);
+        sizeSelect.removeEventListener('change', updatePriceAndStockStatus);
+        sizeSelect.addEventListener('change', updatePriceAndStockStatus);
         if (window.jQuery && typeof $(sizeSelect).niceSelect === 'function') {
             $(sizeSelect).off('.productSizeSync');
             $(sizeSelect).on('change.productSizeSync', function() {
-                updatePrice();
+                updatePriceAndStockStatus();
             });
             const $nice = $(sizeSelect).next('.nice-select');
             if ($nice.length) {
@@ -659,6 +715,7 @@
 
     // Khởi tạo ban đầu
     updateSizeAndPrice();
+    updateStockStatus();
     // Đảm bảo Nice Select đã update và event đã bind trước khi trigger change
     if (window.jQuery && typeof $('#typeSelect').niceSelect === 'function') {
         $('#typeSelect').niceSelect('update');
@@ -849,6 +906,36 @@ document.querySelectorAll('select[required]').forEach(function(sel) {
     sel.style.height = '1px';
     sel.style.pointerEvents = 'none';
   }
+});
+// Wishlist button logic (đồng bộ với product_list)
+$(document).on('click', '.wishlist-btn', function(e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var productId = $btn.data('product-id');
+    if (isLoggedIn !== 'true') {
+        showAuthModal();
+        return;
+    }
+    $.ajax({
+        url: '/products/wishlist/toggle',
+        method: 'POST',
+        data: { productId: productId },
+        success: function(res) {
+            if (res.success) {
+                $btn.toggleClass('active', res.action === 'added');
+                $btn.attr('title', res.action === 'added' ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích');
+            } else {
+                Swal.fire(res.message || 'Có lỗi xảy ra!', '', 'error');
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 401) {
+                showAuthModal();
+            } else {
+                Swal.fire('Có lỗi xảy ra!', '', 'error');
+            }
+        }
+    });
 });
 </script>
 <%- include('../partials/footer') %>

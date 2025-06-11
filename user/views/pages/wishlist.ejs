@@ -29,6 +29,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 28px 18px;
+  justify-items: start; /* Sản phẩm xuất hiện từ trái qua phải */
+  justify-content: start; /* Lưới bắt đầu từ trái */
 }
 .wishlist-card-modern {
   min-height: 370px;
@@ -245,7 +247,7 @@
             <a href="/products/<%= encodeURIComponent(product.name) %>">
               <img src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : (product.image || '/img/product-placeholder.png') %>" class="wishlist-img-modern" alt="<%= product.name %>">
             </a>
-            <button class="wishlist-heart-btn active" data-product-id="<%= product._id %>" title="Bỏ khỏi yêu thích">
+            <button class="wishlist-heart-btn active" data-product-name="<%= product.name %>" title="Bỏ khỏi yêu thích">
               <i class="fas fa-heart"></i>
             </button>
           </div>
@@ -298,11 +300,11 @@
 $(document).on('click', '.wishlist-heart-btn', function(e) {
   e.preventDefault();
   var $btn = $(this);
-  var productId = $btn.data('product-id');
+  var productName = $btn.data('product-name');
   $.ajax({
     url: '/products/wishlist/toggle',
     method: 'POST',
-    data: { productId: productId },
+    data: { productName: productName },
     success: function(res) {
       if (res.success) {
         if (res.action === 'removed') {

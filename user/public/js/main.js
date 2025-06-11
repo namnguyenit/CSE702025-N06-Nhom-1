@@ -821,14 +821,14 @@ if (product_slide.length && typeof product_slide.owlCarousel !== 'undefined') {
   }); // End Cart Functionality $(document).ready()
 
 // Wishlist (heart) button AJAX
-$(document).on('click', '.wishlist-btn', function(e) {
+$(document).on('click', '.wishlist-btn, .wishlist-heart-btn', function(e) {
     e.preventDefault();
     var $btn = $(this);
-    var productId = $btn.data('product-id');
+    var productName = $btn.data('product-name');
     $.ajax({
         url: '/products/wishlist/toggle',
         method: 'POST',
-        data: { productId: productId },
+        data: { productName: productName },
         success: function(res) {
             if (res.success) {
                 $btn.toggleClass('active', res.action === 'added');
