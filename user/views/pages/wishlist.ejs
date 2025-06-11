@@ -1,56 +1,73 @@
-<%- include('../partials/header', { title: title }) %>
-<section class="wishlist-section py-5" style="background: #f7faff; min-height: 80vh;">
-  <div class="container">
-    <h2 class="mb-4 text-center" style="font-weight:800; color:#ff4b7d; letter-spacing:1px;">Sản phẩm yêu thích</h2>
-    <% if (products && products.length > 0) { %>
-      <div class="row">
-        <% products.forEach(function(product) { %>
-          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-            <div class="card wishlist-card h-100 shadow-sm border-0">
-              <div class="position-relative">
-                <a href="/products/<%= encodeURIComponent(product.name) %>">
-                  <img src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : (product.image || '/img/product-placeholder.png') %>" class="card-img-top" alt="<%= product.name %>" style="border-radius:1rem 1rem 0 0;object-fit:cover;height:220px;">
-                </a>
-                <button class="wishlist-btn active" data-product-id="<%= product._id %>" title="Bỏ khỏi yêu thích">
-                  <i class="fas fa-heart"></i>
-                </button>
-              </div>
-              <div class="card-body text-center d-flex flex-column justify-content-between">
-                <h5 class="card-title mb-2" style="font-weight:700; color:#0d6efd;"><%= product.name %></h5>
-                <div class="mb-2">
-                  <% if (product.detail && product.detail.price) { %>
-                    <span class="fw-bold" style="color:#ff4b7d;font-size:1.15rem;">
-                      <%= product.detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
-                    </span>
-                  <% } else { %>
-                    <span class="text-muted">Liên hệ</span>
-                  <% } %>
-                </div>
-                <a href="/products/<%= encodeURIComponent(product.name) %>" class="btn btn-outline-primary mt-auto" style="border-radius:2rem;font-weight:600;">Xem chi tiết</a>
-              </div>
-            </div>
-          </div>
-        <% }) %>
-      </div>
-    <% } else { %>
-      <div class="alert alert-info text-center py-5" style="font-size:1.2rem;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div>
-    <% } %>
-  </div>
-</section>
-<%- include('../partials/footer') %>
+<%- include('../partials/header', { title: 'Sản phẩm yêu thích' }) %>
+<link rel="stylesheet" href="/css/order-history-modern.css">
 <style>
-.wishlist-card {
-  border-radius: 1rem;
-  transition: box-shadow 0.2s;
-  background: #fff;
+.wishlist-modern-container {
+  background: linear-gradient(135deg, #f7fafd 60%, #eaf1ff 100%);
+  border-radius: 2rem;
+  box-shadow: 0 8px 40px #0d6efd18, 0 1.5px 8px #0d6efd0a;
+  padding: 40px 28px 32px 28px;
+  margin-top: 36px;
+  margin-bottom: 36px;
+  font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif;
 }
-.wishlist-card:hover {
-  box-shadow: 0 8px 32px #ff4b7d22;
+.wishlist-modern-title {
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #0d6efd;
+  margin-bottom: 30px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px #0d6efd22;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.wishlist-btn {
+.wishlist-modern-title i {
+  color: #ff4b7d;
+  font-size: 2.2rem;
+}
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 28px 18px;
+}
+.wishlist-card-modern {
+  min-height: 370px;
+  max-width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px #0d6efd13, 0 1.5px 8px #0d6efd0a;
+  border: 1.5px solid #e3e6ee;
+  background: linear-gradient(120deg, #fff 80%, #eaf1ff 100%);
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow 0.22s, border 0.18s, transform 0.14s;
+}
+.wishlist-card-modern:hover {
+  box-shadow: 0 8px 24px #0d6efd22, 0 2px 8px #0d6efd11;
+  border-color: #0d6efd33;
+  transform: translateY(-2px) scale(1.025);
+}
+.wishlist-img-modern {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  background: #f7fafd;
+  border-radius: 1.2rem 1.2rem 0 0;
+  display: block;
+  margin: 0 auto;
+  transition: transform .22s;
+}
+.wishlist-card-modern:hover .wishlist-img-modern {
+  transform: scale(1.04) rotate(-1.5deg);
+}
+.wishlist-heart-btn {
   position: absolute;
-  top: 14px;
-  right: 18px;
+  top: 10px;
+  right: 12px;
   background: #fff;
   border: none;
   outline: none;
@@ -58,21 +75,227 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
-  transition: background 0.2s;
-  box-shadow: 0 2px 8px #ff4b7d22;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+  box-shadow: 0 1px 4px #ff4b7d22;
+  font-size: 1.1em;
 }
-.wishlist-btn i {
+.wishlist-heart-btn i {
   color: #ff4b7d;
-  font-size: 1.5em;
-  transition: color 0.2s;
+  font-size: 1.3em;
 }
-.wishlist-btn:hover {
+.wishlist-heart-btn:hover {
   background: #ffe6ef;
+  box-shadow: 0 2px 8px #ff4b7d44;
+  transform: scale(1.09) rotate(-6deg);
+}
+.wishlist-badge-modern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px 12px 5px 10px;
+  background: linear-gradient(90deg,#ff4b7d 60%,#ffb6c1 100%);
+  color: #fff;
+  border-radius: 0 0 0.8rem 0;
+  font-weight: 700;
+  font-size: 0.93rem;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+  box-shadow: 0 1px 4px #ff4b7d22;
+}
+.sale-badge-modern {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 10px 5px 8px;
+  background: linear-gradient(90deg,#ff003c 60%,#ffb6c1 100%);
+  color: #fff;
+  border-radius: 0 0 0 0.8rem;
+  font-size: 0.89rem;
+  font-weight: 700;
+  z-index: 2;
+  box-shadow: 0 1px 4px #ff003c22;
+}
+.wishlist-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.1rem 1.2rem 0.7rem 1.2rem;
+  min-height: 120px;
+  text-align: center;
+}
+.wishlist-card-title {
+  font-size: 1.58rem;
+  font-weight: 800;
+  color: #0d6efd;
+  margin-bottom: 0.4rem;
+  min-height: 38px;
+  line-height: 1.22;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.wishlist-card-desc {
+  color: #555;
+  font-size: 1.01rem;
+  min-height: 20px;
+  margin-bottom: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.wishlist-card-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 0.4rem;
+  width: 100%;
+}
+.wishlist-card-price .current {
+  color: #ff4b7d;
+  font-weight: 700;
+  font-size: 1.13rem;
+}
+.wishlist-card-price .original {
+  color: #888;
+  text-decoration: line-through;
+  font-size: 1.01rem;
+}
+.wishlist-card-rating {
+  margin-bottom: 0.4rem;
+}
+.wishlist-card-rating i {
+  color: #ffb400;
+  font-size: 1.08em;
+}
+.wishlist-card-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.wishlist-card-actions .btn.btn-outline-primary {
+  flex: 1 1 0;
+  max-width: 160px;
+  min-width: 120px;
+  text-align: center;
+  margin-right: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  font-size: 1.13rem;
+  font-weight: 700;
+  border-radius: 2rem;
+  box-shadow: 0 2px 8px #256dff11;
+}
+.wishlist-card-actions .btn.btn-primary {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 8px #ff4b7d22;
+  padding: 0;
+}
+@media (max-width: 991px) {
+  .wishlist-modern-container { padding: 10px 0; }
+  .wishlist-grid { gap: 14px 6px; }
+  .wishlist-card-modern { min-height: 200px; max-width: 100%; }
+  .wishlist-img-modern { height: 90px; }
+}
+@media (max-width: 575px) {
+  .wishlist-modern-title { font-size: 1.1rem; }
+  .wishlist-card-body { padding: 0.6rem 0.4rem 0.3rem 0.4rem; }
+  .wishlist-card-actions .btn.btn-outline-primary {
+    min-width: 90px;
+    font-size: 1rem;
+    height: 38px;
+  }
+  .wishlist-card-actions .btn.btn-primary {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
 }
 </style>
+<div class="wishlist-modern-container">
+  <div class="wishlist-modern-title"><i class="fas fa-heart"></i> Sản phẩm yêu thích</div>
+  <% if (products && products.length > 0) { %>
+    <div class="wishlist-grid">
+      <% products.forEach(function(product) { %>
+        <div class="wishlist-card-modern animate__animated animate__fadeInUp">
+          <div class="wishlist-badge-modern"><i class="fas fa-heart"></i> Yêu thích</div>
+          <% if(product.detail && product.detail.originalPrice && product.detail.price && product.detail.originalPrice > product.detail.price) { %>
+            <div class="sale-badge-modern">-
+              <%= Math.round(100 - (product.detail.price / product.detail.originalPrice) * 100) %>%
+            </div>
+          <% } %>
+          <div style="position:relative;">
+            <a href="/products/<%= encodeURIComponent(product.name) %>">
+              <img src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : (product.image || '/img/product-placeholder.png') %>" class="wishlist-img-modern" alt="<%= product.name %>">
+            </a>
+            <button class="wishlist-heart-btn active" data-product-id="<%= product._id %>" title="Bỏ khỏi yêu thích">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+          <div class="wishlist-card-body">
+            <div class="wishlist-card-title"><%= product.name %></div>
+            <% if(product.detail && product.detail.shortDesc) { %>
+              <div class="wishlist-card-desc"><%= product.detail.shortDesc %></div>
+            <% } %>
+            <div class="wishlist-card-price">
+              <% if (product.detail && product.detail.price) { %>
+                <span class="current">
+                  <%= product.detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
+                </span>
+                <% if(product.detail.originalPrice && product.detail.originalPrice > product.detail.price) { %>
+                  <span class="original"> <%= product.detail.originalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %> </span>
+                <% } %>
+              <% } %>
+            </div>
+            <% if(product.detail && product.detail.rating) { %>
+              <div class="wishlist-card-rating">
+                <% for(let i=1;i<=5;i++){ %>
+                  <% if(i <= product.detail.rating) { %>
+                    <i class="fas fa-star"></i>
+                  <% } else { %>
+                    <i class="far fa-star"></i>
+                  <% } %>
+                <% } %>
+              </div>
+            <% } %>
+            <div class="wishlist-card-actions mt-auto">
+              <a href="/products/<%= encodeURIComponent(product.name) %>" class="btn btn-outline-primary flex-fill">Xem chi tiết</a>
+              <form action="/cart/add" method="POST" class="d-inline">
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-cart-plus"></i></button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="d-flex flex-column align-items-center justify-content-center py-5">
+      <img src="/img/empty-wishlist.svg" alt="Empty" style="width:120px;opacity:0.8;margin-bottom:18px;">
+      <div class="mb-3" style="font-size:1.2rem;color:#888;font-weight:500;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div>
+      <a href="/products" class="btn btn-outline-primary px-4 py-2" style="border-radius:2rem;font-weight:600;">Khám phá sản phẩm</a>
+    </div>
+  <% } %>
+</div>
 <script>
-// Wishlist (heart) button AJAX giống product card
-$(document).on('click', '.wishlist-btn', function(e) {
+$(document).on('click', '.wishlist-heart-btn', function(e) {
   e.preventDefault();
   var $btn = $(this);
   var productId = $btn.data('product-id');
@@ -84,12 +307,11 @@ $(document).on('click', '.wishlist-btn', function(e) {
       if (res.success) {
         if (res.action === 'removed') {
           $btn.removeClass('active');
-          // Ẩn card khỏi DOM (fadeOut) như product card nếu muốn
-          $btn.closest('.card.wishlist-card').parent().fadeOut(300, function() {
+          $btn.closest('.wishlist-card-modern').fadeOut(300, function() {
             $(this).remove();
-            if ($('.wishlist-card:visible').length === 0) {
-              $('.wishlist-section .row').remove();
-              $('.wishlist-section .container').append('<div class="alert alert-info text-center py-5" style="font-size:1.2rem;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div>');
+            if ($('.wishlist-card-modern:visible').length === 0) {
+              $('.wishlist-grid').remove();
+              $('.wishlist-modern-container').append('<div class="d-flex flex-column align-items-center justify-content-center py-5"><img src="/img/empty-wishlist.svg" alt="Empty" style="width:120px;opacity:0.8;margin-bottom:18px;"><div class="mb-3" style="font-size:1.2rem;color:#888;font-weight:500;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div><a href="/products" class="btn btn-outline-primary px-4 py-2" style="border-radius:2rem;font-weight:600;">Khám phá sản phẩm</a></div>');
             }
           });
         } else {
@@ -109,3 +331,4 @@ $(document).on('click', '.wishlist-btn', function(e) {
   });
 });
 </script>
+<%- include('../partials/footer') %>
