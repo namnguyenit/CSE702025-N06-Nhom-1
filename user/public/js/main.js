@@ -846,4 +846,45 @@ $(document).on('click', '.wishlist-btn, .wishlist-heart-btn', function(e) {
     });
 });
 
+// Add to cart from wishlist (AJAX, global)
+$(document).on('click', '.wishlist-add-to-cart-btn', function(e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var productID = $btn.data('product-id');
+    var type = $btn.data('type');
+    var size = $btn.data('size');
+    var orderNumber = parseInt($btn.data('order-number')) || 1;
+    if (!productID || !type || !size) {
+      alert('Thiếu thông tin sản phẩm (ID, loại, size). Vui lòng kiểm tra lại!');
+      return;
+    }
+    $.ajax({
+      url: '/cart/add',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ productID: productID, type: type, size: size, orderNumber: orderNumber }),
+      success: function(res) {
+        if (res.success) {
+          // Hiển thị thông báo thành công, có thể cập nhật icon giỏ hàng ở header nếu muốn
+          if (window.updateCartIcon) window.updateCartIcon();
+          $btn.addClass('added');
+          $btn.html('<i class="fas fa-check"></i>');
+          setTimeout(function() {
+            $btn.removeClass('added');
+            $btn.html('<i class="fas fa-cart-plus"></i>');
+          }, 1200);
+        } else {
+          alert(res.message || 'Không thể thêm vào giỏ hàng.');
+        }
+      },
+      error: function(xhr) {
+        if (xhr.status === 401) {
+          window.location.href = '/auth/login';
+        } else {
+          alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
+        }
+      }
+    });
+});
+
 })(jQuery);

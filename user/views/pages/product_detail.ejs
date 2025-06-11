@@ -570,6 +570,15 @@
             // Listen for native select change (for keyboard, programmatic, etc)
             $('#typeSelect').on('change.productTypeSync', function() {
                 updateSizeAndPrice();
+                // Tự động set filterReviewType về đúng loại đang chọn
+                var typeIdx = $('#typeSelect').val();
+                var typeName = productTypes[typeIdx]?.type || '';
+                var $filter = $('#filterReviewType');
+                if ($filter.length && $filter.val() !== typeName) {
+                    $filter.val(typeName).trigger('change');
+                } else {
+                    fetchReviews();
+                }
             });
             // Listen for Nice Select option click
             const $nice = $('#typeSelect').next('.nice-select');
@@ -586,6 +595,15 @@
                     var $select = $('#typeSelect');
                     if ($select.val() !== value) {
                         $select.val(value).trigger('change');
+                    }
+                    // Tự động set filterReviewType về đúng loại đang chọn
+                    var typeIdx = value;
+                    var typeName = productTypes[typeIdx]?.type || '';
+                    var $filter = $('#filterReviewType');
+                    if ($filter.length && $filter.val() !== typeName) {
+                        $filter.val(typeName).trigger('change');
+                    } else {
+                        fetchReviews();
                     }
                 });
             }

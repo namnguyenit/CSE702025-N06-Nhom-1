@@ -279,10 +279,6 @@
             <% } %>
             <div class="wishlist-card-actions mt-auto">
               <a href="/products/<%= encodeURIComponent(product.name) %>" class="btn btn-outline-primary flex-fill">Xem chi tiết</a>
-              <form action="/cart/add" method="POST" class="d-inline">
-                <input type="hidden" name="productId" value="<%= product._id %>">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-cart-plus"></i></button>
-              </form>
             </div>
           </div>
         </div>
