@@ -62,7 +62,11 @@ exports.getCart = async (req, res, next) => {
             taxPrice,
             totalPrice: itemsPrice + shippingPrice + taxPrice
         };
-        res.render('pages/cart', { cart });
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (user && user.wishlist) wishlistCount = user.wishlist.length;
+        if (user && user.carts) cartCount = user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0);
+        res.render('pages/cart', { cart, wishlistCount, cartCount });
     } catch (err) {
         next(err);
     }

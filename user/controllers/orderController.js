@@ -192,7 +192,14 @@ exports.checkoutPage = async (req, res, next) => {
         if (!orderId) return res.status(400).render('pages/500', { title: 'Lỗi', message: 'Không tìm thấy đơn hàng', error: {} });
         const order = await Order.findById(orderId).populate('items.product');
         if (!order) return res.status(404).render('pages/404', { title: 'Không tìm thấy đơn hàng' });
-        res.render('pages/order_confirmation', { title: 'Xác nhận đơn hàng', order });
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
+        res.render('pages/order_confirmation', { title: 'Xác nhận đơn hàng', order, wishlistCount, cartCount });
     } catch (err) {
         next(err);
     }
@@ -205,7 +212,11 @@ exports.getOrderHistory = async (req, res, next) => {
             path: 'orders',
             populate: { path: 'items.product' }
         });
-        res.render('pages/order_history', { orders: user.orders });
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (user && user.wishlist) wishlistCount = user.wishlist.length;
+        if (user && user.carts) cartCount = user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0);
+        res.render('pages/order_history', { orders: user.orders, wishlistCount, cartCount });
     } catch (err) {
         next(err);
     }

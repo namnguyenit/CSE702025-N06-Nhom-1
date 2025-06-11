@@ -2,6 +2,7 @@
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 const mongoose = require('mongoose');
+const User = require('../models/UserModel'); // Thêm ở đầu file nếu chưa có
 
 // Hiển thị trang danh sách sản phẩm (có lọc và sắp xếp)
 exports.getProductListPage = async (req, res, next) => {
@@ -65,9 +66,12 @@ exports.getProductListPage = async (req, res, next) => {
         });
         const types = Array.from(typesSet);
         let wishlist = [];
+        let wishlistCount = 0;
+        let cartCount = 0;
         if (req.session.user) {
-            const User = require('../models/UserModel');
             const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
             if (user && user.wishlist) wishlist = user.wishlist;
         }
         res.render('pages/product_list', {
@@ -78,7 +82,9 @@ exports.getProductListPage = async (req, res, next) => {
             sortBy: sortBy || '',
             types, // truyền types cho EJS
             currentType: req.query.type || '',
-            wishlist // truyền wishlist cho EJS
+            wishlist, // truyền wishlist cho EJS
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         next(err);
@@ -115,16 +121,21 @@ exports.getProductDetailPage = async (req, res, next) => {
         };
         const categories = await Category.find({});
         let wishlist = [];
+        let wishlistCount = 0;
+        let cartCount = 0;
         if (req.session.user) {
-            const User = require('../models/UserModel');
             const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
             if (user && user.wishlist) wishlist = user.wishlist;
         }
         res.render('pages/product_detail', {
             title: productName,
             product: productDetail,
             categories,
-            wishlist // truyền wishlist cho EJS
+            wishlist, // truyền wishlist cho EJS
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         next(err);
@@ -167,6 +178,13 @@ exports.searchProductsPage = async (req, res, next) => {
         }
 
         const categories = await Category.find({}).sort({ name: 1 });
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
 
         res.render('pages/product_list', { // Đúng tên file view
             title: pageTitle,
@@ -174,7 +192,9 @@ exports.searchProductsPage = async (req, res, next) => {
             categories,
             currentCategorySlug: 'all', // Không có category cụ thể khi tìm kiếm
             sortBy: '', // Không có sắp xếp cụ thể ban đầu khi tìm kiếm
-            searchQuery: searchQuery // Truyền lại searchQuery để hiển thị trên view nếu cần
+            searchQuery: searchQuery, // Truyền lại searchQuery để hiển thị trên view nếu cần
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi tại searchProductsPage:', err);
@@ -202,7 +222,10 @@ exports.toggleWishlist = async (req, res) => {
             await User.updateOne({ _id: userId }, { $addToSet: { wishlist: productName } });
             action = 'added';
         }
-        return res.json({ success: true, action });
+        // Lấy lại số lượng wishlist mới sau khi cập nhật
+        const updatedUser = await User.findById(userId);
+        const wishlistCount = updatedUser.wishlist ? updatedUser.wishlist.length : 0;
+        return res.json({ success: true, action, wishlistCount });
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Lỗi server.' });
     }

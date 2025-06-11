@@ -3666,10 +3666,11 @@ input:focus {
   position: relative;
 }
 
+
 /* line 192, ../../SAIFUL/Running_project/250 eCommerce_HTML/250 eCommerce_HTML/250 eCommerce_HTML/assets/scss/_headerMenu.scss */
 .header-bottom .header-right .favorit-items::before {
   position: absolute;
-  content: "02";
+  content: attr(favourite-count);
   width: 25px;
   height: 25px;
   background: #00b1ff;
@@ -3687,6 +3688,10 @@ input:focus {
   transition: all 0.2s ease-out 0s;
   box-shadow: 0 2px 5pxrgba 0,0,0,0.3;
 }
+/* .favorit-items[data-count="0"]::before,
+.favorit-items[data-count=""]::before {
+  display: none;
+} */
 
 /* line 208, ../../SAIFUL/Running_project/250 eCommerce_HTML/250 eCommerce_HTML/250 eCommerce_HTML/assets/scss/_headerMenu.scss */
 .header-bottom .header-right .favorit-items i {
@@ -3709,7 +3714,7 @@ input:focus {
 /* line 224, ../../SAIFUL/Running_project/250 eCommerce_HTML/250 eCommerce_HTML/250 eCommerce_HTML/assets/scss/_headerMenu.scss */
 .header-bottom .header-right .shopping-card::before {
   position: absolute;
-  content: "02";
+  content: attr(cart-count);
   width: 25px;
   height: 25px;
   background: #00b1ff;

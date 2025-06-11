@@ -1,6 +1,7 @@
 // user/controllers/pageController.js
 const Product = require('../models/ProductModel'); //
 const Category = require('../models/CategoryModel'); //
+const User = require('../models/UserModel'); // Thêm ở đầu file nếu chưa có
 
 exports.getHomePage = async (req, res, next) => {
     try {
@@ -10,11 +11,20 @@ exports.getHomePage = async (req, res, next) => {
             .limit(8);
 
         const categories = await Category.find({});
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
         console.log('Dữ liệu render index:', { popularProductsCount: products.length, categoriesCount: categories.length });
         res.render('pages/index', { // Giả sử bạn có view index.ejs đã Việt hóa
             title: 'Trang Chủ',
             products,
-            categories
+            categories,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getHomePage:', err);
@@ -27,11 +37,20 @@ exports.getCartPage = async (req, res) => {
         // Truyền toàn bộ đối tượng cart từ session, hoặc một đối tượng cart rỗng nếu chưa có
         const sessionCart = req.session.cart || { items: [], itemsPrice: 0, taxPrice: 0, shippingPrice: 0, totalPrice: 0 };
 
-        res.render('cart', { // Renders views/cart.ejs
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
+        res.render('cart', {
             title: 'Shopping Cart',
             path: '/cart',
             user: req.user,
-            cart: sessionCart // Truyền toàn bộ đối tượng cart
+            cart: sessionCart,
+            wishlistCount,
+            cartCount
         });
     } catch (error) {
         console.error(error);
@@ -43,9 +62,18 @@ exports.getContactPage = async (req, res, next) => {
     try {
         console.log('GET /contact');
         const categories = await Category.find({});
-        res.render('pages/contact-vi', { // Giả sử có contact-vi.ejs
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
+        res.render('pages/contact-vi', {
             title: 'Liên Hệ',
-            categories
+            categories,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getContactPage:', err);
@@ -57,9 +85,18 @@ exports.getAboutPage = async (req, res, next) => {
     try {
         console.log('GET /about');
         const categories = await Category.find({});
-        res.render('pages/about-vi', { // Giả sử có about-vi.ejs
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
+        res.render('pages/about-vi', {
             title: 'Về Chúng Tôi',
-            categories
+            categories,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getAboutPage:', err);
@@ -71,9 +108,18 @@ exports.getElementsPage = async (req, res, next) => {
     try {
         console.log('GET /elements');
         const categories = await Category.find({});
-        res.render('pages/elements-vi', { // Giả sử có elements-vi.ejs
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
+        res.render('pages/elements-vi', {
             title: 'Thành Phần',
-            categories
+            categories,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getElementsPage:', err);
@@ -112,7 +158,6 @@ exports.handleSubscription = async (req, res, next) => {
 exports.getWishlistPage = async (req, res, next) => {
     try {
         if (!req.session.user) return res.redirect('/auth/login');
-        const User = require('../models/UserModel');
         const Product = require('../models/ProductModel');
         const user = await User.findById(req.session.user._id);
         const categories = await Category.find({});
@@ -124,10 +169,14 @@ exports.getWishlistPage = async (req, res, next) => {
             // Đảm bảo thứ tự theo wishlist
             wishlistProducts = wishlistNames.map(name => allProducts.find(p => p.name === name)).filter(Boolean);
         }
+        const wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+        const cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
         res.render('pages/wishlist', {
             title: 'Sản phẩm yêu thích',
             products: wishlistProducts,
-            categories
+            categories,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         next(err);

@@ -9,11 +9,20 @@ exports.getLoginPage = async (req, res, next) => {
     try {
         console.log('GET /auth/login');
         const categories = await Category.find({}); 
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
         res.render('pages/login', {
             title: 'Đăng Nhập',
             path: '/login',
             categories,
-            oldInput: { account: "" }
+            oldInput: { account: "" },
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getLoginPage:', err);
@@ -87,11 +96,20 @@ exports.getRegisterPage = async (req, res, next) => {
     try {
         console.log('GET /auth/register');
         const categories = await Category.find({});
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
         res.render('pages/register', {
             title: 'Đăng Ký',
             path: '/register',
             categories,
-            oldInput: {}
+            oldInput: {},
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getRegisterPage:', err);
@@ -167,10 +185,18 @@ exports.getUserProfilePage = async (req, res, next) => {
             req.flash('error_msg', 'Không tìm thấy người dùng.');
             return res.redirect('/');
         }
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+        }
         res.render('pages/profile', {
             title: 'Thông Tin Cá Nhân',
             categories,
-            profileUser: user 
+            profileUser: user,
+            wishlistCount,
+            cartCount
         });
     } catch (err) {
         console.error('Lỗi getUserProfilePage:', err);

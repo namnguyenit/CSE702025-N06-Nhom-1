@@ -832,6 +832,9 @@ $(document).on('click', '.wishlist-btn, .wishlist-heart-btn', function(e) {
         success: function(res) {
             if (res.success) {
                 $btn.toggleClass('active', res.action === 'added');
+                if (typeof res.wishlistCount !== 'undefined') {
+                    window.updateHeaderBadges(res.wishlistCount);
+                }
             } else {
                 alert(res.message || 'Có lỗi xảy ra!');
             }
@@ -886,5 +889,17 @@ $(document).on('click', '.wishlist-add-to-cart-btn', function(e) {
       }
     });
 });
+
+// Hàm cập nhật số lượng badge trên header (dùng cho ::before)
+window.updateHeaderBadges = function(wishlistCount, cartCount) {
+  var $wishlist = $('.favorit-items');
+  var $cartCard = $('.shopping-card');
+  if (typeof wishlistCount !== 'undefined') {
+    $wishlist.attr('favourite-count', wishlistCount > 0 ? wishlistCount : '');
+  }
+  if (typeof cartCount !== 'undefined') {
+    $cartCard.attr('cart-count', cartCount > 0 ? cartCount : '');
+  }
+};
 
 })(jQuery);
