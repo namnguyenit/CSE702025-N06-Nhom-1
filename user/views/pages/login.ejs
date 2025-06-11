@@ -1,6 +1,19 @@
 <%- include('../partials/header', { title: title }) %>
+<link rel="stylesheet" href="/css/animate.min.css">
+<style>
+/* Tùy chỉnh lại cho login/register chuyển cảnh đẹp, giữ style template */
+.login_part.section_padding {padding: 80px 0; background: #f7fafd; min-height: 70vh;}
+.login_part_text, .login_part_form {background: #fff; border-radius: 1.5rem; box-shadow: 0 4px 32px #0d6efd11;}
+.login_part_text {padding: 48px 32px; min-height: 420px; display: flex; align-items: center; justify-content: center;}
+.login_part_text_iner {width: 100%;}
+.login_part_form {padding: 48px 32px; min-height: 420px; display: flex; align-items: center; justify-content: center;}
+.login_part_form_iner {width: 100%;}
+.btn_3 {background: linear-gradient(90deg,#256DFF 0%,#ff4b7d 100%); color: #fff; border: none; border-radius: 2rem; padding: 12px 36px; font-weight: 700; font-size: 1.13rem; transition: background 0.18s; box-shadow: 0 2px 8px #256dff22;}
+.btn_3:hover {background: linear-gradient(90deg,#ff4b7d 0%,#256DFF 100%); color: #fff;}
+@media (max-width: 991px) {.login_part_text, .login_part_form {padding: 28px 10px;}}
+</style>
 <div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/images/hero/category.jpg">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
@@ -12,36 +25,51 @@
         </div>
     </div>
 </div>
-<section class="login_box_area section-padding"> <div class="container">
-        <div class="row">
-            <div class="col-lg-6 mx-auto"> <div class="login_form_inner"> <h3>Đăng nhập vào tài khoản của bạn</h3>
-                    <form class="row login_form" action="/auth/login" method="post" id="contactForm" novalidate="novalidate">
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="account" name="account" placeholder="Tài khoản hoặc Gmail" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tài khoản hoặc Gmail'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mật khẩu'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'password')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'password').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <div class="creat_account d-flex align-items-center"> <input type="checkbox" id="f-option2" name="remember">
-                                <label for="f-option2">Nhớ tài khoản</label>
+<section class="login_part section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_text text-center">
+                    <div class="login_part_text_iner">
+                        <h2>Bạn mới đến với Shop?</h2>
+                        <p>Đăng ký tài khoản để trải nghiệm mua sắm hiện đại, tiện lợi và nhận nhiều ưu đãi hấp dẫn!</p>
+                        <a href="/auth/register" class="btn_3" id="gotoRegister">Tạo tài khoản</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_form">
+                    <div class="login_part_form_iner">
+                        <h3>Chào mừng trở lại!<br>Vui lòng đăng nhập</h3>
+                        <form class="row contact_form" action="/auth/login" method="post" novalidate="novalidate">
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="account" name="account" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" placeholder="Tài khoản hoặc Email">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
+                                <% } %>
                             </div>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <button type="submit" value="submit" class="primary-btn">Đăng Nhập</button> <a href="#">Quên mật khẩu?</a> </div>
-                        <div class="col-md-12 form-group text-center">
-                            <p>Chưa có tài khoản? <a href="/auth/register">Đăng ký ngay</a></p>
-                        </div>
-                    </form>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'password')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'password').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <div class="creat_account d-flex align-items-center">
+                                    <input type="checkbox" id="f-option2" name="remember">
+                                    <label for="f-option2">Nhớ tài khoản</label>
+                                </div>
+                                <button type="submit" value="submit" class="btn_3 w-100 mt-3">Đăng Nhập</button>
+                                <a class="lost_pass d-block mt-2" href="#">Quên mật khẩu?</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/js/animate-login-register.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <%- include('../partials/footer') %>

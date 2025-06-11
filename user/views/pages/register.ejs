@@ -1,6 +1,18 @@
 <%- include('../partials/header', { title: title }) %>
+<link rel="stylesheet" href="/css/animate.min.css">
+<style>
+.login_part.section_padding {padding: 80px 0; background: #f7fafd; min-height: 70vh;}
+.login_part_text, .login_part_form {background: #fff; border-radius: 1.5rem; box-shadow: 0 4px 32px #0d6efd11;}
+.login_part_text {padding: 48px 32px; min-height: 420px; display: flex; align-items: center; justify-content: center;}
+.login_part_text_iner {width: 100%;}
+.login_part_form {padding: 48px 32px; min-height: 420px; display: flex; align-items: center; justify-content: center;}
+.login_part_form_iner {width: 100%;}
+.btn_3 {background: linear-gradient(90deg,#256DFF 0%,#ff4b7d 100%); color: #fff; border: none; border-radius: 2rem; padding: 12px 36px; font-weight: 700; font-size: 1.13rem; transition: background 0.18s; box-shadow: 0 2px 8px #256dff22;}
+.btn_3:hover {background: linear-gradient(90deg,#ff4b7d 0%,#256DFF 100%); color: #fff;}
+@media (max-width: 991px) {.login_part_text, .login_part_form {padding: 28px 10px;}}
+</style>
 <div class="slider-area ">
-    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/images/hero/category.jpg">
+    <div class="single-slider slider-height2 d-flex align-items-center" data-background="/img/hero/category.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
@@ -12,52 +24,64 @@
         </div>
     </div>
 </div>
-<section class="login_box_area section-padding">
+<section class="login_part section_padding">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <div class="login_form_inner"> <h3>Tạo tài khoản mới</h3>
-                    <form class="row login_form" action="/auth/register" method="post" id="registerForm" novalidate="novalidate">
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Họ và Tên" value="<%= typeof oldInput !== 'undefined' ? oldInput.name : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Họ và Tên'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'name')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'name').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="account" name="account" placeholder="Tên đăng nhập" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tên đăng nhập'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="email" class="form-control" id="gmail" name="gmail" placeholder="Email" value="<%= typeof oldInput !== 'undefined' ? oldInput.gmail : '' %>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'gmail')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'gmail').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu (ít nhất 6 ký tự)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mật khẩu (ít nhất 6 ký tự)'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'password')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'password').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Nhập lại mật khẩu'">
-                            <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'confirmPassword')) { %>
-                                <small class="text-danger"><%= errors.find(e => e.path === 'confirmPassword').msg %></small>
-                            <% } %>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <button type="submit" value="submit" class="primary-btn">Đăng Ký</button>
-                        </div>
-                        <div class="col-md-12 form-group text-center">
-                            <p>Đã có tài khoản? <a href="/auth/login">Đăng nhập ngay</a></p>
-                        </div>
-                    </form>
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_form">
+                    <div class="login_part_form_iner">
+                        <h3>Chào mừng bạn!<br>Vui lòng đăng ký</h3>
+                        <form class="row contact_form" action="/auth/register" method="post" novalidate="novalidate">
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="name" name="name" value="<%= typeof oldInput !== 'undefined' ? oldInput.name : '' %>" placeholder="Họ và Tên">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'name')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'name').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="account" name="account" value="<%= typeof oldInput !== 'undefined' ? oldInput.account : '' %>" placeholder="Tên đăng nhập">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'account')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'account').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="email" class="form-control" id="gmail" name="gmail" value="<%= typeof oldInput !== 'undefined' ? oldInput.gmail : '' %>" placeholder="Email">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'gmail')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'gmail').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu (ít nhất 6 ký tự)">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'password')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'password').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu">
+                                <% if (typeof errors !== 'undefined' && errors.find(e => e.path === 'confirmPassword')) { %>
+                                    <small class="text-danger"><%= errors.find(e => e.path === 'confirmPassword').msg %></small>
+                                <% } %>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button type="submit" value="submit" class="btn_3 w-100 mt-3">Đăng Ký</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_text text-center">
+                    <div class="login_part_text_iner">
+                        <h2>Đã có tài khoản?</h2>
+                        <p>Đăng nhập để tiếp tục mua sắm và quản lý đơn hàng của bạn!</p>
+                        <a href="/auth/login" class="btn_3" id="gotoLogin">Đăng nhập</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/js/animate-login-register.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <%- include('../partials/footer') %>
