@@ -337,6 +337,32 @@
   font-size: 1.25rem;
   transition: color 0.2s;
 }
+/* Wishlist (heart) button styles */
+.wishlist-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  outline: none;
+  z-index: 10;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.wishlist-btn i {
+  color: #bbb;
+  font-size: 1.5em;
+  transition: color 0.2s;
+}
+.single-product:hover .wishlist-btn i,
+.wishlist-btn.active i {
+  color: #ff4b7d;
+}
+.wishlist-btn:hover {
+  background: #ffe6ef;
+}
 @media (max-width: 991px) {
   .product_sidebar {
     padding: 0;

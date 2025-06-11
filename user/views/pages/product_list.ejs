@@ -51,6 +51,9 @@
                                         <a href="/products/<%= encodeURIComponent(product.name) %>">
                                             <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid" />
                                         </a>
+                                        <button class="wishlist-btn" data-product-id="<%= product._id %>" title="Thêm vào yêu thích">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
                                         <% if (product.isNew) { %>
                                             <div class="new-product"><span>New</span></div>
                                         <% } %>

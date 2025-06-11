@@ -1,0 +1,111 @@
+<%- include('../partials/header', { title: title }) %>
+<section class="wishlist-section py-5" style="background: #f7faff; min-height: 80vh;">
+  <div class="container">
+    <h2 class="mb-4 text-center" style="font-weight:800; color:#ff4b7d; letter-spacing:1px;">Sản phẩm yêu thích</h2>
+    <% if (products && products.length > 0) { %>
+      <div class="row">
+        <% products.forEach(function(product) { %>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+            <div class="card wishlist-card h-100 shadow-sm border-0">
+              <div class="position-relative">
+                <a href="/products/<%= encodeURIComponent(product.name) %>">
+                  <img src="<%= product.image && product.image.imageData ? `data:${product.image.imageType};base64,${product.image.imageData.toString('base64')}` : (product.image || '/img/product-placeholder.png') %>" class="card-img-top" alt="<%= product.name %>" style="border-radius:1rem 1rem 0 0;object-fit:cover;height:220px;">
+                </a>
+                <button class="wishlist-btn active" data-product-id="<%= product._id %>" title="Bỏ khỏi yêu thích">
+                  <i class="fas fa-heart"></i>
+                </button>
+              </div>
+              <div class="card-body text-center d-flex flex-column justify-content-between">
+                <h5 class="card-title mb-2" style="font-weight:700; color:#0d6efd;"><%= product.name %></h5>
+                <div class="mb-2">
+                  <% if (product.detail && product.detail.price) { %>
+                    <span class="fw-bold" style="color:#ff4b7d;font-size:1.15rem;">
+                      <%= product.detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
+                    </span>
+                  <% } else { %>
+                    <span class="text-muted">Liên hệ</span>
+                  <% } %>
+                </div>
+                <a href="/products/<%= encodeURIComponent(product.name) %>" class="btn btn-outline-primary mt-auto" style="border-radius:2rem;font-weight:600;">Xem chi tiết</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="alert alert-info text-center py-5" style="font-size:1.2rem;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div>
+    <% } %>
+  </div>
+</section>
+<%- include('../partials/footer') %>
+<style>
+.wishlist-card {
+  border-radius: 1rem;
+  transition: box-shadow 0.2s;
+  background: #fff;
+}
+.wishlist-card:hover {
+  box-shadow: 0 8px 32px #ff4b7d22;
+}
+.wishlist-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: #fff;
+  border: none;
+  outline: none;
+  z-index: 10;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px #ff4b7d22;
+}
+.wishlist-btn i {
+  color: #ff4b7d;
+  font-size: 1.5em;
+  transition: color 0.2s;
+}
+.wishlist-btn:hover {
+  background: #ffe6ef;
+}
+</style>
+<script>
+// Wishlist (heart) button AJAX giống product card
+$(document).on('click', '.wishlist-btn', function(e) {
+  e.preventDefault();
+  var $btn = $(this);
+  var productId = $btn.data('product-id');
+  $.ajax({
+    url: '/products/wishlist/toggle',
+    method: 'POST',
+    data: { productId: productId },
+    success: function(res) {
+      if (res.success) {
+        if (res.action === 'removed') {
+          $btn.removeClass('active');
+          // Ẩn card khỏi DOM (fadeOut) như product card nếu muốn
+          $btn.closest('.card.wishlist-card').parent().fadeOut(300, function() {
+            $(this).remove();
+            if ($('.wishlist-card:visible').length === 0) {
+              $('.wishlist-section .row').remove();
+              $('.wishlist-section .container').append('<div class="alert alert-info text-center py-5" style="font-size:1.2rem;">Bạn chưa có sản phẩm nào trong mục yêu thích.</div>');
+            }
+          });
+        } else {
+          $btn.addClass('active');
+        }
+      } else {
+        alert(res.message || 'Có lỗi xảy ra!');
+      }
+    },
+    error: function(xhr) {
+      if (xhr.status === 401) {
+        window.location.href = '/auth/login';
+      } else {
+        alert('Có lỗi xảy ra!');
+      }
+    }
+  });
+});
+</script>

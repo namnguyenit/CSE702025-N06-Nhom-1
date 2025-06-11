@@ -23,6 +23,10 @@ router.post('/subscribe', pageController.handleSubscription); // Route mới cho
 // GET /history - Lịch sử mua hàng
 router.get('/history', orderController.getOrderHistory);
 
+// Trang wishlist
+const { getWishlistPage } = require('../controllers/pageController');
+router.get('/wishlist', getWishlistPage);
+
 // Các route khác cho các trang tĩnh (ví dụ)
 // router.get('/faq', pageController.getFaqPage);
 // router.get('/terms', pageController.getTermsPage);

@@ -15,6 +15,8 @@ const users = new Schema({
   gmail: String,
   address: String,
   carts: [cartList],
+  wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
+  
 });
 
 module.exports = mongoose.model("users", users);

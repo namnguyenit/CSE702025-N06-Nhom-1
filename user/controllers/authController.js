@@ -61,7 +61,7 @@ exports.postLogin = async (req, res, next) => {
         req.flash('success_msg', 'Đăng nhập thành công!');
         console.log('Đăng nhập thành công:', account, 'role:', user.role);
 
-        if (user.role === 'shipper') {
+        if (user.role === 'Shipper') {
             // Chỉ chuyển thông tin cá nhân sang model Shipper nếu chưa có
             let shipper = await Shipper.findOne({ user: user._id });
             if (!shipper) {

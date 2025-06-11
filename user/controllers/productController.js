@@ -1,6 +1,7 @@
 // user/controllers/productController.js
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
+const mongoose = require('mongoose');
 
 // Hiển thị trang danh sách sản phẩm (có lọc và sắp xếp)
 exports.getProductListPage = async (req, res, next) => {
@@ -154,5 +155,38 @@ exports.searchProductsPage = async (req, res, next) => {
     } catch (err) {
         console.error('Lỗi tại searchProductsPage:', err);
         next(err);
+    }
+};
+
+// Thêm/xóa sản phẩm vào wishlist (AJAX)
+exports.toggleWishlist = async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập để sử dụng chức năng này.' });
+    }
+    const userId = req.session.user._id;
+    let { productId } = req.body;
+    if (!productId) return res.status(400).json({ success: false, message: 'Thiếu productId.' });
+    const mongoose = require('mongoose');
+    try {
+        // Đảm bảo productId là ObjectId
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ success: false, message: 'productId không hợp lệ.' });
+        }
+        productId = new mongoose.Types.ObjectId(productId);
+        const User = require('../models/UserModel');
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ success: false, message: 'Không tìm thấy user.' });
+        let action;
+        if (user.wishlist.some(id => id.equals(productId))) {
+            // Xóa bằng $pull với ObjectId
+            await User.updateOne({ _id: userId }, { $pull: { wishlist: productId } });
+            action = 'removed';
+        } else {
+            await User.updateOne({ _id: userId }, { $addToSet: { wishlist: productId } });
+            action = 'added';
+        }
+        res.json({ success: true, action });
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Lỗi server.' });
     }
 };

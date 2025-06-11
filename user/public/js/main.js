@@ -820,4 +820,30 @@ if (product_slide.length && typeof product_slide.owlCarousel !== 'undefined') {
 
   }); // End Cart Functionality $(document).ready()
 
+// Wishlist (heart) button AJAX
+$(document).on('click', '.wishlist-btn', function(e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var productId = $btn.data('product-id');
+    $.ajax({
+        url: '/products/wishlist/toggle',
+        method: 'POST',
+        data: { productId: productId },
+        success: function(res) {
+            if (res.success) {
+                $btn.toggleClass('active', res.action === 'added');
+            } else {
+                alert(res.message || 'Có lỗi xảy ra!');
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 401) {
+                window.location.href = '/auth/login';
+            } else {
+                alert('Có lỗi xảy ra!');
+            }
+        }
+    });
+});
+
 })(jQuery);

@@ -38,7 +38,7 @@ exports.isUser = (req, res, next) => {
 
 // Kiểm tra vai trò Shipper
 exports.isShipper = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'shipper') {
+    if (req.session.user && req.session.user.role === 'Shipper') {
         return next();
     }
     if (req.xhr || (req.headers.accept && req.headers.accept.indexOf('json') > -1)) {
@@ -46,7 +46,7 @@ exports.isShipper = (req, res, next) => {
     }
     req.flash('error_msg', 'Bạn không có quyền truy cập. Chức năng này dành cho nhân viên giao hàng.');
     if (req.session.user) {
-        res.redirect('/'); // Nếu đã login nhưng không phải shipper
+        res.redirect('/'); // Nếu đã login nhưng không phải Shipper
     } else {
         res.redirect('/auth/login'); // Nếu chưa login
     }

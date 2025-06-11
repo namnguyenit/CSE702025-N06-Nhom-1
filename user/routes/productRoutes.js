@@ -15,4 +15,7 @@ router.get('/:name', productController.getProductDetailPage);
 
 router.get('/image/:id', productController.getProductImage);
 
+// Thêm/xóa sản phẩm vào wishlist (AJAX)
+router.post('/wishlist/toggle', require('../middlewares/authMiddleware').isLoggedIn, productController.toggleWishlist);
+
 module.exports = router;

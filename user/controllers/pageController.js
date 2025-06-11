@@ -107,3 +107,22 @@ exports.handleSubscription = async (req, res, next) => {
         next(err);
     }
 };
+
+// Trang wishlist
+exports.getWishlistPage = async (req, res, next) => {
+    try {
+        if (!req.session.user) return res.redirect('/auth/login');
+        const User = require('../models/UserModel');
+        const Product = require('../models/ProductModel');
+        const user = await User.findById(req.session.user._id).populate('wishlist');
+        const categories = await Category.find({});
+        const wishlistProducts = user.wishlist || [];
+        res.render('pages/wishlist', {
+            title: 'Sản phẩm yêu thích',
+            products: wishlistProducts,
+            categories
+        });
+    } catch (err) {
+        next(err);
+    }
+};
