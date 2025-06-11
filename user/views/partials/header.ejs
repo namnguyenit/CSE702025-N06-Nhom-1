@@ -50,72 +50,6 @@
     .btn.header-btn i {
         font-size: 16px;
     }
-
-    .account-item, .history-item {
-        margin: 0 15px;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .account-item a, .history-item a {
-        color: #333;
-        font-size: 15px;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .history-item i {
-        font-size: 20px;
-        color: #333;
-    }
-
-    .account-item a:hover, .history-item a:hover {
-        color: #ff4c4c;
-    }
-    
-    .header-right {
-        display: flex !important;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 15px;
-    }
-    
-    .shopping-card, .history-item, .favorit-items {
-        margin-right: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .shopping-card a, .history-item a, .favorit-items i {
-        font-size: 20px;
-        color: #333;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px;
-    }
-
-    .shopping-card:hover a, .history-item:hover a {
-        color: #2196f3;
-        transform: scale(1.2);
-    }
-
-    .favorit-items:hover i {
-        color: #ff0000;
-        transform: scale(1.2);
-    }
-
-    .shopping-card a, .history-item a, .favorit-items i {
-        transition: all 0.3s ease;
-    }
-
-    li[style*="display: flex"] {
-        align-items: center !important;
-        gap: 15px !important;
-    }
     </style>
 </head>
 <body>
@@ -161,13 +95,15 @@
                             </div>
                             <div class="header-info-right">
                                 <ul>
-                                    <li><a href="/wishlist">Yêu thích</a></li>
                                     <% if (currentUser) { %>
+                                        <li><a href="/auth/profile">Tài khoản (<%= (currentUser.name || currentUser.fullName || '').split(' ').pop() %>)</a></li>
+                                        <li><a href="/history">Lịch sử mua hàng</a></li>
                                         <li><a href="/auth/logout">Đăng xuất</a></li>
                                     <% } else { %>
                                         <li><a href="/auth/login">Đăng nhập</a></li>
                                         <li><a href="/auth/register">Đăng ký</a></li>
                                     <% } %>
+                                    <li><a href="/wishlist">Yêu thích</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -206,9 +142,9 @@
                             </div>
                         </div>
                         <div class="col-xl-5 col-lg-3 col-md-3 col-sm-3 fix-card">
-                            <ul class="header-right f-right d-none d-lg-block d-flex justify-content-between align-items-center">
+                            <ul class="header-right f-right d-none d-lg-block d-flex justify-content-between">
                                 <li class="d-none d-xl-block">
-                                    <div class="form-box f-right">
+                                    <div class="form-box f-right ">
                                         <form action="/products" method="GET">
                                             <input type="text" name="search" placeholder="Tìm kiếm sản phẩm">
                                             <div class="search-icon">
@@ -222,24 +158,14 @@
                                         <i class="far fa-heart"></i>
                                     </div>
                                 </li>
-                                <li style="display: flex; align-items: center;">
-                                    <% if (currentUser) { %>
-                                        <div class="shopping-card">
-                                            <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
-                                        </div>
-                                        <div class="history-item">
-                                            <a href="/history"><i class="fas fa-cart-arrow-down"></i></a>
-                                        </div>
-                                        <div class="account-item">
-                                            <a href="/auth/profile">Tài khoản (<%= (currentUser.name || currentUser.fullName || '').split(' ').pop() %>)</a>
-                                        </div>
-                                    <% } else { %>
-                                        <div class="login-register">
-                                            <a href="/auth/login">Đăng nhập</a> / 
-                                            <a href="/auth/register">Đăng ký</a>
-                                        </div>
-                                    <% } %>
+                                <li>
+                                    <div class="shopping-card">
+                                        <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                                    </div>
                                 </li>
+                                <% if (!currentUser) { %>
+                                    <li class="d-none d-lg-block"> <a href="/auth/login" class="btn header-btn">Đăng nhập</a></li>
+                                <% } %>
                             </ul>
                         </div>
                         <div class="col-12">

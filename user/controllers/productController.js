@@ -55,6 +55,12 @@ exports.getProductListPage = async (req, res, next) => {
             if (prod.type) typesSet.add(prod.type);
         });
         const types = Array.from(typesSet);
+        let wishlist = [];
+        if (req.session.user) {
+            const User = require('../models/UserModel');
+            const user = await User.findById(req.session.user._id);
+            if (user && user.wishlist) wishlist = user.wishlist.map(id => id.toString());
+        }
         res.render('pages/product_list', {
             title: pageTitle,
             products: Object.values(groupedProducts),
@@ -62,7 +68,8 @@ exports.getProductListPage = async (req, res, next) => {
             currentCategory: categoryName || 'all',
             sortBy: sortBy || '',
             types, // truyền types cho EJS
-            currentType: req.query.type || ''
+            currentType: req.query.type || '',
+            wishlist // truyền wishlist cho EJS
         });
     } catch (err) {
         next(err);
