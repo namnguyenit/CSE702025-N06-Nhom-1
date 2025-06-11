@@ -339,6 +339,30 @@
     <script src="./assets/js/plugins.js"></script>
     <script src="./assets/js/main.js"></script>
 
+    <script>
+        // Khi nhấn nút "Sign in"
+        $('.btn_3[href$="login.html"]').on('click', function(e) {
+            e.preventDefault();
+            $('.login_part_form').addClass('animate__animated animate__fadeOutLeft');
+            $('.login_part_text').addClass('animate__animated animate__fadeOutRight');
+            setTimeout(() => {
+                window.location.href = $(this).attr('href');
+            }, 600);
+        });
+
+        // Khi submit form đăng ký
+        $('.login_part_form form').on('submit', function(e) {
+            e.preventDefault();
+            $('.login_part_form').addClass('animate__animated animate__fadeOutLeft');
+            $('.login_part_text').addClass('animate__animated animate__fadeOutRight');
+            setTimeout(() => {
+                // Thay đổi đường dẫn sau khi đăng ký thành công nếu cần
+                window.location.href = "login.html";
+            }, 600);
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 </body>
     
 </html>
