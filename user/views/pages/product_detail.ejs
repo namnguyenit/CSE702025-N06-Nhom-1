@@ -538,17 +538,13 @@
         if (stock === 0) {
             if (badgeSuccess) badgeSuccess.style.display = 'none';
             if (badgeDanger) badgeDanger.style.display = '';
-            // Disable nút mua
-            document.getElementById('addToCartBtn').disabled = true;
+            // Chỉ thêm class disabled, KHÔNG set thuộc tính disabled
             document.getElementById('addToCartBtn').classList.add('disabled');
-            document.getElementById('buyNowBtn').disabled = true;
             document.getElementById('buyNowBtn').classList.add('disabled');
         } else {
             if (badgeSuccess) badgeSuccess.style.display = '';
             if (badgeDanger) badgeDanger.style.display = 'none';
-            document.getElementById('addToCartBtn').disabled = false;
             document.getElementById('addToCartBtn').classList.remove('disabled');
-            document.getElementById('buyNowBtn').disabled = false;
             document.getElementById('buyNowBtn').classList.remove('disabled');
         }
     }
@@ -653,7 +649,17 @@
         $('#authModal').modal('show');
     }
 
-    document.getElementById('buyNowBtn').addEventListener('click', async function() {
+    document.getElementById('buyNowBtn').addEventListener('click', async function(e) {
+        if (this.classList.contains('disabled')) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sản phẩm đã hết hàng',
+                text: 'Bạn không thể đặt hàng sản phẩm này vì đã hết hàng.',
+                confirmButtonText: 'OK'
+            });
+            e.preventDefault();
+            return;
+        }
         if (!isLoggedIn) {
             showAuthModal();
             return;
@@ -681,7 +687,17 @@
         window.location.href = '/cart/checkout?' + params.toString();
     });
 
-    document.getElementById('addToCartBtn').addEventListener('click', async function() {
+    document.getElementById('addToCartBtn').addEventListener('click', async function(e) {
+        if (this.classList.contains('disabled')) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sản phẩm đã hết hàng',
+                text: 'Bạn không thể đặt hàng sản phẩm này vì đã hết hàng.',
+                confirmButtonText: 'OK'
+            });
+            e.preventDefault();
+            return;
+        }
         if (!isLoggedIn) {
             showAuthModal();
             return;
