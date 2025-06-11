@@ -763,6 +763,8 @@
     const productId = '<%= product._id %>';
     const reviewList = document.getElementById('reviewList');
     let allReviews = [];
+    let currentReviewPage = 1;
+    const REVIEWS_PER_PAGE = 5;
     function renderReviews(reviews) {
       const filterType = document.getElementById('filterReviewType').value;
       let filtered = reviews;
@@ -771,9 +773,16 @@
       }
       if (!filtered.length) {
         reviewList.innerHTML = '<div class="review-modern-empty">Chưa có đánh giá nào cho loại này.</div>';
+        document.getElementById('reviewPagination')?.remove();
         return;
       }
-      reviewList.innerHTML = filtered.map(r => `
+      // Phân trang
+      const totalPages = Math.ceil(filtered.length / REVIEWS_PER_PAGE);
+      if (currentReviewPage > totalPages) currentReviewPage = totalPages || 1;
+      const startIdx = (currentReviewPage - 1) * REVIEWS_PER_PAGE;
+      const endIdx = startIdx + REVIEWS_PER_PAGE;
+      const pageReviews = filtered.slice(startIdx, endIdx);
+      reviewList.innerHTML = pageReviews.map(r => `
         <div class="review-modern-box">
           <div class="review-modern-header">
             <span class="review-modern-username">${r.username || 'Ẩn danh'}</span>
@@ -784,6 +793,30 @@
           <div class="review-modern-comment">${r.comment}</div>
         </div>
       `).join('');
+      // Render pagination
+      let paginationHtml = '';
+      if (totalPages > 1) {
+        paginationHtml = '<nav id="reviewPagination" class="mt-3"><ul class="pagination justify-content-center">';
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `<li class="page-item${i === currentReviewPage ? ' active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+        }
+        paginationHtml += '</ul></nav>';
+      }
+      // Nếu đã có pagination thì thay thế, chưa có thì thêm sau reviewList
+      let oldPag = document.getElementById('reviewPagination');
+      if (oldPag) oldPag.outerHTML = paginationHtml;
+      else reviewList.insertAdjacentHTML('afterend', paginationHtml);
+      // Gán sự kiện click cho page-link
+      document.querySelectorAll('#reviewPagination .page-link').forEach(link => {
+        link.onclick = function(e) {
+          e.preventDefault();
+          const page = parseInt(this.dataset.page);
+          if (page !== currentReviewPage) {
+            currentReviewPage = page;
+            renderReviews(allReviews);
+          }
+        };
+      });
     }
     async function fetchReviews() {
       reviewList.innerHTML = '<div class="text-center text-muted">Đang tải đánh giá...</div>';
