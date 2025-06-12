@@ -105,8 +105,7 @@ exports.quickOrder = async (req, res, next) => {
             email: req.body.email || (shippingAddressData && shippingAddressData.email) || ''
         };
         // Bắt đầu transaction giảm tồn kho cho từng sản phẩm trong giỏ
-        const session = await Product.startSession();
-        session.startTransaction();
+        // Bỏ transaction/session để chạy với MongoDB standalone
         try {
             const updatedProducts = [];
             for (const item of user.carts) {
@@ -118,12 +117,10 @@ exports.quickOrder = async (req, res, next) => {
                         "detail.stock": { $gte: item.orderNumber }
                     },
                     { $inc: { "detail.$.stock": -item.orderNumber } },
-                    { new: true, session }
+                    { new: true }
                 );
                 if (!updated) {
-                    // Rollback
-                    await session.abortTransaction();
-                    session.endSession();
+                    // Rollback (giả lập): báo lỗi và dừng
                     return isAjax(req)
                         ? res.status(400).json({ success: false, message: `Sản phẩm ${item.productID.name} (${item.size}) không đủ tồn kho.` })
                         : res.redirect('/cart?error=outofstock');
@@ -160,19 +157,15 @@ exports.quickOrder = async (req, res, next) => {
                 paymentMethod: 'COD',
                 paymentStatus: 'chưa thanh toán'
             });
-            await order.save({ session });
+            await order.save();
             user.orders.push(order._id);
             user.carts = [];
-            await user.save({ session });
-            await session.commitTransaction();
-            session.endSession();
+            await user.save();
             if (isAjax(req)) {
                 return res.json({ success: true, orderId: order._id });
             }
             return res.redirect('/order/history');
         } catch (err) {
-            await session.abortTransaction();
-            session.endSession();
             if (isAjax(req)) {
                 return res.status(500).json({ success: false, message: err.message || 'Đặt hàng thất bại.' });
             }
