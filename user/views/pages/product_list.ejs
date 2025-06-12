@@ -69,8 +69,11 @@
                                     <div class="product-caption text-center">
                                         <h4 class="mb-2"><a href="/products/<%= encodeURIComponent(product.name) %>"><%= product.name %></a></h4>
                                         <div class="product-ratting mb-2">
+                                            <% 
+                                                const displayRating = typeof product.displayRating !== 'undefined' ? product.displayRating : 0;
+                                            %>
                                             <% for(let i = 0; i < 5; i++) { %>
-                                                <% if (product.rating && i < product.rating) { %>
+                                                <% if (i < displayRating) { %>
                                                     <i class="fas fa-star"></i>
                                                 <% } else { %>
                                                     <i class="far fa-star"></i>

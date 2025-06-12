@@ -42,14 +42,34 @@ exports.getProductListPage = async (req, res, next) => {
                     image: prod.image && prod.image.imageData ? `data:${prod.image.imageType};base64,${prod.image.imageData.toString('base64')}` : '/img/product-placeholder.png',
                     types: [],
                     detail: prod.detail,
-                    reviewProducts: prod.reviewProducts,
-                    isOutOfStock: false // default
+                    reviewProducts: [], // sẽ tổng hợp tất cả review của các type
+                    rating: 0,
+                    ratingCount: 0
                 };
             }
             groupedProducts[prod.name].types.push({
                 type: prod.type,
                 detail: prod.detail
             });
+            // Gom tất cả reviewProducts của các type vào 1 mảng
+            if (Array.isArray(prod.reviewProducts) && prod.reviewProducts.length > 0) {
+                groupedProducts[prod.name].reviewProducts = groupedProducts[prod.name].reviewProducts.concat(prod.reviewProducts);
+            }
+        });
+        // Tính lại rating trung bình và số lượng đánh giá cho từng sản phẩm (từ tất cả type)
+        Object.values(groupedProducts).forEach(product => {
+            let totalStars = 0, totalReviews = 0, avgRating = 0;
+            if (Array.isArray(product.reviewProducts) && product.reviewProducts.length > 0) {
+                totalReviews = product.reviewProducts.length;
+                totalStars = product.reviewProducts.reduce((sum, r) => sum + (r.star || 0), 0);
+                avgRating = totalStars / totalReviews;
+            }
+            // Làm tròn số sao: .01-.49 làm tròn xuống, .5 trở lên làm tròn lên
+            let displayRating = Math.floor(avgRating + 0.5 * (avgRating % 1 >= 0.5 ? 1 : 0));
+            product.rating = avgRating;
+            product.displayRating = displayRating;
+            product.ratingCount = totalReviews;
+            console.log(`Sản phẩm: ${product.name} - Số sao trung bình: ${avgRating.toFixed(2)} (Hiển thị: ${displayRating} sao, ${totalReviews} đánh giá)`);
         });
         // Đánh dấu hết hàng nếu tất cả các biến thể đều hết stock
         Object.values(groupedProducts).forEach(product => {
