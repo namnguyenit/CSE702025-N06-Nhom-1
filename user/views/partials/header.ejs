@@ -51,9 +51,20 @@
         font-size: 16px;
     }
     /* Gom 3 nút header phải sát nhau, đồng bộ layout */
+    .header-bottom .header-right {
+        gap: 20px !important;
+    }
     .header-bottom .header-right li {
-        padding-left: 8px !important;
+        padding-left: 0 !important;
         padding-right: 0 !important;
+    }
+    .header-icon-btn,
+    .header-user-dropdown {
+        margin-right: 0 !important;
+    }
+    .header-right li:last-child .header-icon-btn,
+    .header-right li:last-child .header-user-dropdown {
+        margin-right: 0;
     }
     .header-icon-btn {
         position: relative;
