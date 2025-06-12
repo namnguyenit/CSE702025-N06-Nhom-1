@@ -924,4 +924,25 @@ window.updateHeaderBadges = function(wishlistCount, cartCount) {
   }
 };
 
+// Custom message auto-hide and close logic
+$(document).ready(function() {
+  // Hiển thị hiệu ứng fade in
+  $('.custom-message').addClass('show');
+
+  // Tự động ẩn sau 2.5s
+  setTimeout(function() {
+    $('.custom-message').each(function() {
+      $(this).removeClass('show');
+      setTimeout(() => $(this).remove(), 500); // Xóa khỏi DOM sau hiệu ứng
+    });
+  }, 2500);
+
+  // Đóng thủ công
+  $(document).on('click', '.custom-message-close', function() {
+    var $msg = $(this).closest('.custom-message');
+    $msg.removeClass('show');
+    setTimeout(() => $msg.remove(), 500);
+  });
+});
+
 })(jQuery);

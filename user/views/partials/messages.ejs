@@ -1,31 +1,125 @@
+<style>
+.custom-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 220px;
+  max-width: 96vw;
+  margin: 20px auto 0 auto;
+  padding: 16px 24px 16px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.06);
+  font-size: 1rem;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  position: relative;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+  z-index: 1050;
+}
+.custom-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.custom-message-success {
+  background: #eafaf1;
+  color: #256029;
+  border-left: 5px solid #4BB543;
+}
+.custom-message-error {
+  background: #fff0f0;
+  color: #a94442;
+  border-left: 5px solid #FF4F4F;
+}
+.custom-message-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+.custom-message-text {
+  flex: 1 1 auto;
+  word-break: break-word;
+}
+.custom-message-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  position: absolute;
+  top: 10px;
+  right: 16px;
+}
+.custom-message-close:hover {
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .custom-message {
+    padding: 12px 12px 12px 10px;
+    font-size: 0.95rem;
+  }
+  .custom-message-close {
+    top: 6px;
+    right: 8px;
+  }
+}
+.custom-message ul {
+  margin: 0;
+  padding-left: 18px;
+}
+</style>
+
 <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <%= success_msg %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="custom-message custom-message-success show" role="alert">
+        <span class="custom-message-icon">
+            <!-- Success SVG icon -->
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#4BB543"/><path d="M7 13l3 3 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="custom-message-text"><%= success_msg %></span>
+        <button type="button" class="custom-message-close" aria-label="Close">&times;</button>
     </div>
 <% } %>
 
 <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error_msg %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="custom-message custom-message-error show" role="alert">
+        <span class="custom-message-icon">
+            <!-- Error SVG icon -->
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FF4F4F"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="custom-message-text"><%= error_msg %></span>
+        <button type="button" class="custom-message-close" aria-label="Close">&times;</button>
     </div>
 <% } %>
 
 <% if (typeof error !== 'undefined' && error.length > 0 && (!Array.isArray(error))) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="custom-message custom-message-error show" role="alert">
+        <span class="custom-message-icon">
+            <!-- Error SVG icon -->
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FF4F4F"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="custom-message-text"><%= error %></span>
+        <button type="button" class="custom-message-close" aria-label="Close">&times;</button>
     </div>
 <% } %>
 
 <% if (typeof errors !== 'undefined' && errors.length > 0 && Array.isArray(errors)) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <ul style="margin-bottom:0;">
-            <% errors.forEach(function(e) { %>
-                <li><%= e.msg %></li>
-            <% }); %>
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="custom-message custom-message-error show" role="alert">
+        <span class="custom-message-icon">
+            <!-- Error SVG icon -->
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FF4F4F"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="custom-message-text">
+            <ul style="margin-bottom:0;">
+                <% errors.forEach(function(e) { %>
+                    <li><%= e.msg %></li>
+                <% }); %>
+            </ul>
+        </span>
+        <button type="button" class="custom-message-close" aria-label="Close">&times;</button>
     </div>
 <% } %>
