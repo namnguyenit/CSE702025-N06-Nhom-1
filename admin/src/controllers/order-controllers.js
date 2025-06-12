@@ -26,7 +26,26 @@ class OrderControllers {
     return res.render("orders/detail", { nameForm, nameTable, order });
   }
   async cancelled(req, res) {
-    return res.send("DE");
+    try {
+      //Tìm theo ID và xóa
+      const order = await OrderModels.findById(req.body.id);
+      if (order.status == "delivered") {
+        PopupService.message(req, res, "error", "Đơn hàng đã được giao!");
+        return res.redirect("/orders");
+      }
+      if (order.status == "cancelled") {
+        return res.redirect("/orders");
+      }
+      order.status = "cancelled";
+      await order.save();
+      return res.status(204).end();
+    } catch (error) {
+      //log và thông báo về lỗi
+      console.error("Error in OrderControllers.cancelled:", error);
+      return res
+        .status(500)
+        .json({ error: "Error in OrderControllers.cancelled" });
+    }
   }
 }
 

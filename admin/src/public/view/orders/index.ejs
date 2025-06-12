@@ -105,7 +105,7 @@
                                                                 <td>
                                                                     <%=order.paymentStatus %>
                                                                 </td>
-                                                                <td>
+                                                                <td id="chang-status">
                                                                     <%=order.status %>
                                                                 </td>
                                                                 <td>
@@ -113,68 +113,77 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-button-action">
-                                                                        <% if(order.status=="pending" ){ %>
-                                                                            <form action="/orders/approved"
-                                                                                method="post">
-                                                                                <input type="hidden" name="id"
-                                                                                    value="<%=order.id %>">
-                                                                                <div class="form-button-action">
+                                                                        <div id="chang-status-icon">
+                                                                            <% if(order.status=="pending" ){ %>
+                                                                                <form action="/orders/approved"
+                                                                                    method="post">
+                                                                                    <input type="hidden" name="id"
+                                                                                        value="<%=order.id %>">
+                                                                                    <div class="form-button-action">
+                                                                                        <div class="form-button-action">
+                                                                                            <button type="submit"
+                                                                                                data-bs-toggle="tooltip"
+                                                                                                title="approve"
+                                                                                                class="btn btn-link btn-warning">
+                                                                                                <i
+                                                                                                    class="fa fa-hourglass-half"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </form>
+                                                                                <% } else if(order.status=="waiting" ){
+                                                                                    %>
                                                                                     <div class="form-button-action">
                                                                                         <button type="submit"
                                                                                             data-bs-toggle="tooltip"
-                                                                                            title="approve"
-                                                                                            class="btn btn-link btn-warning">
+                                                                                            title="approved"
+                                                                                            class="btn btn-link btn-success">
                                                                                             <i
                                                                                                 class="fa fa-hourglass-half"></i>
                                                                                         </button>
                                                                                     </div>
-                                                                                </div>
-                                                                            </form>
-                                                                            <% } else{ %>
+                                                                                    <% } else{ %>
+                                                                                        <div class="form-button-action">
+                                                                                            <button type="submit"
+                                                                                                data-bs-toggle="tooltip"
+                                                                                                title="cancelled"
+                                                                                                class="btn btn-link btn-secondary">
+                                                                                                <i
+                                                                                                    class="fa fa-hourglass-half"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <% } %>
+                                                                        </div>
+
+                                                                        <form action="/orders/detail" method="post">
+                                                                            <input type="hidden" name="id"
+                                                                                value="<%=order.id %>">
+                                                                            <div class="form-button-action">
                                                                                 <div class="form-button-action">
                                                                                     <button type="submit"
                                                                                         data-bs-toggle="tooltip"
-                                                                                        title="approved"
-                                                                                        class="btn btn-link btn-success">
-                                                                                        <i
-                                                                                            class="fa fa-hourglass-half"></i>
+                                                                                        title="Detail"
+                                                                                        class="btn btn-link btn-info">
+                                                                                        <i class="fa fa-eye"></i>
                                                                                     </button>
                                                                                 </div>
-                                                                                <% } %>
-                                                                                    <form action="/orders/detail"
-                                                                                        method="post">
-                                                                                        <input type="hidden" name="id"
-                                                                                            value="<%=order.id %>">
-                                                                                        <div class="form-button-action">
-                                                                                            <div
-                                                                                                class="form-button-action">
-                                                                                                <button type="submit"
-                                                                                                    data-bs-toggle="tooltip"
-                                                                                                    title="Detail"
-                                                                                                    class="btn btn-link btn-info">
-                                                                                                    <i
-                                                                                                        class="fa fa-eye"></i>
-                                                                                                </button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                    <form action="/orders/cancelled"
-                                                                                        method="post">
-                                                                                        <input type="hidden" name="id"
-                                                                                            value="<%=order.id %>">
-                                                                                        <div class="form-button-action">
-                                                                                            <div
-                                                                                                class="form-button-action">
-                                                                                                <button type="submit"
-                                                                                                    data-bs-toggle="tooltip"
-                                                                                                    title="Cancelled"
-                                                                                                    class="btn btn-link btn-danger">
-                                                                                                    <i
-                                                                                                        class="fa fa-times"></i>
-                                                                                                </button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </form>
+                                                                            </div>
+                                                                        </form>
+                                                                        <form class="btn-destroy-order"
+                                                                            action="/orders/cancelled" method="post">
+                                                                            <input type="hidden" name="id"
+                                                                                value="<%=order.id %>">
+                                                                            <div class="form-button-action">
+                                                                                <div class="form-button-action">
+                                                                                    <button type="submit"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        title="Cancelled"
+                                                                                        class="btn btn-link btn-danger">
+                                                                                        <i class="fa fa-times"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
                                                                     </div>
                                                                 </td>
                                                             </tr>
