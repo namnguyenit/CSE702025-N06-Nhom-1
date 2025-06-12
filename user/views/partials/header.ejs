@@ -100,6 +100,86 @@
     .header-icon-btn[data-badge="0"]:before {
         display: none;
     }
+    .header-user-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .header-user-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid #eeeeee;
+        background: #fff;
+        transition: border 0.2s, color 0.2s;
+        cursor: pointer;
+    }
+    .header-user-btn i {
+        font-size: 21px;
+        color: #4e4e4e;
+        transition: color 0.2s;
+    }
+    .header-user-btn:hover {
+        border: 1.5px solid #00b1ff;
+    }
+    .header-user-btn:hover i {
+        color: #00b1ff;
+    }
+    .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 56px;
+        right: 0;
+        min-width: 220px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px #0d6efd22, 0 1.5px 8px #0d6efd0a;
+        padding: 18px 20px 14px 20px;
+        z-index: 100;
+        font-family: 'Inter', 'Roboto', Arial, sans-serif;
+        animation: fadeInDown .25s;
+    }
+    .header-user-dropdown:hover .user-dropdown-menu {
+        display: block;
+    }
+    .user-dropdown-name {
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #0d6efd;
+        margin-bottom: 10px;
+        text-align: left;
+        letter-spacing: 0.5px;
+    }
+    .user-dropdown-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .user-dropdown-actions a, .user-dropdown-actions button {
+        border: none;
+        outline: none;
+        background: linear-gradient(90deg,#e7f1ff 60%,#f7fafd 100%);
+        color: #0d6efd;
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 10px;
+        padding: 8px 0;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.18s, color 0.18s;
+        cursor: pointer;
+    }
+    .user-dropdown-actions a:hover, .user-dropdown-actions button:hover {
+        background: linear-gradient(90deg,#0d6efd 60%,#00b1ff 100%);
+        color: #fff;
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
     </style>
 </head>
 <body>
@@ -190,7 +270,7 @@
                                 </nav>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 fix-card">
+                        <div class="col-xl-5 col-lg-3 col-md-3 col-sm-3 fix-card">
                             <ul class="header-right f-right d-none d-lg-block d-flex justify-content-between">
                                 <li class="d-none d-xl-block">
                                     <div class="form-box f-right ">
@@ -216,6 +296,22 @@
                                     <a href="/order/history" class="header-icon-btn" title="Lịch sử mua hàng">
                                         <i class="fas fa-history"></i>
                                     </a>
+                                </li>
+                                <li class="header-user-dropdown">
+                                    <div class="header-user-btn" tabindex="0">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="user-dropdown-menu">
+                                        <div class="user-dropdown-name">
+                                            <%= currentUser ? (currentUser.name || currentUser.fullName || 'Người dùng') : 'Khách' %>
+                                        </div>
+                                        <div class="user-dropdown-actions">
+                                            <a href="/auth/profile">Thông tin cá nhân</a>
+                                            <form action="/auth/logout" method="POST" style="margin:0;padding:0;">
+                                                <button type="submit">Đăng xuất</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </li>
                                 <% if (!currentUser) { %>
                                     <li class="d-none d-lg-block"> <a href="/auth/login" class="btn header-btn">Đăng nhập</a></li>
