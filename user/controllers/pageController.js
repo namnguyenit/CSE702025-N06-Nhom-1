@@ -69,7 +69,7 @@ exports.getContactPage = async (req, res, next) => {
             wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
             cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
         }
-        res.render('pages/contact-vi', {
+        res.render('pages/contact', {
             title: 'Liên Hệ',
             categories,
             wishlistCount,
@@ -92,7 +92,7 @@ exports.getAboutPage = async (req, res, next) => {
             wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
             cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
         }
-        res.render('pages/about-vi', {
+        res.render('pages/about', {
             title: 'Về Chúng Tôi',
             categories,
             wishlistCount,
