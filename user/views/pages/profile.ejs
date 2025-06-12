@@ -8,7 +8,7 @@
       <p style="font-size:1.15rem;font-weight:600;color:#222;margin-bottom:8px;">✉️ <%= profileUser.email %></p>
       <p><strong>Tên đăng nhập:</strong> <%= profileUser.username %></p>
       <p><strong>Số điện thoại:</strong> <%= profileUser.phone || 'Chưa cập nhật' %></p>
-      <p><strong>Địa chỉ:</strong> <%= profileUser.address && profileUser.address.street ? profileUser.address.street + ', ' : '' %><%= profileUser.address && profileUser.address.city ? profileUser.address.city : 'Chưa cập nhật' %></p>
+      <p><strong>Địa chỉ:</strong> <%= profileUser.address || 'Chưa cập nhật' %></p>
     </div>
     <form class="profile-modern-form" action="/auth/profile" method="post">
       <div class="mb-2">
@@ -20,12 +20,8 @@
         <input type="text" class="form-control" id="phone" name="phone" value="<%= profileUser.phone || '' %>" placeholder="Số điện thoại">
       </div>
       <div class="mb-2">
-        <label for="address_street">Địa chỉ (Số nhà, đường)</label>
-        <input type="text" class="form-control" id="address_street" name="address_street" value="<%= profileUser.address ? profileUser.address.street : '' %>" placeholder="Số nhà, đường">
-      </div>
-      <div class="mb-2">
-        <label for="address_city">Thành phố</label>
-        <input type="text" class="form-control" id="address_city" name="address_city" value="<%= profileUser.address ? profileUser.address.city : '' %>" placeholder="Thành phố">
+        <label for="address">Địa chỉ</label>
+        <input type="text" class="form-control" id="address" name="address" value="<%= profileUser.address || '' %>" placeholder="Nhập địa chỉ đầy đủ">
       </div>
       <button type="submit" class="primary-btn w-100">Cập Nhật</button>
     </form>

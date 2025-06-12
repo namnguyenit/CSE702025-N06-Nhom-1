@@ -13032,3 +13032,12 @@ input:focus {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+/* Tăng cỡ chữ cho tên sản phẩm trong popular-caption (product_card) */
+.popular-caption h3 {
+  font-size: 3rem !important;
+  font-weight: 900 !important;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  word-break: break-word;
+}

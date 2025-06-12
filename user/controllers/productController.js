@@ -268,3 +268,81 @@ exports.toggleWishlist = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Lỗi server.' });
     }
 };
+
+// Hiển thị sản phẩm theo category id (gộp các type thành 1 sản phẩm theo name)
+exports.getCategoryProductsPage = async (req, res, next) => {
+    try {
+        const categoryId = req.params.id;
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return res.status(404).render('error', { title: 'Không tìm thấy danh mục', message: 'Danh mục không tồn tại.' });
+        }
+        // Gộp các type thành 1 sản phẩm theo name
+        const groupedProducts = {};
+        (category.products || []).forEach(prod => {
+            if (!groupedProducts[prod.name]) {
+                groupedProducts[prod.name] = {
+                    _id: prod._id,
+                    name: prod.name,
+                    description: prod.description,
+                    image: prod.image && prod.image.imageData ? `data:${prod.image.imageType};base64,${prod.image.imageData.toString('base64')}` : '/img/product-placeholder.png',
+                    types: [],
+                    detail: prod.detail,
+                    reviewProducts: [],
+                    rating: 0,
+                    ratingCount: 0
+                };
+            }
+            groupedProducts[prod.name].types.push({
+                type: prod.type,
+                detail: prod.detail
+            });
+            // Nếu có reviewProducts thì gộp vào
+            if (Array.isArray(prod.reviewProducts) && prod.reviewProducts.length > 0) {
+                groupedProducts[prod.name].reviewProducts = groupedProducts[prod.name].reviewProducts.concat(prod.reviewProducts);
+            }
+        });
+        // Tính lại rating trung bình và số lượng đánh giá cho từng sản phẩm (từ tất cả type)
+        Object.values(groupedProducts).forEach(product => {
+            let totalStars = 0, totalReviews = 0, avgRating = 0;
+            if (Array.isArray(product.reviewProducts) && product.reviewProducts.length > 0) {
+                totalReviews = product.reviewProducts.length;
+                totalStars = product.reviewProducts.reduce((sum, r) => sum + (r.star || 0), 0);
+                avgRating = totalStars / totalReviews;
+            }
+            let displayRating = Math.floor(avgRating + 0.5 * (avgRating % 1 >= 0.5 ? 1 : 0));
+            product.rating = avgRating;
+            product.displayRating = displayRating;
+            product.ratingCount = totalReviews;
+        });
+        // Đánh dấu hết hàng nếu tất cả các biến thể đều hết stock
+        Object.values(groupedProducts).forEach(product => {
+            let allOut = true;
+            product.types.forEach(type => {
+                if (type.detail.some(d => d.stock > 0)) allOut = false;
+            });
+            product.isOutOfStock = allOut;
+        });
+        const categories = await Category.find({});
+        let wishlist = [];
+        let wishlistCount = 0;
+        let cartCount = 0;
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            wishlistCount = user && user.wishlist ? user.wishlist.length : 0;
+            cartCount = user && user.carts ? user.carts.reduce((sum, item) => sum + (item.orderNumber || 0), 0) : 0;
+            if (user && user.wishlist) wishlist = user.wishlist;
+        }
+        res.render('pages/product_list', {
+            title: category.name,
+            products: Object.values(groupedProducts),
+            categories,
+            currentCategory: category.name,
+            wishlist,
+            wishlistCount,
+            cartCount
+        });
+    } catch (err) {
+        next(err);
+    }
+};

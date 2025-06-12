@@ -18,28 +18,30 @@
     <div class="container">
         <div class="row">
             <!-- Sidebar filter (optional, hidden if not needed) -->
-            <div class="col-xl-3 col-lg-3 col-md-4 d-none d-md-block">
-                <div class="product_sidebar">
-                    <form action="/products" method="GET" id="searchForm">
-                        <div class="sidebar-search-group" style="position:relative; margin-bottom:20px;">
-                            <input type="text" name="keyword" class="form-control mb-0" placeholder="Search keyword" value="<%= typeof keyword !== 'undefined' ? keyword : '' %>" style="border-radius: 30px; background: #f7f0f7; border: none; font-size: 1.13rem; font-weight: 500; color: #6d5477; padding-right: 44px;">
-                            <button type="submit" style="position:absolute; right:18px; top:50%; transform:translateY(-50%); background:transparent; border:none; outline:none;">
-                                <i class="fa fa-search" style="color:#6d5477; font-size:1.25rem;"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar-category-group" style="margin-bottom:20px;">
-                            <select name="category" class="form-control mb-0" style="border-radius: 30px; background: #f7f0f7; border: none; font-size: 1.13rem; font-weight: 500; color: #6d5477; padding-right: 38px;">
-                                <option value="">Category</option>
-                                <% if (categories && categories.length > 0) { %>
-                                    <% categories.forEach(function(category) { %>
-                                        <option value="<%= category.name %>" <%= (currentCategory === category.name) ? 'selected' : '' %>><%= category.name %></option>
-                                    <% }); %>
-                                <% } %>
-                            </select>
-                        </div>
-                    </form>
+            <% if (!currentCategory) { %>
+                <div class="col-xl-3 col-lg-3 col-md-4 d-none d-md-block">
+                    <div class="product_sidebar">
+                        <form action="/products" method="GET" id="searchForm">
+                            <div class="sidebar-search-group" style="position:relative; margin-bottom:20px;">
+                                <input type="text" name="keyword" class="form-control mb-0" placeholder="Search keyword" value="<%= typeof keyword !== 'undefined' ? keyword : '' %>" style="border-radius: 30px; background: #f7f0f7; border: none; font-size: 1.13rem; font-weight: 500; color: #6d5477; padding-right: 44px;">
+                                <button type="submit" style="position:absolute; right:18px; top:50%; transform:translateY(-50%); background:transparent; border:none; outline:none;">
+                                    <i class="fa fa-search" style="color:#6d5477; font-size:1.25rem;"></i>
+                                </button>
+                            </div>
+                            <div class="sidebar-category-group" style="margin-bottom:20px;">
+                                <select name="category" class="form-control mb-0" style="border-radius: 30px; background: #f7f0f7; border: none; font-size: 1.13rem; font-weight: 500; color: #6d5477; padding-right: 38px;">
+                                    <option value="">Category</option>
+                                    <% if (categories && categories.length > 0) { %>
+                                        <% categories.forEach(function(category) { %>
+                                            <option value="<%= category.name %>" <%= (currentCategory === category.name) ? 'selected' : '' %>><%= category.name %></option>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            <% } %>
             <!-- Product list -->
             <div class="col-xl-9 col-lg-9 col-md-8">
                 <div class="row">

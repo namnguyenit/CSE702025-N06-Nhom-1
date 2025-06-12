@@ -23,10 +23,7 @@ const userSchema = new Schema({
     name: { type: String, required: true },
     phone: String,
     gmail: String,
-    address: {
-        street: { type: String, default: '' },
-        city: { type: String, default: '' }
-    },
+    address: { type: String },
     carts: [cartSchema],
     reviewProducts: [reviewProductSchema],
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],

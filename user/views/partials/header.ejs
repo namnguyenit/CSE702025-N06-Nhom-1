@@ -263,11 +263,9 @@
                                             <ul class="submenu">
                                                 <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
                                                     <% categories.forEach(category => { %>
-                                                        <li><a href="/products?category=<%= category.slug %>"><%= category.name %></a></li>
+                                                        <li><a href="/products/category/<%= category._id %>"><%= category.name %></a></li>
                                                     <% }); %>
                                                 <% } %>
-                                                <li><a href="/products?category=ao-nam">Áo Nam</a></li>
-                                                <li><a href="/products?category=quan-nu">Quần Nữ</a></li>
                                             </ul>
                                         </li>
                                         <li><a href="/about">Về Chúng Tôi</a></li>

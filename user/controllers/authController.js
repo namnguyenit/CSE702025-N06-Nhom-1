@@ -214,7 +214,7 @@ exports.getUserProfilePage = async (req, res, next) => {
 };
 
 exports.postUpdateUserProfile = async (req, res, next) => {
-    const { fullName, phone, address_street, address_city } = req.body;
+    const { fullName, phone, address } = req.body;
     // Thêm validation nếu cần
     try {
         const user = await User.findById(req.session.user._id);
@@ -225,8 +225,7 @@ exports.postUpdateUserProfile = async (req, res, next) => {
 
         user.fullName = fullName || user.fullName;
         user.phone = phone || user.phone;
-        user.address.street = address_street || user.address.street;
-        user.address.city = address_city || user.address.city;
+        user.address = address || user.address;
         // Cập nhật các trường khác nếu có
 
         await user.save();
@@ -235,7 +234,6 @@ exports.postUpdateUserProfile = async (req, res, next) => {
         const userSessionData = user.toObject();
         delete userSessionData.password;
         req.session.user = userSessionData;
-
 
         req.flash('success_msg', 'Cập nhật thông tin thành công!');
         res.redirect('/auth/profile');
@@ -270,7 +268,7 @@ exports.postShipperLogin = async (req, res, next) => {
     }
     try {
         const user = await User.findOne({ $or: [ { account }, { gmail: account } ] });
-        if (!user || user.role !== 'shipper') {
+        if (!user || user.role !== 'Shipper') {
             return res.render('pages/shipper_login', {
                 title: 'Đăng Nhập Shipper',
                 path: '/auth/shipper-login',
