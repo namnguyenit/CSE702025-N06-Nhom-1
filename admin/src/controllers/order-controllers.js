@@ -30,11 +30,10 @@ class OrderControllers {
       //Tìm theo ID và xóa
       const order = await OrderModels.findById(req.body.id);
       if (order.status == "delivered") {
-        PopupService.message(req, res, "error", "Đơn hàng đã được giao!");
-        return res.redirect("/orders");
+        return res.status(500).end();
       }
       if (order.status == "cancelled") {
-        return res.redirect("/orders");
+        return res.status(500).end();
       }
       order.status = "cancelled";
       await order.save();
