@@ -121,6 +121,21 @@ exports.getProductDetailPage = async (req, res, next) => {
             err.status = 404;
             return next(err);
         }
+        // Gom tất cả reviewProducts của các type vào 1 mảng
+        let allReviews = [];
+        variants.forEach(v => {
+            if (Array.isArray(v.reviewProducts) && v.reviewProducts.length > 0) {
+                allReviews = allReviews.concat(v.reviewProducts);
+            }
+        });
+        // Tính số sao trung bình và số đánh giá (dùng cùng logic với ngoài card)
+        let totalStars = 0, totalReviews = 0, avgRating = 0, displayRating = 0;
+        if (allReviews.length > 0) {
+            totalReviews = allReviews.length;
+            totalStars = allReviews.reduce((sum, r) => sum + (r.star || 0), 0);
+            avgRating = totalStars / totalReviews;
+            displayRating = Math.floor(avgRating + 0.5 * (avgRating % 1 >= 0.5 ? 1 : 0));
+        }
         const productDetail = {
             _id: variants[0]._id,
             name: productName,
@@ -136,8 +151,11 @@ exports.getProductDetailPage = async (req, res, next) => {
                 } : null
             })),
             detail: variants[0].detail,
-            reviewProducts: variants[0].reviewProducts,
-            isOutOfStock: variants.every(v => v.detail.every(d => d.stock === 0))
+            reviewProducts: allReviews,
+            isOutOfStock: variants.every(v => v.detail.every(d => d.stock === 0)),
+            rating: avgRating,
+            displayRating,
+            ratingCount: totalReviews
         };
         const categories = await Category.find({});
         let wishlist = [];

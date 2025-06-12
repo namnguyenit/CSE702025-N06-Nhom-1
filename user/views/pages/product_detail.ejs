@@ -340,6 +340,26 @@
         <div class="col-lg-6 col-md-6">
             <div class="single-product-details">
                 <h3><%= product.name %></h3>
+                <!-- Hiển thị số sao và số đánh giá -->
+                <div class="product-rating mb-3" style="font-size:1.35rem;">
+                  <% const displayRating = typeof product.displayRating !== 'undefined' ? product.displayRating : 0;
+                     const avgRating = typeof product.rating !== 'undefined' ? product.rating : 0;
+                     const totalReviews = typeof product.ratingCount !== 'undefined' ? product.ratingCount : (product.reviewProducts ? product.reviewProducts.length : 0);
+                     const rounded = Math.round(avgRating * 10) / 10;
+                  %>
+                  <% if (totalReviews > 0) { %>
+                    <% for(let i=1;i<=5;i++) { %>
+                      <% if (i <= displayRating) { %>
+                        <i class="fas fa-star" style="color:#ffb400;"></i>
+                      <% } else { %>
+                        <i class="far fa-star" style="color:#ffb400;"></i>
+                      <% } %>
+                    <% } %>
+                    <span style="font-size:1.08rem;color:#888;margin-left:8px;vertical-align:middle;">(<%= rounded %> / 5, <%= totalReviews %> đánh giá)</span>
+                  <% } else { %>
+                    <span class="text-muted" style="font-size:1.08rem;">Chưa có đánh giá</span>
+                  <% } %>
+                </div>
                 <div class="mb-2">
                     <span class="badge badge-success">Còn hàng</span>
                     <span class="badge-outofstock" style="display:none;font-size:1.1rem;padding:8px 22px;border-radius:18px;">Hết hàng</span>
