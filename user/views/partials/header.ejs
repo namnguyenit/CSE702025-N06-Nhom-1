@@ -244,46 +244,7 @@
     <!-- Header Start -->
     <div class="header-area">
         <div class="main-header ">
-            <div class="header-top top-bg d-none d-lg-block">
-                <div class="container-fluid">
-                    <div class="col-xl-12">
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="header-info-left d-flex">
-                                <div class="flag">
-                                    <img src="/img/icon/header_icon.png" alt="">
-                                </div>
-                                <div class="select-this">
-                                    <form action="#">
-                                        <div class="select-itms">
-                                            <select name="select" id="select1">
-                                                <option value="">VN</option>
-                                                <option value="">USA</option>
-                                                <option value="">SPN</option>
-                                                <option value="">CDA</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                                <ul class="contact-now">
-                                    <li>+84 123 456 789</li>
-                                </ul>
-                            </div>
-                            <div class="header-info-right">
-                                <ul>
-                                    <% if (currentUser) { %>
-                                        <li><a href="/auth/profile">Tài khoản (<%= (currentUser.name || currentUser.fullName || '').split(' ').pop() %>)</a></li>
-                                        <li><a href="/history">Lịch sử mua hàng</a></li>
-                                        <li><a href="/auth/logout">Đăng xuất</a></li>
-                                    <% } else { %>
-                                        <li><a href="/auth/login">Đăng nhập</a></li>
-                                        <li><a href="/auth/register">Đăng ký</a></li>wishlist
-                                    <% } %>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- ĐÃ XÓA header-top/top-bg panel đen phía trên -->
             <div class="header-bottom header-sticky">
                 <div class="container-fluid">
                     <div class="row align-items-center">
@@ -327,42 +288,43 @@
                                         </form>
                                     </div>
                                 </li>
-                                <li class="d-none d-xl-block">
-                                    <a href="/wishlist" class="header-icon-btn" data-badge="<%= typeof wishlistCount !== 'undefined' ? wishlistCount : 0 %>" title="Yêu thích">
-                                        <i class="far fa-heart"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/cart" class="header-icon-btn" data-badge="<%= typeof cartCount !== 'undefined' ? cartCount : 0 %>" title="Giỏ hàng">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/order/history" class="header-icon-btn" title="Lịch sử mua hàng">
-                                        <i class="fas fa-history"></i>
-                                    </a>
-                                </li>
-                                <li class="header-user-dropdown">
-                                    <div class="header-user-btn" tabindex="0">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="user-dropdown-menu">
-                                        <div class="user-dropdown-avatar">
+                                <% if (currentUser) { %>
+                                    <li class="d-none d-xl-block">
+                                        <a href="/wishlist" class="header-icon-btn" data-badge="<%= typeof wishlistCount !== 'undefined' ? wishlistCount : 0 %>" title="Yêu thích">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/cart" class="header-icon-btn" data-badge="<%= typeof cartCount !== 'undefined' ? cartCount : 0 %>" title="Giỏ hàng">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/order/history" class="header-icon-btn" title="Lịch sử mua hàng">
+                                            <i class="fas fa-history"></i>
+                                        </a>
+                                    </li>
+                                    <li class="header-user-dropdown">
+                                        <div class="header-user-btn" tabindex="0">
                                             <i class="fas fa-user"></i>
                                         </div>
-                                        <div class="user-dropdown-name">
-                                            <%= currentUser ? (currentUser.name || currentUser.fullName || 'Người dùng') : 'Khách' %>
+                                        <div class="user-dropdown-menu">
+                                            <div class="user-dropdown-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="user-dropdown-name">
+                                                <%= currentUser ? (currentUser.name || currentUser.fullName || 'Người dùng') : 'Khách' %>
+                                            </div>
+                                            <hr class="user-dropdown-divider" />
+                                            <div class="user-dropdown-actions">
+                                                <a href="/auth/profile"><i class="fas fa-id-card"></i>Thông tin cá nhân</a>
+                                                <form action="/auth/logout" method="POST" style="margin:0;padding:0;">
+                                                    <button type="submit"><i class="fas fa-sign-out-alt"></i>Đăng xuất</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <hr class="user-dropdown-divider" />
-                                        <div class="user-dropdown-actions">
-                                            <a href="/auth/profile"><i class="fas fa-id-card"></i>Thông tin cá nhân</a>
-                                            <form action="/auth/logout" method="POST" style="margin:0;padding:0;">
-                                                <button type="submit"><i class="fas fa-sign-out-alt"></i>Đăng xuất</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <% if (!currentUser) { %>
+                                    </li>
+                                <% } else { %>
                                     <li class="d-none d-lg-block"> <a href="/auth/login" class="btn header-btn">Đăng nhập</a></li>
                                 <% } %>
                             </ul>
