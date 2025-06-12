@@ -174,6 +174,15 @@ exports.getLogout = (req, res, next) => {
     });
 };
 
+exports.postLogout = (req, res, next) => {
+    req.session.destroy(err => {
+        if (err) {
+            return next(err);
+        }
+        res.clearCookie('connect.sid');
+        res.redirect('/');
+    });
+};
 
 exports.getUserProfilePage = async (req, res, next) => {
     try {

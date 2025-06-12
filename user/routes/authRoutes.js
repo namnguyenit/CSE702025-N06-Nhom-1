@@ -32,6 +32,8 @@ router.post('/register', isLoggedOut, [
 
 // GET /auth/logout - Xử lý đăng xuất
 router.get('/logout', isLoggedIn, authController.getLogout);
+// POST /auth/logout - Xử lý đăng xuất từ form
+router.post('/logout', isLoggedIn, authController.postLogout);
 
 // GET /auth/profile - Trang thông tin cá nhân (Ví dụ)
 router.get('/profile', isLoggedIn, authController.getUserProfilePage);
