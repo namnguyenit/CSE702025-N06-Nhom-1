@@ -13,9 +13,11 @@ const connectDB = require('./config/database');
 const indexRoutes = require('./routes/indexRoutes');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
-// const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
-// const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
-// const shipperRoutes = require('./routes/shipperRoutes'); // Sẽ thêm
+const orderRoutes = require('./routes/orderRoutes'); // Sẽ thêm
+const cartRoutes = require('./routes/cartRoutes'); // Sẽ thêm
+const shipperRoutes = require('./routes/shipperRoutes'); // Sẽ thêm
+const reviewRoutes = require('./routes/reviewRoutes'); // Thêm reviewRoutes
+const returnPolicyRoutes = require('./routes/returnPolicyRoutes'); // Thêm route cho chính sách đổi trả
 
 // Connect to Database
 connectDB();
@@ -27,8 +29,8 @@ const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -70,10 +72,12 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
-app.use('/products', productRoutes); // Route cho sản phẩm
-// app.use('/cart', cartRoutes);
-// app.use('/orders', orderRoutes);
-// app.use('/shipper', shipperRoutes);
+app.use('/products', productRoutes);
+app.use('/order', orderRoutes);
+app.use('/cart', cartRoutes);
+app.use('/shipper', shipperRoutes);
+app.use('/review', reviewRoutes);
+app.use('/return-policy', returnPolicyRoutes); // Thêm route cho chính sách đổi trả
 
 // 404 Handler
 app.use((req, res, next) => {
