@@ -27,6 +27,11 @@ router.get('/history', orderController.getOrderHistory);
 const { getWishlistPage } = require('../controllers/pageController');
 router.get('/wishlist', getWishlistPage);
 
+// Trang chính sách đổi trả (tĩnh, không cần controller riêng)
+router.get('/return-policy', (req, res) => {
+    res.render('pages/return-policy', { title: 'Chính Sách Đổi Trả' });
+});
+
 // Các route khác cho các trang tĩnh (ví dụ)
 // router.get('/faq', pageController.getFaqPage);
 // router.get('/terms', pageController.getTermsPage);

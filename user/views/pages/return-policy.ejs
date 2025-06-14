@@ -1,0 +1,150 @@
+<%- include('../partials/header') %>
+
+<!-- Return Policy Section -->
+<main class="return-policy-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title text-center mb-5">
+                    <h2>Chính Sách Đổi Trả</h2>
+                    <p>Chúng tôi cam kết đem đến trải nghiệm mua sắm tốt nhất cho khách hàng</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="policy-wrapper">
+                    <!-- Điều kiện đổi trả -->
+                    <div class="policy-item mb-4">
+                        <h4>1. Điều Kiện Đổi Trả</h4>
+                        <ul>
+                            <li>Sản phẩm còn nguyên tem, nhãn mác</li>
+                            <li>Sản phẩm chưa qua sử dụng, còn nguyên vẹn</li>
+                            <li>Có hóa đơn mua hàng trong vòng 7 ngày</li>
+                            <li>Sản phẩm không thuộc danh mục không áp dụng đổi trả</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-item mb-4">
+                        <h4>2. Thời Gian Đổi Trả</h4>
+                        <ul>
+                            <li>Thời gian đổi trả: 7 ngày kể từ ngày nhận hàng</li>
+                            <li>Thời gian xử lý đổi trả: 3-5 ngày làm việc</li>
+                            <li>Thời gian hoàn tiền: 5-7 ngày làm việc</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-item mb-4">
+                        <h4>3. Quy Trình Đổi Trả</h4>
+                        <ul>
+                            <li>Liên hệ với bộ phận CSKH qua hotline hoặc email</li>
+                            <li>Cung cấp mã đơn hàng và lý do đổi trả</li>
+                            <li>Nhận mã đổi trả và hướng dẫn đóng gói</li>
+                            <li>Gửi sản phẩm về địa chỉ được cung cấp</li>
+                            <li>Chờ xác nhận và xử lý từ bộ phận CSKH</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-item mb-4">
+                        <h4>4. Các Trường Hợp Được Chấp Nhận Đổi Trả</h4>
+                        <ul>
+                            <li>Sản phẩm bị lỗi từ nhà sản xuất</li>
+                            <li>Sản phẩm không đúng size, màu sắc như đã đặt</li>
+                            <li>Sản phẩm không đúng mẫu mã như hình ảnh</li>
+                            <li>Sản phẩm bị hư hỏng trong quá trình vận chuyển</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-contact mt-5">
+                        <h4>Thông Tin Liên Hệ</h4>
+                        <p>Nếu có bất kỳ thắc mắc nào về chính sách đổi trả, quý khách vui lòng liên hệ:</p>
+                        <ul>
+                            <li>Hotline: 1800-XXXX</li>
+                            <li>Email: support@example.com</li>
+                            <li>Giờ làm việc: 8:00 - 22:00 (Thứ 2 - Chủ Nhật)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .return-policy-page {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+
+    .policy-wrapper {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .policy-item {
+        margin-bottom: 30px;
+    }
+
+    .policy-item h4 {
+        color: #2d2d2d;
+        font-size: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ff2020;
+    }
+
+    .policy-item ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .policy-item ul li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 15px;
+        color: #666;
+    }
+
+    .policy-item ul li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #ff2020;
+    }
+
+    .policy-contact {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+    }
+
+    .policy-contact h4 {
+        color: #2d2d2d;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .policy-contact p {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .return-policy-page {
+            padding: 40px 0;
+        }
+
+        .policy-wrapper {
+            padding: 20px;
+        }
+
+        .policy-item h4 {
+            font-size: 18px;
+        }
+    }
+</style>
+
+<%- include('../partials/footer') %>
