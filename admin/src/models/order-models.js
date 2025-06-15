@@ -31,6 +31,7 @@ const orders = new Schema({
   status: String,
   items: [itemList],
   totalAmount: Number,
+  orderDate: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("orders", orders);

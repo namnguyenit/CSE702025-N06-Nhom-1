@@ -3,7 +3,7 @@ const PopupService = require("../service/popup-service");
 
 class OrderControllers {
   async index(req, res) {
-    const orders = await OrderModels.find({});
+    const orders = await OrderModels.find({}).sort({ orderDate: -1 });
     const nameTable = "Order Table";
     res.render("orders/index", { nameTable, orders });
   }

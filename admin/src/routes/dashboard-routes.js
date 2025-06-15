@@ -10,6 +10,8 @@ route.use(authenticateMiddleware);
 route.use(authorizationMiddleware);
 
 route.get("/", DashboardControllers.index);
+route.get("/price-total", DashboardControllers.priceTotal);
+route.get("/total-month", DashboardControllers.totalMonth);
 
 //----------------------
 
