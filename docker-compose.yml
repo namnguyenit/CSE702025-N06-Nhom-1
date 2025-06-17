@@ -1,0 +1,168 @@
+version: '3.9'
+services:
+  # MongoDB cluster (replica set, không auth, không keyFile cho dev)
+  mongo1:
+    image: mongo:latest
+    container_name: mongo1
+    ports:
+      - 27019:27017
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo1_data:/data/db
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mongo2:
+    image: mongo:latest
+    container_name: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo2_data:/data/db
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mongo3:
+    image: mongo:latest
+    container_name: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo3_data:/data/db
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    # Khởi tạo replica set sau khi các node mongo đã sẵn sàng
+  mongo-setup:
+    image: mongo:latest
+    depends_on:
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
+    restart: on-failure # Tự động thử lại nếu thất bại
+    command: >
+      sh -c "i=1; while [ $i -le 30 ]; do mongosh --host mongo1 --eval \"db.adminCommand('ping')\" && break; echo 'Waiting for mongo1 to be ready...'; i=$((i+1)); sleep 2; done; mongosh --host mongo1 --eval 'rs.initiate({_id: \"rs0\", members: [{ _id: 0, host: \"mongo1:27017\" },{ _id: 1, host: \"mongo2:27017\" },{ _id: 2, host: \"mongo3:27017\" }]}); rs.status();'"
+    networks:
+      - backend
+
+  # User app (5 instances)
+  user1:
+    build: ./user
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 3001:3000
+    networks:
+      - backend
+  user2:
+    build: ./user
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 3002:3000
+    networks:
+      - backend
+  user3:
+    build: ./user
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 3003:3000
+    networks:
+      - backend
+  user4:
+    build: ./user
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 3004:3000
+    networks:
+      - backend
+  user5:
+    build: ./user
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 3005:3000
+    networks:
+      - backend
+
+  # Admin app
+  admin:
+    build: ./admin
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/webbtl?replicaSet=rs0
+    depends_on:
+      mongo-setup:
+        condition: service_completed_successfully
+    ports:
+      - 4001:4000
+    networks:
+      - backend
+
+  # Nginx load balancer
+  nginx:
+    image: nginx:1.25
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - user1
+      - user2
+      - user3
+      - user4
+      - user5
+    networks:
+      - backend
+
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
+
+networks:
+  backend:
+    driver: bridge

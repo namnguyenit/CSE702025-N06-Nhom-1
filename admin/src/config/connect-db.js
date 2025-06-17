@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      `mongodb://${config.db.host}:${config.db.port}/${config.db.database}`
-    );
+    // Ưu tiên dùng MONGODB_URI nếu có, fallback về config cũ
+    const uri = process.env.MONGODB_URI ||
+      `mongodb://${config.db.host}:${config.db.port}/${config.db.database}`;
+    await mongoose.connect(uri);
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
