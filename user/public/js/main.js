@@ -945,4 +945,72 @@ $(document).ready(function() {
   });
 });
 
+// Gợi ý sản phẩm khi nhập từ khóa tìm kiếm (cho cả header và sidebar)
+$(document).ready(function() {
+  $("input[name='keyword']").each(function(idx, el) {
+    var $searchInput = $(el);
+    // Tạo box gợi ý riêng cho mỗi input
+    var suggestBoxId = 'search-suggest-box-' + idx;
+    var $suggestBox = $('<div></div>')
+      .attr('id', suggestBoxId)
+      .addClass('search-suggest-box')
+      .css({
+        position: 'absolute',
+        background: '#fff',
+        border: '1px solid #ddd',
+        zIndex: 1000,
+        display: 'none',
+        maxHeight: '320px',
+        overflowY: 'auto',
+        borderRadius: '12px',
+        boxShadow: '0 4px 16px #0001',
+        padding: '0.5rem 0',
+        minWidth: $searchInput.outerWidth()
+      });
+    // Thêm vào body để định vị tuyệt đối
+    $('body').append($suggestBox);
+    function updateSuggestBoxPosition() {
+      var offset = $searchInput.offset();
+      $suggestBox.css({
+        top: offset.top + $searchInput.outerHeight() + 2,
+        left: offset.left,
+        minWidth: $searchInput.outerWidth()
+      });
+    }
+    $searchInput.on('input focus', function() {
+      var keyword = $searchInput.val().trim();
+      updateSuggestBoxPosition();
+      if (keyword.length < 2) {
+        $suggestBox.hide();
+        return;
+      }
+      $.get('/products/search', { q: keyword }, function(data) {
+        if (data && data.length > 0) {
+          var html = data.map(function(p) {
+            return `<div class='suggest-item' style='padding:8px 18px;cursor:pointer;display:flex;align-items:center;'>
+              <img src='${p.image}' style='width:36px;height:36px;object-fit:cover;border-radius:6px;margin-right:12px;'>
+              <span>${p.name}</span>
+            </div>`;
+          }).join('');
+          $suggestBox.html(html).show();
+        } else {
+          $suggestBox.html('<div style="padding:10px 18px;color:#888;">Không có gợi ý</div>').show();
+        }
+      });
+    });
+    $suggestBox.on('click', '.suggest-item', function() {
+      var name = $(this).find('span').text();
+      $searchInput.val(name);
+      $suggestBox.hide();
+      $searchInput.closest('form').submit();
+    });
+    $(window).on('resize scroll', updateSuggestBoxPosition);
+    $(document).on('click', function(e) {
+      if (!$(e.target).closest($searchInput).length && !$(e.target).closest($suggestBox).length) {
+        $suggestBox.hide();
+      }
+    });
+  });
+});
+
 })(jQuery);

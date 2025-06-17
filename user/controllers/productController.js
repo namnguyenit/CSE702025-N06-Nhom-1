@@ -9,16 +9,23 @@ exports.getProductListPage = async (req, res, next) => {
     try {
         const categoryName = req.query.category;
         const sortBy = req.query.sort;
-        let products;
-        let currentCategory = null;
-        let pageTitle = 'Tất Cả Sản Phẩm';
+        const keyword = req.query.keyword ? req.query.keyword.trim() : '';
         let queryConditions = {};
+        let pageTitle = 'Tất Cả Sản Phẩm';
+        let currentCategory = null;
         if (categoryName && categoryName !== 'all') {
             currentCategory = await Category.findOne({ name: categoryName });
             if (currentCategory) {
                 queryConditions.category = currentCategory._id;
                 pageTitle = currentCategory.name;
             }
+        }
+        if (keyword) {
+            queryConditions.$or = [
+                { name: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } }
+            ];
+            pageTitle = `Kết quả cho "${keyword}"`;
         }
         let sortOptions = { createdAt: -1 };
         if (sortBy) {
@@ -30,10 +37,17 @@ exports.getProductListPage = async (req, res, next) => {
                 case 'latest': sortOptions = { createdAt: -1 }; break;
             }
         }
-        products = await Product.find(queryConditions).sort(sortOptions);
+        // Truy vấn sản phẩm đúng điều kiện
+        const products = await Product.find(queryConditions).sort(sortOptions);
         const categories = await Category.find({}).sort({ name: 1 });
+        // Nếu có keyword, chỉ gộp các sản phẩm mà name hoặc description khớp keyword
+        let filteredProducts = products;
+        if (keyword) {
+            const regex = new RegExp(keyword, 'i');
+            filteredProducts = products.filter(prod => regex.test(prod.name) || regex.test(prod.description || ''));
+        }
         const groupedProducts = {};
-        products.forEach(prod => {
+        filteredProducts.forEach(prod => {
             if (!groupedProducts[prod.name]) {
                 groupedProducts[prod.name] = {
                     _id: prod._id,
@@ -98,11 +112,9 @@ exports.getProductListPage = async (req, res, next) => {
             title: pageTitle,
             products: Object.values(groupedProducts),
             categories,
-            currentCategory: categoryName || 'all',
-            sortBy: sortBy || '',
-            types, // truyền types cho EJS
-            currentType: req.query.type || '',
-            wishlist, // truyền wishlist cho EJS
+            currentCategory: currentCategory ? currentCategory.name : null,
+            keyword, // Truyền keyword để giữ lại giá trị trong form
+            wishlist, // Truyền wishlist để view không lỗi
             wishlistCount,
             cartCount
         });
@@ -345,4 +357,21 @@ exports.getCategoryProductsPage = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+};
+
+// API gợi ý sản phẩm cho tìm kiếm nhanh
+exports.suggestProducts = async (req, res) => {
+    const q = req.query.q ? req.query.q.trim() : '';
+    if (!q || q.length < 2) return res.json([]);
+    const products = await Product.find({
+        $or: [
+            { name: { $regex: q, $options: 'i' } },
+            { description: { $regex: q, $options: 'i' } }
+        ]
+    }).limit(8);
+    const result = products.map(p => ({
+        name: p.name,
+        image: p.image && p.image.imageData ? `data:${p.image.imageType};base64,${p.image.imageData.toString('base64')}` : '/img/product-placeholder.png'
+    }));
+    res.json(result);
 };

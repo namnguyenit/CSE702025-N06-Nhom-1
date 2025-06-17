@@ -8,6 +8,8 @@ router.get('/', productController.getProductListPage);
 
 // GET /products/search - Trang kết quả tìm kiếm sản phẩm
 router.get('/search', productController.searchProductsPage); // Route mới cho tìm kiếm
+// API gợi ý sản phẩm cho tìm kiếm nhanh
+router.get('/search', productController.suggestProducts);
 
 // GET /products/:name - Trang chi tiết sản phẩm (dùng name)
 router.get('/:name', productController.getProductDetailPage);
