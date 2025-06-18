@@ -145,8 +145,6 @@ Dự án được phát triển phục vụ mục đích học tập và nghiên
 
 Mọi thắc mắc, góp ý hoặc trao đổi vui lòng liên hệ qua GitHub của nhóm hoặc email của các thành viên (nếu cần).
 
-> 📫 GitHub: [github.com/leduclong123](https://github.com/leduclong123)
-
 > 📫 GitHub: [github.com/namnguyenit](https://github.com/namnguyenit)
 
 > Made with ❤️ by **Nhóm 1 - CSE702025 - Đại học Phenikaa**
