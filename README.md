@@ -94,7 +94,23 @@ npm start
 # Build image và chạy container
 docker-compose up --build
 ```
-
+```bash
+# lệnh chạy container cho những lần sau
+docker-compose start
+```
+```bash
+#import data sample
+docker cp products.json mongo1:/data/products.json
+docker exec mongo1 mongoimport --db webbtl --collection products --file /data/products.json --jsonArray
+```
+```bash
+# lệnh ngừng và xóa container docker
+docker-compose down
+```
+```bash
+# lệnh ngừng container docker
+docker-compose stop
+```
 ---
 
 ## 🧱 Kiến trúc & Công nghệ
