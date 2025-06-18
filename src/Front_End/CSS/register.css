@@ -1,0 +1,110 @@
+.register__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  flex-direction: column;
+}
+
+.form__register {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.form__register h2 {
+  margin-bottom: 25px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.form__register input {
+  width: calc(100% - 22px);
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.form__register button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1.1em;
+}
+
+.form__register button:hover {
+  background-color: #0056b3;
+}
+
+.form__register .error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.register__username,
+.register__password,
+.register__email,
+.register__role {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+label {
+  width: 120px;
+  text-align: left;
+}
+
+.select__role {
+  width: calc(100% - 135px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.welcome__text {
+  font-size: 30px;
+  position: absolute;
+  bottom: 10%;
+  font-weight: bold;
+}
+
+.login__link {
+    margin-top: 15px;
+    font-size: 1em;
+}
+
+.login__link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login__link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .welcome__text {
+    font-size: 20px;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
