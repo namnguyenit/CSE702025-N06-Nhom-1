@@ -4,8 +4,9 @@ services:
   mongo1:
     image: mongo:latest
     container_name: mongo1
+    hostname: mongo1
     ports:
-      - 27019:27017
+      - 27030:27017
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - mongo1_data:/data/db
@@ -19,6 +20,9 @@ services:
   mongo2:
     image: mongo:latest
     container_name: mongo2
+    hostname: mongo2
+    ports:
+      - 27031:27017
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - mongo2_data:/data/db
@@ -32,6 +36,9 @@ services:
   mongo3:
     image: mongo:latest
     container_name: mongo3
+    hostname: mongo3
+    ports:
+      - 27032:27017
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - mongo3_data:/data/db
@@ -53,9 +60,12 @@ services:
         condition: service_healthy
       mongo3:
         condition: service_healthy
-    restart: on-failure # Tự động thử lại nếu thất bại
-    command: >
-      sh -c "i=1; while [ $i -le 30 ]; do mongosh --host mongo1 --eval \"db.adminCommand('ping')\" && break; echo 'Waiting for mongo1 to be ready...'; i=$((i+1)); sleep 2; done; mongosh --host mongo1 --eval 'rs.initiate({_id: \"rs0\", members: [{ _id: 0, host: \"mongo1:27017\" },{ _id: 1, host: \"mongo2:27017\" },{ _id: 2, host: \"mongo3:27017\" }]}); rs.status();'"
+    entrypoint: >
+      bash -c "\
+        sleep 10; \
+        echo '--- INIT REPLICA SET ---'; \
+        mongosh --host mongo1:27017 --eval 'rs.initiate({_id: \"rs0\", members: [{ _id: 0, host: \"mongo1:27017\" },{ _id: 1, host: \"mongo2:27017\" },{ _id: 2, host: \"mongo3:27017\" }]})'; \
+      "
     networks:
       - backend
 
