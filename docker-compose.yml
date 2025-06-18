@@ -64,7 +64,38 @@ services:
       bash -c "\
         sleep 10; \
         echo '--- INIT REPLICA SET ---'; \
-        mongosh --host mongo1:27017 --eval 'rs.initiate({_id: \"rs0\", members: [{ _id: 0, host: \"mongo1:27017\" },{ _id: 1, host: \"mongo2:27017\" },{ _id: 2, host: \"mongo3:27017\" }]})'; \
+        mongosh --host mongo1:27017 --eval '\
+          try { \
+            var status = rs.status(); \
+            if (status.ok === 0 || status.code === 94) { \
+              rs.initiate({ \
+                _id: \"rs0\", \
+                members: [ \
+                  { _id: 0, host: \"mongo1:27017\" }, \
+                  { _id: 1, host: \"mongo2:27017\" }, \
+                  { _id: 2, host: \"mongo3:27017\" } \
+                ] \
+              }); \
+              print(\"Replica set initiated\"); \
+            } else { \
+              print(\"Replica set already initialized\"); \
+            } \
+          } catch(e) { \
+            if (e.code === 94) { \
+              rs.initiate({ \
+                _id: \"rs0\", \
+                members: [ \
+                  { _id: 0, host: \"mongo1:27017\" }, \
+                  { _id: 1, host: \"mongo2:27017\" }, \
+                  { _id: 2, host: \"mongo3:27017\" } \
+                ] \
+              }); \
+              print(\"Replica set initiated\"); \
+            } else { \
+              print(\"Error: \" + e); \
+            } \
+          } \
+        '; \
       "
     networks:
       - backend
