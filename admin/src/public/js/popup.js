@@ -6,20 +6,25 @@ const popup = document.getElementById("popup");
 //not-match: Passwords do not match
 //missing-data: Please fill out this field.
 
-if (document.cookie) {
-  const message = getMessage();
-  if (!(message.icon && message.title)) {
-    return;
+function init() {
+  if (document.cookie) {
+    const message = getMessage();
+    if (!(message.icon && message.title)) {
+      return;
+    }
+    Swal.fire({
+      title: message.title,
+      icon: message.icon,
+      draggable: true,
+    }).then((result) => {
+      document.cookie = "icon=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "title=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    });
   }
-  Swal.fire({
-    title: message.title,
-    icon: message.icon,
-    draggable: true,
-  }).then((result) => {
-    document.cookie = "icon=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "title=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  });
 }
+
+init(); // gọi hàm
 
 function getMessage() {
   const cookies = document.cookie.split("; ");
