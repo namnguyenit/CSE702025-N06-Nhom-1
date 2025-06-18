@@ -2,22 +2,11 @@
 
 Dự án mô phỏng sàn thương mại điện tử với các vai trò: Admin, User và Shipper, được xây dựng bằng Node.js, MongoDB, Docker và Bootstrap.
 
-<p style="text-align:center">
+<p align="center">
   <img src="./image/welcome.jpg" alt="alt text" width="600"/>
 </p>
 
-<p style="
-  font-size: 40px;
-  text-align: center;
-  font-weight: bold;
-  background: linear-gradient(to right,#00ff00,#b4feb4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-">
-  THƯƠNG MẠI ĐIỆN TỬ
-</p>
-
----
+# THƯƠNG MẠI ĐIỆN TỬ
 
 ## 🛍️ Giới thiệu dự án
 
@@ -121,19 +110,19 @@ docker-compose up --build
 
 ### Trang người dùng
 
-<p style="text-align:center">
+<p align="center">
   <img src="./image/user.png" alt="alt text" width="600"/>
 </p>
 
 ### Trang quản trị viên
 
-<p style="text-align:center">
+<p align="center">
   <img src="./image/admin.png" alt="alt text" width="600"/>
 </p>
 
 ### Giao diện shipper
 
-<p style="text-align:center">
+<p align="center">
   <img src="./image/shipper.png" alt="alt text" width="600"/>
 </p>
 
