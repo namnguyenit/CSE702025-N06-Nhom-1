@@ -8,6 +8,12 @@ const popup = document.getElementById("popup");
 
 if (document.cookie) {
   const message = getMessage();
+  if (
+    message == ".Tunnels.Relay.WebForwarding.Cookies" ||
+    message == "tunnel_phishing_protection"
+  ) {
+    return;
+  }
   Swal.fire({
     title: message.title,
     icon: message.icon,
