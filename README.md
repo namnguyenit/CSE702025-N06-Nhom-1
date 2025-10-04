@@ -32,6 +32,8 @@ Dự án sử dụng Node.js kết hợp Express và MongoDB (qua Mongoose), tri
 - Đăng sản phẩm mới.
 - Cập nhật/xoá sản phẩm.
 - Quản lý người dùng và đơn hàng.
+- Tài khoản admin:  Username: admin
+                    Password: admin
 
 ### 🚚 Shipper
 
